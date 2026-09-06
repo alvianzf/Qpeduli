@@ -1,0 +1,38 @@
+* {
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100%;
+}
+
+body {
+  background-color: #F3F7FF;
+  overflow-x: hidden;
+}
+
+.MuiGrid-root,
+.MuiStack-root {
+  min-width: 0 !important;
+}
+
+.MuiAvatar-root {
+  flex-shrink: 0;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(30, 95, 224, 0.25);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(30, 95, 224, 0.4);
+}
