@@ -24,7 +24,9 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import PaymentsIcon from '@mui/icons-material/Payments';
 import CampaignIcon from '@mui/icons-material/Campaign';
 import ForumIcon from '@mui/icons-material/Forum';
+import { alpha } from '@mui/material/styles';
 import { formatRupiah, timeAgo } from '../data/mockData';
+import { brand } from '../theme/theme';
 import { userCache as users, categoryCache } from '../lib/adapters';
 import { useThread, useAddComment, apiErrorMessage } from '../lib/queries';
 import { useAuth } from '../context/AuthContext';
@@ -265,13 +267,22 @@ export default function ThreadDetail() {
                       {thread.campaign.status === 'completed' ? 'Target Tercapai 🎉' : 'Donasi Sekarang'}
                     </Button>
                     {thread.campaign.status === 'pending-verification' && (
-                      <Chip
-                        icon={<ShieldIcon sx={{ fontSize: '14px !important' }} />}
-                        label="Menunggu Guarantor Ksatria Komunitas"
-                        size="small"
-                        color="warning"
-                        sx={{ mt: 1.5, width: '100%' }}
-                      />
+                      <Stack
+                        direction="row"
+                        spacing={1}
+                        alignItems="center"
+                        sx={{
+                          mt: 1.5,
+                          p: 1,
+                          borderRadius: 2,
+                          bgcolor: alpha(brand.cta, 0.08),
+                        }}
+                      >
+                        <ShieldIcon sx={{ fontSize: 16, color: 'warning.dark' }} />
+                        <Typography variant="caption" fontWeight={700} color="warning.dark">
+                          Menunggu Guarantor Ksatria Komunitas
+                        </Typography>
+                      </Stack>
                     )}
                   </Card>
                 </motion.div>
