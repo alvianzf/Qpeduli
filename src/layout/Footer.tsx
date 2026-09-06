@@ -31,7 +31,7 @@ export default function Footer() {
       component="footer"
       sx={{
         mt: 8,
-        background: 'linear-gradient(180deg,#0B1E4D 0%, #123A8C 100%)',
+        background: 'linear-gradient(180deg,#1E3A6E 0%, #2F4F8A 100%)',
         color: 'rgba(255,255,255,0.85)',
         pt: 6,
         pb: 3,

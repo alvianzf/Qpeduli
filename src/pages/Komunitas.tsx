@@ -18,6 +18,10 @@ import ParkIcon from '@mui/icons-material/Park';
 import { useCategories, useThreads } from '../lib/queries';
 import ThreadCard from '../components/ThreadCard';
 import CircularProgress from '@mui/material/CircularProgress';
+import Card from '@mui/material/Card';
+import Button from '@mui/material/Button';
+import { useAuth } from '../context/AuthContext';
+import { useCreateThreadDialog } from '../context/CreateThreadContext';
 
 const iconMap: Record<string, ReactElement> = {
   LocationCity: <LocationCityIcon />,
@@ -38,10 +42,20 @@ export default function Komunitas() {
     category: slug,
     filter: filter === 'all' ? undefined : filter,
   });
+  const { user } = useAuth();
+  const { openCreateThread } = useCreateThreadDialog();
+
+  const handleCreateClick = () => {
+    if (!user) {
+      navigate('/masuk');
+      return;
+    }
+    openCreateThread();
+  };
 
   return (
     <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', pb: 8 }}>
-      <Box sx={{ background: 'linear-gradient(180deg,#123A8C,#1E5FE0)', color: '#fff', pt: { xs: 6, md: 8 }, pb: { xs: 6, md: 8 } }}>
+      <Box sx={{ background: 'linear-gradient(180deg,#2F4F8A,#4267B2)', color: '#fff', pt: { xs: 6, md: 8 }, pb: { xs: 6, md: 8 } }}>
         <Container maxWidth="lg">
           <Typography variant="h3" fontWeight={800} sx={{ fontSize: { xs: '1.9rem', md: '2.6rem' } }}>
             {activeCategory ? activeCategory.name : 'Ruang Komunitas'}
@@ -114,9 +128,14 @@ export default function Komunitas() {
           ) : filteredThreads.length ? (
             filteredThreads.map((t, i) => <ThreadCard thread={t} key={t.id} index={i} />)
           ) : (
-            <Typography color="text.secondary" textAlign="center" sx={{ py: 6 }}>
-              Belum ada thread untuk filter ini.
-            </Typography>
+            <Card sx={{ p: 6, textAlign: 'center' }}>
+              <Typography sx={{ fontSize: 40, mb: 1 }}>💬</Typography>
+              <Typography fontWeight={700} sx={{ mb: 0.5 }}>Belum ada thread untuk filter ini</Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                Jadilah yang pertama memulai diskusi{activeCategory ? ` di ${activeCategory.name}` : ''}.
+              </Typography>
+              <Button variant="contained" onClick={handleCreateClick}>Buat Thread</Button>
+            </Card>
           )}
         </Stack>
       </Container>

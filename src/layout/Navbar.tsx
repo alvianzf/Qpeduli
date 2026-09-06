@@ -20,6 +20,7 @@ import useScrollTrigger from '@mui/material/useScrollTrigger';
 import KarmaChip from '../components/KarmaChip';
 import Logo from '../components/Logo';
 import { useAuth } from '../context/AuthContext';
+import { useCreateThreadDialog } from '../context/CreateThreadContext';
 
 const navLinks = [
   { label: 'Beranda', to: '/' },
@@ -28,19 +29,20 @@ const navLinks = [
   { label: 'Transparansi & Keamanan', to: '/keamanan' },
 ];
 
-export default function Navbar({ onCreateThread }: { onCreateThread: () => void }) {
+export default function Navbar() {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const scrolled = useScrollTrigger({ disableHysteresis: true, threshold: 8 });
   const { user, logout } = useAuth();
+  const { openCreateThread } = useCreateThreadDialog();
 
   const handleCreateClick = () => {
     if (!user) {
       navigate('/masuk');
       return;
     }
-    onCreateThread();
+    openCreateThread();
   };
 
   return (

@@ -22,15 +22,30 @@ import CloseIcon from '@mui/icons-material/Close';
 import StorefrontIcon from '@mui/icons-material/Storefront';
 import { motion } from 'framer-motion';
 import CircularProgress from '@mui/material/CircularProgress';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import { useNavigate } from 'react-router-dom';
 import { formatRupiah } from '../data/mockData';
 import { userCache as users } from '../lib/adapters';
 import { useFjbItems } from '../lib/queries';
+import { useAuth } from '../context/AuthContext';
+import CreateFjbItemDialog from '../components/CreateFjbItemDialog';
 import type { FjbItem } from '../types';
 
 export default function FjbAmal() {
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const [query, setQuery] = useState('');
   const [selected, setSelected] = useState<FjbItem | null>(null);
+  const [sellOpen, setSellOpen] = useState(false);
   const { data: fjbItems = [], isLoading } = useFjbItems();
+
+  const handleSellClick = () => {
+    if (!user) {
+      navigate('/masuk');
+      return;
+    }
+    setSellOpen(true);
+  };
 
   const filtered = useMemo(
     () => fjbItems.filter((f) => f.title.toLowerCase().includes(query.toLowerCase())),
@@ -39,15 +54,23 @@ export default function FjbAmal() {
 
   return (
     <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', pb: 10 }}>
-      <Box sx={{ background: 'linear-gradient(180deg,#123A8C,#1E5FE0)', color: '#fff', pt: { xs: 6, md: 8 }, pb: { xs: 8, md: 10 } }}>
+      <Box sx={{ background: 'linear-gradient(180deg,#2F4F8A,#4267B2)', color: '#fff', pt: { xs: 6, md: 8 }, pb: { xs: 8, md: 10 } }}>
         <Container maxWidth="lg">
           <Chip icon={<StorefrontIcon sx={{ fontSize: '14px !important', color: '#fff !important' }} />} label="Forum Jual Beli Amal" sx={{ bgcolor: 'rgba(255,255,255,0.18)', color: '#fff', fontWeight: 700, mb: 2 }} />
           <Typography variant="h3" fontWeight={800} sx={{ fontSize: { xs: '1.9rem', md: '2.6rem' }, mb: 1.5 }}>
             Jual Barang, Salurkan Kebaikan
           </Typography>
-          <Typography sx={{ opacity: 0.85, maxWidth: 560 }}>
+          <Typography sx={{ opacity: 0.85, maxWidth: 560, mb: 3 }}>
             Setiap barang & jasa di sini terhubung ke sebuah kampanye Aksi Sosial — hasil penjualan otomatis disalurkan ke dompet kampanye pilihan penjual.
           </Typography>
+          <Button
+            variant="contained"
+            color="warning"
+            startIcon={<AddCircleIcon />}
+            onClick={handleSellClick}
+          >
+            Jual Barang / Jasa
+          </Button>
         </Container>
       </Box>
 
@@ -72,9 +95,14 @@ export default function FjbAmal() {
             <Typography fontWeight={700} sx={{ mb: 0.5 }}>
               {query ? 'Tidak ada barang yang cocok' : 'Belum ada barang atau jasa'}
             </Typography>
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body2" color="text.secondary" sx={{ mb: query ? 0 : 2 }}>
               {query ? 'Coba kata kunci lain.' : 'Jadilah penjual pertama di FJB Amal.'}
             </Typography>
+            {!query && (
+              <Button variant="contained" color="warning" onClick={handleSellClick}>
+                Jual Barang / Jasa
+              </Button>
+            )}
           </Card>
         )}
 
@@ -150,6 +178,8 @@ export default function FjbAmal() {
           </>
         )}
       </Dialog>
+
+      <CreateFjbItemDialog open={sellOpen} onClose={() => setSellOpen(false)} />
     </Box>
   );
 }
