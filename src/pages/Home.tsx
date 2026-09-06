@@ -233,11 +233,24 @@ export default function Home() {
             Lihat Semua
           </Button>
         </Stack>
-        <Stack spacing={2.5}>
-          {featured.map((t, i) => (
-            <ThreadCard thread={t} key={t.id} index={i} />
-          ))}
-        </Stack>
+        {featured.length > 0 ? (
+          <Stack spacing={2.5}>
+            {featured.map((t, i) => (
+              <ThreadCard thread={t} key={t.id} index={i} />
+            ))}
+          </Stack>
+        ) : (
+          <Card sx={{ p: { xs: 4, md: 6 }, textAlign: 'center' }}>
+            <Typography sx={{ fontSize: 40, mb: 1 }}>🌱</Typography>
+            <Typography fontWeight={700} sx={{ mb: 0.5 }}>Belum ada Aksi Sosial aktif</Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+              Jadilah yang pertama mengubah diskusi menjadi aksi nyata.
+            </Typography>
+            <Button variant="contained" color="warning" onClick={() => navigate('/komunitas')}>
+              Mulai Diskusi
+            </Button>
+          </Card>
+        )}
       </Container>
 
       {/* CATEGORIES */}
@@ -296,17 +309,25 @@ export default function Home() {
               </Button>
             </Grid>
             <Grid size={{ xs: 12, md: 6 }}>
-              <Grid container spacing={2}>
-                {fjbItems.slice(0, 4).map((item) => (
-                  <Grid size={6} key={item.id}>
-                    <Card sx={{ p: 2 }}>
-                      <Typography variant="h4" sx={{ mb: 1 }}>{item.emoji}</Typography>
-                      <Typography variant="body2" fontWeight={700} noWrap>{item.title}</Typography>
-                      <Typography variant="caption" color="primary.dark" fontWeight={800}>{formatRupiah(item.price)}</Typography>
-                    </Card>
-                  </Grid>
-                ))}
-              </Grid>
+              {fjbItems.length > 0 ? (
+                <Grid container spacing={2}>
+                  {fjbItems.slice(0, 4).map((item) => (
+                    <Grid size={6} key={item.id}>
+                      <Card sx={{ p: 2 }}>
+                        <Typography variant="h4" sx={{ mb: 1 }}>{item.emoji}</Typography>
+                        <Typography variant="body2" fontWeight={700} noWrap>{item.title}</Typography>
+                        <Typography variant="caption" color="primary.dark" fontWeight={800}>{formatRupiah(item.price)}</Typography>
+                      </Card>
+                    </Grid>
+                  ))}
+                </Grid>
+              ) : (
+                <Card sx={{ p: 4, textAlign: 'center' }}>
+                  <Typography variant="body2" color="text.secondary">
+                    Belum ada barang atau jasa yang dijual. Jadilah penjual pertama!
+                  </Typography>
+                </Card>
+              )}
             </Grid>
           </Grid>
         </Card>

@@ -66,6 +66,18 @@ export default function FjbAmal() {
           <Stack alignItems="center" sx={{ py: 6 }}><CircularProgress /></Stack>
         )}
 
+        {!isLoading && filtered.length === 0 && (
+          <Card sx={{ p: 6, textAlign: 'center' }}>
+            <Typography sx={{ fontSize: 40, mb: 1 }}>🛍️</Typography>
+            <Typography fontWeight={700} sx={{ mb: 0.5 }}>
+              {query ? 'Tidak ada barang yang cocok' : 'Belum ada barang atau jasa'}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              {query ? 'Coba kata kunci lain.' : 'Jadilah penjual pertama di FJB Amal.'}
+            </Typography>
+          </Card>
+        )}
+
         <Grid container spacing={2.5}>
           {filtered.map((item, i) => {
             const seller = users[item.sellerId];
