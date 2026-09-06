@@ -30,49 +30,55 @@ export default function ThreadCard({ thread, index = 0 }: { thread: Thread; inde
       viewport={{ once: true, margin: '-40px' }}
       transition={{ duration: 0.45, delay: index * 0.05 }}
     >
-      <Card sx={{ overflow: 'hidden' }}>
+      <Card
+        sx={{
+          overflow: 'hidden',
+          borderLeft: category ? `3px solid ${category.color}` : undefined,
+          transition: 'box-shadow .2s ease, transform .2s ease',
+          '&:hover': { boxShadow: '0 6px 20px rgba(22,35,63,0.08)' },
+        }}
+      >
         <CardActionArea onClick={() => navigate(`/thread/${thread.id}`)}>
           <CardContent sx={{ p: { xs: 2, sm: 2.5 } }}>
             <Stack direction="row" spacing={1.5}>
-              <Avatar sx={{ bgcolor: author.avatarColor, width: 42, height: 42, fontWeight: 700 }}>
+              <Avatar sx={{ bgcolor: author.avatarColor, width: 42, height: 42, fontWeight: 700, flexShrink: 0 }}>
                 {author.avatarInitial}
               </Avatar>
               <Box sx={{ flex: 1, minWidth: 0 }}>
-                <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap" useFlexGap sx={{ rowGap: 0.75 }}>
+                <Stack direction="row" spacing={0.5} alignItems="center" flexWrap="wrap" useFlexGap sx={{ rowGap: 0.5 }}>
                   <Typography variant="subtitle2" fontWeight={700} noWrap>
                     {author.name}
                   </Typography>
                   {author.isKsatria && <VerifiedBadge size={15} />}
-                  <Typography variant="caption" color="text.secondary">
-                    · {timeAgo(thread.createdAt)}
-                  </Typography>
-                  {category && (
-                    <Chip
-                      label={category.name}
-                      size="small"
-                      sx={{ bgcolor: `${category.color}1A`, color: category.color }}
-                    />
-                  )}
+                  <Typography variant="caption" color="text.secondary">· {timeAgo(thread.createdAt)}</Typography>
                   {thread.hot && (
-                    <Chip
-                      icon={<LocalFireDepartmentIcon sx={{ fontSize: '14px !important' }} />}
-                      label="Trending"
-                      size="small"
-                      color="warning"
-                    />
+                    <Stack direction="row" spacing={0.25} alignItems="center" sx={{ ml: 0.5 }}>
+                      <LocalFireDepartmentIcon sx={{ fontSize: 14, color: 'warning.main' }} />
+                      <Typography variant="caption" fontWeight={700} color="warning.main">Trending</Typography>
+                    </Stack>
                   )}
                 </Stack>
 
-                <Typography variant="subtitle1" fontWeight={800} sx={{ mt: 0.75, mb: 0.5 }}>
+                <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: 0.75, mb: 0.75 }} flexWrap="wrap" useFlexGap>
+                  {category && (
+                    <Stack direction="row" spacing={0.5} alignItems="center">
+                      <Box sx={{ width: 6, height: 6, borderRadius: '50%', bgcolor: category.color }} />
+                      <Typography variant="caption" fontWeight={600} sx={{ color: category.color }}>
+                        {category.name}
+                      </Typography>
+                    </Stack>
+                  )}
                   {thread.isAksiSosial && (
                     <Chip
                       icon={<VolunteerActivismIcon sx={{ fontSize: '14px !important' }} />}
                       label="Aksi Sosial"
                       size="small"
                       color="primary"
-                      sx={{ mr: 1, verticalAlign: 'middle' }}
                     />
                   )}
+                </Stack>
+
+                <Typography variant="subtitle1" fontWeight={800} sx={{ mb: 0.5 }}>
                   {thread.title}
                 </Typography>
 
@@ -90,11 +96,11 @@ export default function ThreadCard({ thread, index = 0 }: { thread: Thread; inde
 
                 <Stack direction="row" spacing={2.5} sx={{ mt: 1.5 }}>
                   <Stack direction="row" spacing={0.5} alignItems="center">
-                    <ChatBubbleOutlineIcon sx={{ fontSize: 15, color: 'text.secondary' }} />
+                    <ChatBubbleOutlineIcon sx={{ fontSize: 15, color: 'text.disabled' }} />
                     <Typography variant="caption" color="text.secondary">{thread.comments.length} komentar</Typography>
                   </Stack>
                   <Stack direction="row" spacing={0.5} alignItems="center">
-                    <VisibilityOutlinedIcon sx={{ fontSize: 15, color: 'text.secondary' }} />
+                    <VisibilityOutlinedIcon sx={{ fontSize: 15, color: 'text.disabled' }} />
                     <Typography variant="caption" color="text.secondary">{thread.views.toLocaleString('id-ID')} dilihat</Typography>
                   </Stack>
                 </Stack>

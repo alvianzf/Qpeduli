@@ -29,6 +29,7 @@ import { userCache as users } from '../lib/adapters';
 import { useFjbItems } from '../lib/queries';
 import { useAuth } from '../context/AuthContext';
 import CreateFjbItemDialog from '../components/CreateFjbItemDialog';
+import EmptyState from '../components/EmptyState';
 import type { FjbItem } from '../types';
 
 export default function FjbAmal() {
@@ -90,20 +91,18 @@ export default function FjbAmal() {
         )}
 
         {!isLoading && filtered.length === 0 && (
-          <Card sx={{ p: 6, textAlign: 'center' }}>
-            <Typography sx={{ fontSize: 40, mb: 1 }}>🛍️</Typography>
-            <Typography fontWeight={700} sx={{ mb: 0.5 }}>
-              {query ? 'Tidak ada barang yang cocok' : 'Belum ada barang atau jasa'}
-            </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mb: query ? 0 : 2 }}>
-              {query ? 'Coba kata kunci lain.' : 'Jadilah penjual pertama di FJB Amal.'}
-            </Typography>
-            {!query && (
-              <Button variant="contained" color="warning" onClick={handleSellClick}>
-                Jual Barang / Jasa
-              </Button>
-            )}
-          </Card>
+          <EmptyState
+            icon={<StorefrontIcon fontSize="large" />}
+            title={query ? 'Tidak ada barang yang cocok' : 'Belum ada barang atau jasa'}
+            description={query ? 'Coba kata kunci lain.' : 'Jadilah penjual pertama di FJB Amal.'}
+            action={
+              !query && (
+                <Button variant="contained" color="warning" onClick={handleSellClick}>
+                  Jual Barang / Jasa
+                </Button>
+              )
+            }
+          />
         )}
 
         <Grid container spacing={2.5}>

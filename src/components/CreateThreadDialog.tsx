@@ -117,7 +117,7 @@ export default function CreateThreadDialog({ open, onClose }: { open: boolean; o
               p: 1.5, borderRadius: 3, bgcolor: 'rgba(66,103,178,0.06)', border: '1px solid rgba(66,103,178,0.15)',
             }}>
               <Stack>
-                <Typography fontWeight={700} variant="body2">Jadikan "Aksi Sosial" 🎯</Typography>
+                <Typography fontWeight={700} variant="body2">Jadikan "Aksi Sosial"</Typography>
                 <Typography variant="caption" color="text.secondary">Aktifkan target dana & tombol donasi pada thread ini</Typography>
               </Stack>
               <Switch checked={isAksi} onChange={(e) => setIsAksi(e.target.checked)} />

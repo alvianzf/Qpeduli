@@ -13,6 +13,7 @@ import GroupsIcon from '@mui/icons-material/Groups';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutlined';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import { heroGradient } from '../theme/theme';
 
 const pillars = [
@@ -132,7 +133,10 @@ export default function TrustSafety() {
           <Grid size={{ xs: 12, md: 5 }}>
             <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
               <Card sx={{ p: { xs: 3, md: 4 }, mt: 3 }}>
-                <Typography variant="h6" fontWeight={800} sx={{ mb: 2 }}>❤️ Sistem Poin Kebaikan</Typography>
+                <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 2 }}>
+                  <FavoriteIcon sx={{ color: '#EF4444' }} />
+                  <Typography variant="h6" fontWeight={800}>Sistem Poin Kebaikan</Typography>
+                </Stack>
                 <Stack spacing={1.5} divider={<Divider />}>
                   {karmaRules.map((k) => (
                     <Stack direction="row" justifyContent="space-between" key={k.action} spacing={2}>
@@ -146,7 +150,10 @@ export default function TrustSafety() {
 
             <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
               <Card sx={{ p: { xs: 3, md: 4 }, mt: 3 }}>
-                <Typography variant="h6" fontWeight={800} sx={{ mb: 2 }}>🛡️ Verifikasi Ksatria Komunitas</Typography>
+                <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 2 }}>
+                  <ShieldIcon color="primary" />
+                  <Typography variant="h6" fontWeight={800}>Verifikasi Ksatria Komunitas</Typography>
+                </Stack>
                 <Stack spacing={1.5}>
                   {['Lembaga resmi (yayasan, panti, ormas) dengan legalitas jelas', 'Ketua komunitas regional aktif & memiliki rekam jejak baik', 'Tokoh masyarakat yang direkomendasikan komunitas'].map((t) => (
                     <Stack direction="row" spacing={1.5} key={t} alignItems="flex-start">

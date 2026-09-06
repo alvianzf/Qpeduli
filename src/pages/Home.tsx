@@ -22,7 +22,8 @@ import LandslideIcon from '@mui/icons-material/Landslide';
 import GroupsIcon from '@mui/icons-material/Groups';
 import ParkIcon from '@mui/icons-material/Park';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { heroGradient } from '../theme/theme';
+import { heroGradient, brand } from '../theme/theme';
+import EmptyState from '../components/EmptyState';
 import { formatRupiah } from '../data/mockData';
 import { useCategories, useThreads, useFjbItems, useStats } from '../lib/queries';
 import ThreadCard from '../components/ThreadCard';
@@ -240,16 +241,17 @@ export default function Home() {
             ))}
           </Stack>
         ) : (
-          <Card sx={{ p: { xs: 4, md: 6 }, textAlign: 'center' }}>
-            <Typography sx={{ fontSize: 40, mb: 1 }}>🌱</Typography>
-            <Typography fontWeight={700} sx={{ mb: 0.5 }}>Belum ada Aksi Sosial aktif</Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-              Jadilah yang pertama mengubah diskusi menjadi aksi nyata.
-            </Typography>
-            <Button variant="contained" color="warning" onClick={() => navigate('/komunitas')}>
-              Mulai Diskusi
-            </Button>
-          </Card>
+          <EmptyState
+            icon={<VolunteerActivismIcon fontSize="large" />}
+            color={brand.cta}
+            title="Belum ada Aksi Sosial aktif"
+            description="Jadilah yang pertama mengubah diskusi menjadi aksi nyata."
+            action={
+              <Button variant="contained" color="warning" onClick={() => navigate('/komunitas')}>
+                Mulai Diskusi
+              </Button>
+            }
+          />
         )}
       </Container>
 
@@ -322,11 +324,11 @@ export default function Home() {
                   ))}
                 </Grid>
               ) : (
-                <Card sx={{ p: 4, textAlign: 'center' }}>
-                  <Typography variant="body2" color="text.secondary">
-                    Belum ada barang atau jasa yang dijual. Jadilah penjual pertama!
-                  </Typography>
-                </Card>
+                <EmptyState
+                  icon={<StorefrontIcon fontSize="large" />}
+                  title="Belum ada yang dijual"
+                  description="Jadilah penjual pertama di FJB Amal."
+                />
               )}
             </Grid>
           </Grid>

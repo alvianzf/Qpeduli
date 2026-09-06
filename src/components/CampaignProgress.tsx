@@ -3,6 +3,8 @@ import Stack from '../components/ui/FlexStack';
 import Typography from '../components/ui/Txt';
 import { motion } from 'framer-motion';
 import { alpha } from '@mui/material/styles';
+import GroupsIcon from '@mui/icons-material/Groups';
+import ScheduleIcon from '@mui/icons-material/Schedule';
 import { formatRupiah } from '../data/mockData';
 import { brand } from '../theme/theme';
 import type { Campaign } from '../types';
@@ -43,13 +45,19 @@ export default function CampaignProgress({ campaign, compact = false }: { campai
         </Typography>
       </Stack>
       {!compact && (
-        <Stack direction="row" spacing={2} sx={{ mt: 0.5 }}>
-          <Typography variant="caption" color="text.secondary">
-            👥 {campaign.donorCount.toLocaleString('id-ID')} donatur
-          </Typography>
-          <Typography variant="caption" color="text.secondary">
-            ⏳ Batas {new Date(campaign.deadline).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}
-          </Typography>
+        <Stack direction="row" spacing={2.5} sx={{ mt: 0.75 }}>
+          <Stack direction="row" spacing={0.5} alignItems="center">
+            <GroupsIcon sx={{ fontSize: 15 }} color="disabled" />
+            <Typography variant="caption" color="text.secondary">
+              {campaign.donorCount.toLocaleString('id-ID')} donatur
+            </Typography>
+          </Stack>
+          <Stack direction="row" spacing={0.5} alignItems="center">
+            <ScheduleIcon sx={{ fontSize: 15 }} color="disabled" />
+            <Typography variant="caption" color="text.secondary">
+              Batas {new Date(campaign.deadline).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}
+            </Typography>
+          </Stack>
         </Stack>
       )}
     </Box>

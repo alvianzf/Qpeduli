@@ -16,6 +16,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import VolunteerActivismIcon from '@mui/icons-material/VolunteerActivism';
 import ForumIcon from '@mui/icons-material/Forum';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import { formatRupiah } from '../data/mockData';
 import { useUserProfile } from '../lib/queries';
 import { useAuth } from '../context/AuthContext';
@@ -82,7 +83,10 @@ export default function Profile() {
           <Grid size={{ xs: 12, md: 4 }}>
             <Stack spacing={3}>
               <Card sx={{ p: 3 }}>
-                <Typography variant="subtitle2" fontWeight={800} sx={{ mb: 1.5 }}>❤️ Poin Kebaikan</Typography>
+                <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1.5 }}>
+                  <FavoriteIcon sx={{ color: '#EF4444' }} fontSize="small" />
+                  <Typography variant="subtitle2" fontWeight={800}>Poin Kebaikan</Typography>
+                </Stack>
                 <Typography variant="h3" fontWeight={800} color="primary.dark">{user.karma.toLocaleString('id-ID')}</Typography>
                 <Typography variant="caption" color="text.secondary">Menuju level "Penjaga Komunitas"</Typography>
                 <LinearProgress variant="determinate" value={pct} sx={{ mt: 1.5, mb: 0.5 }} />

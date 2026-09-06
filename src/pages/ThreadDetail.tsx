@@ -21,6 +21,9 @@ import SendIcon from '@mui/icons-material/Send';
 import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
 import ShieldIcon from '@mui/icons-material/Shield';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import PaymentsIcon from '@mui/icons-material/Payments';
+import CampaignIcon from '@mui/icons-material/Campaign';
+import ForumIcon from '@mui/icons-material/Forum';
 import { formatRupiah, timeAgo } from '../data/mockData';
 import { userCache as users, categoryCache } from '../lib/adapters';
 import { useThread, useAddComment, apiErrorMessage } from '../lib/queries';
@@ -127,7 +130,10 @@ export default function ThreadDetail() {
             {thread.isAksiSosial && thread.campaign && (
               <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.1 }}>
                 <Card sx={{ p: { xs: 2.5, md: 3.5 }, mb: 3 }}>
-                  <Typography variant="h6" fontWeight={800} sx={{ mb: 2 }}>📋 Progres Pencairan Dana Bertahap</Typography>
+                  <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 2 }}>
+                    <PaymentsIcon color="primary" />
+                    <Typography variant="h6" fontWeight={800}>Progres Pencairan Dana Bertahap</Typography>
+                  </Stack>
                   {thread.campaign.milestones.length === 0 ? (
                     <Typography variant="body2" color="text.secondary">
                       Kreator belum menetapkan tahapan pencairan untuk kampanye ini.
@@ -166,7 +172,10 @@ export default function ThreadDetail() {
             {thread.updates.length > 0 && (
               <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.15 }}>
                 <Card sx={{ p: { xs: 2.5, md: 3.5 }, mb: 3 }}>
-                  <Typography variant="h6" fontWeight={800} sx={{ mb: 2 }}>📢 Update Transparansi</Typography>
+                  <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 2 }}>
+                    <CampaignIcon color="primary" />
+                    <Typography variant="h6" fontWeight={800}>Update Transparansi</Typography>
+                  </Stack>
                   <Stack spacing={2.5}>
                     {thread.updates.map((u) => (
                       <Box key={u.id} sx={{ pl: 2, borderLeft: '3px solid #4267B2' }}>
@@ -181,9 +190,12 @@ export default function ThreadDetail() {
             )}
 
             <Card sx={{ p: { xs: 2.5, md: 3.5 } }}>
-              <Typography variant="h6" fontWeight={800} sx={{ mb: 2 }}>
-                💬 Diskusi & Komentar ({thread.comments.length})
-              </Typography>
+              <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 2 }}>
+                <ForumIcon color="primary" />
+                <Typography variant="h6" fontWeight={800}>
+                  Diskusi & Komentar ({thread.comments.length})
+                </Typography>
+              </Stack>
               {commentError && <Typography variant="body2" color="error" sx={{ mb: 1.5 }}>{commentError}</Typography>}
               <Stack direction="row" spacing={1.5} sx={{ mb: 3 }}>
                 <Avatar sx={{ bgcolor: user?.avatarColor || '#94A3B8', width: 38, height: 38, fontWeight: 700, fontSize: 14 }}>
@@ -267,7 +279,10 @@ export default function ThreadDetail() {
 
               {guarantor && (
                 <Card sx={{ p: 3, mb: 2.5 }}>
-                  <Typography variant="subtitle2" fontWeight={800} sx={{ mb: 1.5 }}>🛡️ Dijamin Oleh</Typography>
+                  <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1.5 }}>
+                    <ShieldIcon color="primary" fontSize="small" />
+                    <Typography variant="subtitle2" fontWeight={800}>Dijamin Oleh</Typography>
+                  </Stack>
                   <Stack direction="row" spacing={1.5} alignItems="center">
                     <Avatar sx={{ bgcolor: guarantor.avatarColor, fontWeight: 700 }}>{guarantor.avatarInitial}</Avatar>
                     <Box>

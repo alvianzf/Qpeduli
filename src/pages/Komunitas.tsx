@@ -15,10 +15,12 @@ import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
 import LandslideIcon from '@mui/icons-material/Landslide';
 import GroupsIcon from '@mui/icons-material/Groups';
 import ParkIcon from '@mui/icons-material/Park';
+import VolunteerActivismIcon from '@mui/icons-material/VolunteerActivism';
+import ForumIcon from '@mui/icons-material/Forum';
 import { useCategories, useThreads } from '../lib/queries';
 import ThreadCard from '../components/ThreadCard';
+import EmptyState from '../components/EmptyState';
 import CircularProgress from '@mui/material/CircularProgress';
-import Card from '@mui/material/Card';
 import Button from '@mui/material/Button';
 import { useAuth } from '../context/AuthContext';
 import { useCreateThreadDialog } from '../context/CreateThreadContext';
@@ -118,8 +120,24 @@ export default function Komunitas() {
           sx={{ mb: 3, minHeight: 40, '& .MuiTab-root': { minHeight: 40, fontWeight: 700 } }}
         >
           <Tab label="Semua Thread" value="all" />
-          <Tab label="🎯 Aksi Sosial" value="aksi" />
-          <Tab label="💬 Diskusi" value="diskusi" />
+          <Tab
+            value="aksi"
+            label={
+              <Stack direction="row" spacing={0.75} alignItems="center">
+                <VolunteerActivismIcon fontSize="small" />
+                <span>Aksi Sosial</span>
+              </Stack>
+            }
+          />
+          <Tab
+            value="diskusi"
+            label={
+              <Stack direction="row" spacing={0.75} alignItems="center">
+                <ForumIcon fontSize="small" />
+                <span>Diskusi</span>
+              </Stack>
+            }
+          />
         </Tabs>
 
         <Stack spacing={2.5}>
@@ -128,14 +146,12 @@ export default function Komunitas() {
           ) : filteredThreads.length ? (
             filteredThreads.map((t, i) => <ThreadCard thread={t} key={t.id} index={i} />)
           ) : (
-            <Card sx={{ p: 6, textAlign: 'center' }}>
-              <Typography sx={{ fontSize: 40, mb: 1 }}>💬</Typography>
-              <Typography fontWeight={700} sx={{ mb: 0.5 }}>Belum ada thread untuk filter ini</Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                Jadilah yang pertama memulai diskusi{activeCategory ? ` di ${activeCategory.name}` : ''}.
-              </Typography>
-              <Button variant="contained" onClick={handleCreateClick}>Buat Thread</Button>
-            </Card>
+            <EmptyState
+              icon={<ForumIcon fontSize="large" />}
+              title="Belum ada thread untuk filter ini"
+              description={`Jadilah yang pertama memulai diskusi${activeCategory ? ` di ${activeCategory.name}` : ''}.`}
+              action={<Button variant="contained" onClick={handleCreateClick}>Buat Thread</Button>}
+            />
           )}
         </Stack>
       </Container>
