@@ -1,41 +1,46 @@
 # Qpeduli
 
-**Dari Diskusi, Menjadi Aksi.**
+**Dari diskusi, menjadi aksi.**
 
-Qpeduli is a community-driven crowdfunding platform — a forum where discussion threads about social issues (regional, education, health, disaster relief, hobbies) can be raised into a fully tracked "Aksi Sosial" fundraising campaign, right inside the thread.
+Most donation platforms only show up in your phone when you already know you want to give. Forums like Kaskus show up every day, because people go there to talk. Qpeduli is trying to be both at once: a regular discussion forum — regional, education, health, disaster relief, hobbies — where any thread can be turned into a tracked fundraising campaign without leaving the conversation.
 
-Built for PT INI TIKET QUE ([tiketq.com](https://tiketq.com)). Deployed at [qpeduli.com](https://qpeduli.com).
+The bet is that a platform people open daily to talk retains users better than one they only open to donate.
 
-## Core features
+## How it works
 
-- **Ruang Komunitas** — Kaskus-style sub-forums (Regional, Pendidikan, Kesehatan, Bencana Alam, Hobi & Sosial, Lingkungan)
-- **Aksi Sosial threads** — any thread can be upgraded into a fundraising campaign with a target, deadline, and donate button
-- **Poin Kebaikan** — a karma/reputation system rewarding donations, validation, and consistent campaign updates
-- **Milestone-based fund disbursement** — funds sit in escrow and release in stages, gated by community validation + admin review, mirrored on the [Transparansi & Keamanan](/keamanan) page
-- **FJB Amal** — a preloved marketplace where proceeds route directly into a chosen campaign's wallet
-- **Ksatria Komunitas** — verified badge for official institutions/community leaders who can act as guarantors on campaigns
+1. Someone posts in a sub-forum about a problem — a sick neighbor, a flooded school, a shelter that needs repairs.
+2. If it needs money, the thread owner flips it into an "Aksi Sosial" campaign: a target amount, a deadline, a donate button, right inside the thread.
+3. Donors don't just pay and leave — they stay in the thread, ask questions, and watch the campaign owner post progress updates.
+4. Money doesn't move in one lump sum. It's held in escrow and released in stages, each one gated by community sign-off and an admin review.
 
-## Tech stack
+## Why the fund release matters
 
-- React 19 + TypeScript + Vite
-- MUI (Material UI) for components, with a custom blue-gradient glassy theme
-- Framer Motion for animation
-- React Router for routing
+This is the part most donation apps get wrong in one of two directions. Hand it entirely to the campaign owner and community, and you get brigading — a handful of accounts can vouch for a fake campaign. Hand it entirely to a central admin team, and every campaign is bottlenecked on staff bandwidth, which kills the "transparent community" pitch the whole platform is built on.
 
-This is currently a frontend prototype running on in-memory mock data (`src/data/mockData.ts`) — no backend, auth, or payment integration yet.
+Qpeduli splits the difference: campaigns are broken into milestones up front, each milestone needs both a validation threshold from the community and a document check from an admin, and larger campaigns need a guarantor — a verified "Ksatria Komunitas" (an established institution or community leader) who puts their own reputation behind it. Full writeup is on the `/keamanan` page in the app.
 
-## Getting started
+## Reputation
+
+Donating, verifying an update, or posting consistent progress reports earns Poin Kebaikan — the platform's version of Kaskus's cendol. It's not a leaderboard vanity metric; it's what makes a stranger's campaign look trustworthy enough to fund.
+
+## FJB Amal
+
+A secondary marketplace for preloved goods and services, where the entire sale price routes into a campaign wallet the seller picks. It's a second reason to open the app that isn't "I want to donate."
+
+## What this repo is right now
+
+A frontend build — React, TypeScript, Vite, MUI, Framer Motion, React Router — running against in-memory mock data. No backend, auth, or payments are wired up yet. Every screen (forum, campaign pages, FJB Amal, profile, trust & safety) works end to end against fixtures, which made it possible to design the full disbursement and reputation flow before committing to a backend.
+
+Built for PT INI TIKET QUE ([tiketq.com](https://tiketq.com)). Ships at [qpeduli.com](https://qpeduli.com).
+
+## Running it locally
 
 ```bash
 npm install
 npm run dev
 ```
 
-Then open the printed local URL in your browser.
-
-### Other scripts
-
 ```bash
 npm run build      # type-check + production build
-npm run preview    # preview the production build locally
+npm run preview    # preview the production build
 ```

@@ -10,6 +10,7 @@ import Link from '@mui/material/Link';
 import { motion } from 'framer-motion';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import { heroGradient } from '../theme/theme';
+import Logo from '../components/Logo';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -19,9 +20,7 @@ export default function Login() {
         <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
           <Card sx={{ p: 4 }}>
             <Stack alignItems="center" spacing={1} sx={{ mb: 3 }}>
-              <Box sx={{ width: 46, height: 46, borderRadius: 3, background: 'linear-gradient(135deg,#1E5FE0,#60A5FA)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Typography sx={{ color: '#fff', fontWeight: 900, fontSize: 20 }}>Q</Typography>
-              </Box>
+              <Logo size={46} />
               <Typography variant="h5" fontWeight={800}>Masuk ke Qpeduli</Typography>
               <Typography variant="body2" color="text.secondary">Lanjutkan diskusi & aksi sosialmu</Typography>
             </Stack>

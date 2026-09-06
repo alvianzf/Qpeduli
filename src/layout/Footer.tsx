@@ -6,6 +6,7 @@ import Stack from '../components/ui/FlexStack';
 import Divider from '@mui/material/Divider';
 import Link from '@mui/material/Link';
 import { Link as RouterLink } from 'react-router-dom';
+import Logo from '../components/Logo';
 
 const footerLinks = {
   Platform: [
@@ -40,19 +41,7 @@ export default function Footer() {
         <Grid container spacing={4}>
           <Grid size={{ xs: 12, md: 4 }}>
             <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 1.5 }}>
-              <Box
-                sx={{
-                  width: 34,
-                  height: 34,
-                  borderRadius: '10px',
-                  background: 'linear-gradient(135deg,#1E5FE0,#60A5FA)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                <Typography sx={{ color: '#fff', fontWeight: 900 }}>Q</Typography>
-              </Box>
+              <Logo size={34} />
               <Typography variant="h6" fontWeight={800} color="#fff">Qpeduli</Typography>
             </Stack>
             <Typography variant="body2" sx={{ opacity: 0.75, maxWidth: 320 }}>

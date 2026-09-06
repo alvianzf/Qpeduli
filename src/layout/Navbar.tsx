@@ -19,6 +19,7 @@ import { alpha } from '@mui/material/styles';
 import useScrollTrigger from '@mui/material/useScrollTrigger';
 import { currentUser } from '../data/mockData';
 import KarmaChip from '../components/KarmaChip';
+import Logo from '../components/Logo';
 
 const navLinks = [
   { label: 'Beranda', to: '/' },
@@ -54,19 +55,8 @@ export default function Navbar({ onCreateThread }: { onCreateThread: () => void 
             onClick={() => navigate('/')}
             sx={{ cursor: 'pointer', mr: { xs: 1, md: 4 } }}
           >
-            <Box
-              sx={{
-                width: 38,
-                height: 38,
-                borderRadius: '12px',
-                background: 'linear-gradient(135deg,#1E5FE0,#60A5FA)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                boxShadow: '0 6px 16px rgba(30,95,224,0.35)',
-              }}
-            >
-              <Typography sx={{ color: '#fff', fontWeight: 900, fontSize: 18 }}>Q</Typography>
+            <Box sx={{ boxShadow: '0 6px 16px rgba(30,95,224,0.35)', borderRadius: '12px', lineHeight: 0 }}>
+              <Logo size={38} />
             </Box>
             <Typography variant="h6" fontWeight={800} sx={{ letterSpacing: '-0.02em' }}>
               Qpeduli
