@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Card from '@mui/material/Card';
@@ -7,13 +8,35 @@ import Button from '@mui/material/Button';
 import Stack from '../components/ui/FlexStack';
 import Divider from '@mui/material/Divider';
 import Link from '@mui/material/Link';
+import Alert from '@mui/material/Alert';
 import { motion } from 'framer-motion';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import { heroGradient } from '../theme/theme';
 import Logo from '../components/Logo';
+import { useAuth } from '../context/AuthContext';
 
 export default function Login() {
   const navigate = useNavigate();
+  const { login } = useAuth();
+  const [identifier, setIdentifier] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+    try {
+      await login(identifier, password);
+      navigate('/');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Gagal masuk.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <Box sx={{ minHeight: '100vh', background: heroGradient, display: 'flex', alignItems: 'center', py: 8 }}>
       <Container maxWidth="xs">
@@ -24,10 +47,26 @@ export default function Login() {
               <Typography variant="h5" fontWeight={800}>Masuk ke Qpeduli</Typography>
               <Typography variant="body2" color="text.secondary">Lanjutkan diskusi & aksi sosialmu</Typography>
             </Stack>
-            <Stack spacing={2} component="form" onSubmit={(e) => { e.preventDefault(); navigate('/'); }}>
-              <TextField label="Email atau Username" fullWidth required />
-              <TextField label="Kata Sandi" type="password" fullWidth required />
-              <Button variant="contained" size="large" type="submit">Masuk</Button>
+            {error && <Alert severity="error" sx={{ mb: 2, borderRadius: 3 }}>{error}</Alert>}
+            <Stack spacing={2} component="form" onSubmit={handleSubmit}>
+              <TextField
+                label="Email atau Username"
+                fullWidth
+                required
+                value={identifier}
+                onChange={(e) => setIdentifier(e.target.value)}
+              />
+              <TextField
+                label="Kata Sandi"
+                type="password"
+                fullWidth
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <Button variant="contained" size="large" type="submit" disabled={loading}>
+                {loading ? 'Memproses...' : 'Masuk'}
+              </Button>
             </Stack>
             <Divider sx={{ my: 3 }}>atau</Divider>
             <Button fullWidth variant="outlined" onClick={() => navigate('/')}>Masuk sebagai Tamu</Button>

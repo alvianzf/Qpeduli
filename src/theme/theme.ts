@@ -15,16 +15,20 @@ declare module '@mui/material/styles' {
   }
 }
 
+// Matches PT INI TIKET QUE's brand: blue primary, orange CTA, white base.
 export const brand = {
-  deep: '#0B1E4D',
-  primary: '#123A8C',
-  mid: '#1E5FE0',
-  bright: '#3B82F6',
-  sky: '#60A5FA',
+  deep: '#2F4F8A',
+  primary: '#4267B2',
+  mid: '#4267B2',
+  bright: '#5A7EC4',
+  sky: '#5A7EC4',
   ice: '#DBEAFE',
+  cta: '#FF5A00',
+  ctaLight: '#FF7A33',
+  ctaDark: '#E65100',
 };
 
-export const heroGradient = `linear-gradient(180deg, ${brand.deep} 0%, ${brand.primary} 32%, ${brand.mid} 62%, ${brand.bright} 100%)`;
+export const heroGradient = `linear-gradient(180deg, ${brand.deep} 0%, ${brand.primary} 45%, ${brand.bright} 100%)`;
 export const pageGradient = `linear-gradient(180deg, #EFF4FF 0%, #F7FAFF 40%, #FFFFFF 100%)`;
 export const cardGlass = (opacity = 0.6) => `linear-gradient(145deg, ${alpha('#FFFFFF', opacity)}, ${alpha('#EAF1FF', opacity - 0.15)})`;
 
@@ -32,16 +36,17 @@ const theme = createTheme({
   palette: {
     mode: 'light',
     primary: {
-      main: brand.mid,
-      dark: brand.primary,
-      light: brand.sky,
+      main: brand.primary,
+      dark: brand.deep,
+      light: brand.bright,
       contrastText: '#fff',
     },
     secondary: {
-      main: '#0EA5E9',
+      main: '#0AD1FF',
+      dark: '#00B3D9',
     },
     success: { main: '#16A34A' },
-    warning: { main: '#F59E0B' },
+    warning: { main: brand.cta, light: brand.ctaLight, dark: brand.ctaDark, contrastText: '#fff' },
     error: { main: '#EF4444' },
     background: {
       default: '#F3F7FF',
@@ -57,7 +62,7 @@ const theme = createTheme({
     },
   },
   shape: {
-    borderRadius: 18,
+    borderRadius: 16,
   },
   typography: {
     fontFamily: `'Plus Jakarta Sans', 'Inter', 'Segoe UI', sans-serif`,
@@ -82,11 +87,22 @@ const theme = createTheme({
         {
           props: { variant: 'contained', color: 'primary' },
           style: {
-            backgroundImage: `linear-gradient(135deg, ${brand.mid}, ${brand.bright})`,
-            boxShadow: `0 8px 24px ${alpha(brand.mid, 0.35)}`,
+            backgroundImage: `linear-gradient(135deg, ${brand.primary}, ${brand.bright})`,
+            boxShadow: `0 8px 24px ${alpha(brand.primary, 0.35)}`,
             '&:hover': {
-              backgroundImage: `linear-gradient(135deg, ${brand.primary}, ${brand.mid})`,
-              boxShadow: `0 10px 28px ${alpha(brand.mid, 0.45)}`,
+              backgroundImage: `linear-gradient(135deg, ${brand.deep}, ${brand.primary})`,
+              boxShadow: `0 10px 28px ${alpha(brand.primary, 0.45)}`,
+            },
+          },
+        },
+        {
+          props: { variant: 'contained', color: 'warning' },
+          style: {
+            backgroundImage: `linear-gradient(135deg, ${brand.cta}, ${brand.ctaLight})`,
+            boxShadow: `0 8px 24px ${alpha(brand.cta, 0.35)}`,
+            '&:hover': {
+              backgroundImage: `linear-gradient(135deg, ${brand.ctaDark}, ${brand.cta})`,
+              boxShadow: `0 10px 28px ${alpha(brand.cta, 0.45)}`,
             },
           },
         },
@@ -131,19 +147,33 @@ const theme = createTheme({
     },
     MuiChip: {
       styleOverrides: {
-        root: { fontWeight: 700 },
+        root: {
+          fontWeight: 700,
+          height: 30,
+          paddingInline: 4,
+        },
+        label: {
+          paddingInline: 10,
+        },
+        sizeSmall: {
+          height: 26,
+        },
+        icon: {
+          marginLeft: 8,
+          marginRight: -4,
+        },
       },
     },
     MuiLinearProgress: {
       styleOverrides: {
         root: {
           borderRadius: 999,
-          height: 10,
-          backgroundColor: alpha(brand.mid, 0.12),
+          height: 12,
+          backgroundColor: alpha(brand.primary, 0.1),
         },
         bar: {
           borderRadius: 999,
-          backgroundImage: `linear-gradient(90deg, ${brand.mid}, ${brand.sky})`,
+          backgroundImage: `linear-gradient(90deg, ${brand.cta}, ${brand.ctaLight})`,
         },
       },
     },

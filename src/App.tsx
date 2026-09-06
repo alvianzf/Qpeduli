@@ -44,7 +44,7 @@ export default function App() {
             <Route path="/komunitas/:slug" element={<PageTransition><Komunitas /></PageTransition>} />
             <Route path="/thread/:id" element={<PageTransition><ThreadDetail /></PageTransition>} />
             <Route path="/fjb" element={<PageTransition><FjbAmal /></PageTransition>} />
-            <Route path="/profil" element={<PageTransition><Profile /></PageTransition>} />
+            <Route path="/profil/:username" element={<PageTransition><Profile /></PageTransition>} />
             <Route path="/keamanan" element={<PageTransition><TrustSafety /></PageTransition>} />
             <Route path="/masuk" element={<PageTransition><Login /></PageTransition>} />
             <Route path="/daftar" element={<PageTransition><Register /></PageTransition>} />

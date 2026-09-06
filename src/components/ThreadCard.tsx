@@ -13,15 +13,15 @@ import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutlined';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 import type { Thread } from '../types';
-import { users, timeAgo } from '../data/mockData';
+import { timeAgo } from '../data/mockData';
+import { userCache as users, categoryCache } from '../lib/adapters';
 import VerifiedBadge from './VerifiedBadge';
 import CampaignProgress from './CampaignProgress';
-import { categories } from '../data/mockData';
 
 export default function ThreadCard({ thread, index = 0 }: { thread: Thread; index?: number }) {
   const navigate = useNavigate();
   const author = users[thread.authorId];
-  const category = categories.find((c) => c.id === thread.categoryId);
+  const category = categoryCache[thread.categoryId];
 
   return (
     <motion.div
@@ -38,7 +38,7 @@ export default function ThreadCard({ thread, index = 0 }: { thread: Thread; inde
                 {author.avatarInitial}
               </Avatar>
               <Box sx={{ flex: 1, minWidth: 0 }}>
-                <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap">
+                <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap" useFlexGap sx={{ rowGap: 0.75 }}>
                   <Typography variant="subtitle2" fontWeight={700} noWrap>
                     {author.name}
                   </Typography>
@@ -50,7 +50,7 @@ export default function ThreadCard({ thread, index = 0 }: { thread: Thread; inde
                     <Chip
                       label={category.name}
                       size="small"
-                      sx={{ height: 20, fontSize: 11, bgcolor: `${category.color}1A`, color: category.color }}
+                      sx={{ bgcolor: `${category.color}1A`, color: category.color }}
                     />
                   )}
                   {thread.hot && (
@@ -59,7 +59,6 @@ export default function ThreadCard({ thread, index = 0 }: { thread: Thread; inde
                       label="Trending"
                       size="small"
                       color="warning"
-                      sx={{ height: 20, fontSize: 11 }}
                     />
                   )}
                 </Stack>
@@ -71,7 +70,7 @@ export default function ThreadCard({ thread, index = 0 }: { thread: Thread; inde
                       label="Aksi Sosial"
                       size="small"
                       color="primary"
-                      sx={{ mr: 1, height: 22, fontSize: 11, verticalAlign: 'middle' }}
+                      sx={{ mr: 1, verticalAlign: 'middle' }}
                     />
                   )}
                   {thread.title}

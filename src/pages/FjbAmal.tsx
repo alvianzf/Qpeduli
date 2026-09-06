@@ -21,18 +21,21 @@ import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
 import StorefrontIcon from '@mui/icons-material/Storefront';
 import { motion } from 'framer-motion';
-import { fjbItems, threads, users, formatRupiah } from '../data/mockData';
+import CircularProgress from '@mui/material/CircularProgress';
+import { formatRupiah } from '../data/mockData';
+import { userCache as users } from '../lib/adapters';
+import { useFjbItems } from '../lib/queries';
+import type { FjbItem } from '../types';
 
 export default function FjbAmal() {
   const [query, setQuery] = useState('');
-  const [selected, setSelected] = useState<typeof fjbItems[number] | null>(null);
+  const [selected, setSelected] = useState<FjbItem | null>(null);
+  const { data: fjbItems = [], isLoading } = useFjbItems();
 
   const filtered = useMemo(
     () => fjbItems.filter((f) => f.title.toLowerCase().includes(query.toLowerCase())),
-    [query],
+    [query, fjbItems],
   );
-
-  const campaignFor = (campaignId: string) => threads.find((t) => t.campaign?.id === campaignId);
 
   return (
     <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', pb: 10 }}>
@@ -58,6 +61,10 @@ export default function FjbAmal() {
             slotProps={{ input: { startAdornment: <InputAdornment position="start"><SearchIcon /></InputAdornment> } }}
           />
         </Card>
+
+        {isLoading && (
+          <Stack alignItems="center" sx={{ py: 6 }}><CircularProgress /></Stack>
+        )}
 
         <Grid container spacing={2.5}>
           {filtered.map((item, i) => {
@@ -90,7 +97,8 @@ export default function FjbAmal() {
                           <Chip label={item.category} size="small" variant="outlined" />
                         </Stack>
                         <Typography variant="caption" color="text.secondary">
-                          Oleh {seller.name} · untuk kampanye "{campaignFor(item.campaignId)?.title.replace('[Aksi Sosial] ', '').slice(0, 40)}..."
+                          Oleh {seller?.name}
+                          {item.campaignTitle && ` · untuk kampanye "${item.campaignTitle.replace('[Aksi Sosial] ', '').slice(0, 40)}..."`}
                         </Typography>
                       </CardContent>
                     </CardActionArea>
@@ -125,7 +133,7 @@ export default function FjbAmal() {
             </DialogContent>
             <DialogActions sx={{ p: 2 }}>
               <Button onClick={() => setSelected(null)} color="inherit">Tutup</Button>
-              <Button variant="contained" onClick={() => setSelected(null)}>Beli Sekarang</Button>
+              <Button variant="contained" color="warning" onClick={() => setSelected(null)}>Beli Sekarang</Button>
             </DialogActions>
           </>
         )}

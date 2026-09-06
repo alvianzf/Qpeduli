@@ -14,17 +14,16 @@ export default function Logo({ size = 40 }: { size?: number }) {
       aria-label="Qpeduli"
     >
       <defs>
-        <linearGradient id={gradId} x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#1E5FE0" />
-          <stop offset="1" stopColor="#60A5FA" />
+        <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="64" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#5A7EC4" />
+          <stop offset="1" stopColor="#2F4F8A" />
         </linearGradient>
       </defs>
       <rect width="64" height="64" rx="16" fill={`url(#${gradId})`} />
-      <rect x="12" y="13" width="40" height="25" rx="10" fill="#fff" />
-      <path d="M19 36 L13 49 L27 37 Z" fill="#fff" />
+      <circle cx="29" cy="28" r="12" fill="none" stroke="#fff" strokeWidth="7" />
       <path
-        d="M32 33C32 33 22 26.5 22 20.8C22 17.6 24.7 15.5 27.4 15.9C29.2 16.2 30.4 17.4 32 18.8C33.6 17.4 34.8 16.2 36.6 15.9C39.3 15.5 42 17.6 42 20.8C42 26.5 32 33 32 33Z"
-        fill={`url(#${gradId})`}
+        d="M39 46C39 46 33 42 33 38.2C33 36 34.8 34.5 36.6 34.8C37.8 35 38.5 35.9 39 36.7C39.5 35.9 40.2 35 41.4 34.8C43.2 34.5 45 36 45 38.2C45 42 39 46 39 46Z"
+        fill="#FF5A00"
       />
     </svg>
   );

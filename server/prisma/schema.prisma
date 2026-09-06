@@ -1,0 +1,195 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  KSATRIA_KOMUNITAS
+  ADMIN
+}
+
+enum CampaignStatus {
+  PENDING_VERIFICATION
+  ACTIVE
+  COMPLETED
+}
+
+enum FjbCondition {
+  BARU
+  SEPERTI_BARU
+  BEKAS_LAYAK_PAKAI
+}
+
+enum DonationStatus {
+  PENDING
+  CONFIRMED
+  FAILED
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+  username     String   @unique
+  passwordHash String
+  name         String
+  city         String?
+  bio          String?
+  avatarColor  String   @default("#2563EB")
+  role         Role     @default(USER)
+  karma        Int      @default(0)
+  isVerified   Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  threads      Thread[]
+  comments     Comment[]
+  donations    Donation[]
+  fjbItems     FjbItem[]
+  updates      CampaignUpdate[]
+  guaranteeing Campaign[]       @relation("Guarantor")
+  karmaLogs    KarmaLog[]
+
+  @@map("users")
+}
+
+model Category {
+  id          Int      @id @default(autoincrement())
+  name        String
+  slug        String   @unique
+  description String?
+  icon        String?
+  color       String?
+  threads     Thread[]
+
+  @@map("categories")
+}
+
+model Thread {
+  id           Int      @id @default(autoincrement())
+  categoryId   Int
+  category     Category @relation(fields: [categoryId], references: [id])
+  authorId     Int
+  author       User     @relation(fields: [authorId], references: [id])
+  title        String
+  content      String
+  isAksiSosial Boolean  @default(false)
+  views        Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  campaign Campaign?
+  comments Comment[]
+
+  @@map("threads")
+}
+
+model Campaign {
+  id          Int            @id @default(autoincrement())
+  threadId    Int            @unique
+  thread      Thread         @relation(fields: [threadId], references: [id])
+  target      Decimal
+  collected   Decimal        @default(0)
+  disbursed   Decimal        @default(0)
+  donorCount  Int            @default(0)
+  deadline    DateTime
+  status      CampaignStatus @default(PENDING_VERIFICATION)
+  guarantorId Int?
+  guarantor   User?          @relation("Guarantor", fields: [guarantorId], references: [id])
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  milestones Milestone[]
+  updates    CampaignUpdate[]
+  donations  Donation[]
+  fjbItems   FjbItem[]
+
+  @@map("campaigns")
+}
+
+model Milestone {
+  id         Int       @id @default(autoincrement())
+  campaignId Int
+  campaign   Campaign  @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  label      String
+  amount     Decimal
+  released   Boolean   @default(false)
+  releasedAt DateTime?
+  order      Int       @default(0)
+
+  @@map("milestones")
+}
+
+model CampaignUpdate {
+  id         Int      @id @default(autoincrement())
+  campaignId Int
+  campaign   Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  authorId   Int
+  author     User     @relation(fields: [authorId], references: [id])
+  title      String
+  content    String
+  createdAt  DateTime @default(now())
+
+  @@map("campaign_updates")
+}
+
+model Comment {
+  id         Int      @id @default(autoincrement())
+  threadId   Int
+  thread     Thread   @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  authorId   Int
+  author     User     @relation(fields: [authorId], references: [id])
+  content    String
+  karmaGiven Int      @default(0)
+  createdAt  DateTime @default(now())
+
+  @@map("comments")
+}
+
+model Donation {
+  id          Int            @id @default(autoincrement())
+  campaignId  Int
+  campaign    Campaign       @relation(fields: [campaignId], references: [id])
+  donorId     Int?
+  donor       User?          @relation(fields: [donorId], references: [id])
+  amount      Decimal
+  anonymous   Boolean        @default(false)
+  status      DonationStatus @default(PENDING)
+  createdAt   DateTime       @default(now())
+  confirmedAt DateTime?
+
+  @@map("donations")
+}
+
+model FjbItem {
+  id          Int          @id @default(autoincrement())
+  title       String
+  price       Decimal
+  sellerId    Int
+  seller      User         @relation(fields: [sellerId], references: [id])
+  condition   FjbCondition
+  category    String
+  emoji       String?
+  campaignId  Int?
+  campaign    Campaign?    @relation(fields: [campaignId], references: [id])
+  sold        Boolean      @default(false)
+  description String?
+  createdAt   DateTime     @default(now())
+
+  @@map("fjb_items")
+}
+
+model KarmaLog {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  amount    Int
+  reason    String
+  createdAt DateTime @default(now())
+
+  @@map("karma_logs")
+}

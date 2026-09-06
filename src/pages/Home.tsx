@@ -23,7 +23,8 @@ import GroupsIcon from '@mui/icons-material/Groups';
 import ParkIcon from '@mui/icons-material/Park';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { heroGradient } from '../theme/theme';
-import { categories, threads, fjbItems, formatRupiah } from '../data/mockData';
+import { formatRupiah } from '../data/mockData';
+import { useCategories, useThreads, useFjbItems, useStats } from '../lib/queries';
 import ThreadCard from '../components/ThreadCard';
 import CampaignProgress from '../components/CampaignProgress';
 
@@ -36,12 +37,6 @@ const iconMap: Record<string, ReactElement> = {
   Park: <ParkIcon />,
 };
 
-const stats = [
-  { label: 'Total Dana Tersalurkan', value: 'Rp 4,8 M+' },
-  { label: 'Aksi Sosial Aktif', value: '312' },
-  { label: 'Anggota Komunitas', value: '58.000+' },
-  { label: 'Kota Terjangkau', value: '87' },
-];
 
 const steps = [
   {
@@ -68,7 +63,18 @@ const steps = [
 
 export default function Home() {
   const navigate = useNavigate();
-  const featured = threads.filter((t) => t.isAksiSosial && t.campaign?.status !== 'completed').slice(0, 3);
+  const { data: categories = [] } = useCategories();
+  const { data: threads = [] } = useThreads({ filter: 'aksi' });
+  const { data: fjbItems = [] } = useFjbItems();
+  const { data: stats } = useStats();
+  const featured = threads.filter((t) => t.campaign?.status !== 'completed').slice(0, 3);
+
+  const statCards = [
+    { label: 'Total Dana Tersalurkan', value: formatRupiah(stats?.totalDisbursed ?? 0) },
+    { label: 'Aksi Sosial Aktif', value: String(stats?.activeCampaigns ?? 0) },
+    { label: 'Anggota Komunitas', value: (stats?.totalUsers ?? 0).toLocaleString('id-ID') },
+    { label: 'Kota Terjangkau', value: String(stats?.citiesReached ?? 0) },
+  ];
 
   return (
     <Box>
@@ -166,7 +172,7 @@ export default function Home() {
       <Container maxWidth="lg" sx={{ mt: { xs: -9, md: -11 }, position: 'relative', zIndex: 2 }}>
         <Card sx={{ p: { xs: 2.5, md: 4 } }}>
           <Grid container spacing={2}>
-            {stats.map((s, i) => (
+            {statCards.map((s, i) => (
               <Grid size={{ xs: 6, md: 3 }} key={s.label}>
                 <motion.div
                   initial={{ opacity: 0, y: 12 }}

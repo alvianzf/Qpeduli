@@ -12,6 +12,7 @@ import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
+import CircularProgress from '@mui/material/CircularProgress';
 import { motion } from 'framer-motion';
 import VolunteerActivismIcon from '@mui/icons-material/VolunteerActivism';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -20,7 +21,10 @@ import SendIcon from '@mui/icons-material/Send';
 import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
 import ShieldIcon from '@mui/icons-material/Shield';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { threads, users, currentUser, formatRupiah, timeAgo, categories } from '../data/mockData';
+import { formatRupiah, timeAgo } from '../data/mockData';
+import { userCache as users, categoryCache } from '../lib/adapters';
+import { useThread, useAddComment, apiErrorMessage } from '../lib/queries';
+import { useAuth } from '../context/AuthContext';
 import VerifiedBadge from '../components/VerifiedBadge';
 import CampaignProgress from '../components/CampaignProgress';
 import DonateDialog from '../components/DonateDialog';
@@ -28,10 +32,20 @@ import DonateDialog from '../components/DonateDialog';
 export default function ThreadDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const thread = threads.find((t) => t.id === id);
+  const { user } = useAuth();
+  const { data: thread, isLoading } = useThread(id);
+  const addComment = useAddComment(id || '');
   const [donateOpen, setDonateOpen] = useState(false);
   const [comment, setComment] = useState('');
-  const [localComments, setLocalComments] = useState(thread?.comments ?? []);
+  const [commentError, setCommentError] = useState('');
+
+  if (isLoading) {
+    return (
+      <Container sx={{ py: 12, textAlign: 'center' }}>
+        <CircularProgress />
+      </Container>
+    );
+  }
 
   if (!thread) {
     return (
@@ -44,20 +58,26 @@ export default function ThreadDetail() {
 
   const author = users[thread.authorId];
   const guarantor = thread.campaign?.guarantorId ? users[thread.campaign.guarantorId] : null;
-  const category = categories.find((c) => c.id === thread.categoryId);
+  const category = categoryCache[thread.categoryId];
 
-  const handleSendComment = () => {
+  const handleSendComment = async () => {
     if (!comment.trim()) return;
-    setLocalComments((prev) => [
-      ...prev,
-      { id: `local-${Date.now()}`, authorId: currentUser.id, date: new Date().toISOString(), content: comment.trim() },
-    ]);
-    setComment('');
+    if (!user) {
+      navigate('/masuk');
+      return;
+    }
+    setCommentError('');
+    try {
+      await addComment.mutateAsync(comment.trim());
+      setComment('');
+    } catch (err) {
+      setCommentError(apiErrorMessage(err, 'Gagal mengirim komentar.'));
+    }
   };
 
   return (
     <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', pb: 10 }}>
-      <Box sx={{ background: 'linear-gradient(180deg,#123A8C,#1E5FE0)', pt: { xs: 4, md: 5 }, pb: { xs: 12, md: 14 } }}>
+      <Box sx={{ background: 'linear-gradient(180deg,#2F4F8A,#4267B2)', pt: { xs: 4, md: 5 }, pb: { xs: 12, md: 14 } }}>
         <Container maxWidth="lg">
           <Button
             startIcon={<ArrowBackIcon />}
@@ -89,14 +109,14 @@ export default function ThreadDetail() {
             <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
               <Card sx={{ p: { xs: 2.5, md: 3.5 }, mb: 3 }}>
                 <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 2 }}>
-                  <Avatar sx={{ bgcolor: author.avatarColor, width: 46, height: 46, fontWeight: 700 }}>{author.avatarInitial}</Avatar>
+                  <Avatar sx={{ bgcolor: author?.avatarColor, width: 46, height: 46, fontWeight: 700 }}>{author?.avatarInitial}</Avatar>
                   <Box>
                     <Stack direction="row" alignItems="center" spacing={0.5}>
-                      <Typography fontWeight={800}>{author.name}</Typography>
-                      {author.isKsatria && <VerifiedBadge />}
+                      <Typography fontWeight={800}>{author?.name}</Typography>
+                      {author?.isKsatria && <VerifiedBadge />}
                     </Stack>
                     <Typography variant="caption" color="text.secondary">
-                      {author.city} · {timeAgo(thread.createdAt)} · {thread.views.toLocaleString('id-ID')} dilihat
+                      {author?.city} · {timeAgo(thread.createdAt)} · {thread.views.toLocaleString('id-ID')} dilihat
                     </Typography>
                   </Box>
                 </Stack>
@@ -108,29 +128,33 @@ export default function ThreadDetail() {
               <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.1 }}>
                 <Card sx={{ p: { xs: 2.5, md: 3.5 }, mb: 3 }}>
                   <Typography variant="h6" fontWeight={800} sx={{ mb: 2 }}>📋 Progres Pencairan Dana Bertahap</Typography>
-                  <Stack spacing={1.5}>
-                    {thread.campaign.milestones.map((m) => (
-                      <Stack key={m.id} direction="row" spacing={1.5} alignItems="center">
-                        {m.released ? (
-                          <CheckCircleIcon color="success" />
-                        ) : (
-                          <RadioButtonUncheckedIcon sx={{ color: 'text.disabled' }} />
-                        )}
-                        <Box sx={{ flex: 1 }}>
-                          <Typography variant="body2" fontWeight={700} sx={{ textDecoration: m.released ? 'none' : 'none' }}>
-                            {m.label}
-                          </Typography>
-                          <Typography variant="caption" color="text.secondary">{formatRupiah(m.amount)}</Typography>
-                        </Box>
-                        <Chip
-                          label={m.released ? 'Sudah Cair' : 'Menunggu Verifikasi'}
-                          size="small"
-                          color={m.released ? 'success' : 'default'}
-                          variant={m.released ? 'filled' : 'outlined'}
-                        />
-                      </Stack>
-                    ))}
-                  </Stack>
+                  {thread.campaign.milestones.length === 0 ? (
+                    <Typography variant="body2" color="text.secondary">
+                      Kreator belum menetapkan tahapan pencairan untuk kampanye ini.
+                    </Typography>
+                  ) : (
+                    <Stack spacing={1.5}>
+                      {thread.campaign.milestones.map((m) => (
+                        <Stack key={m.id} direction="row" spacing={1.5} alignItems="center">
+                          {m.released ? (
+                            <CheckCircleIcon color="success" />
+                          ) : (
+                            <RadioButtonUncheckedIcon sx={{ color: 'text.disabled' }} />
+                          )}
+                          <Box sx={{ flex: 1 }}>
+                            <Typography variant="body2" fontWeight={700}>{m.label}</Typography>
+                            <Typography variant="caption" color="text.secondary">{formatRupiah(m.amount)}</Typography>
+                          </Box>
+                          <Chip
+                            label={m.released ? 'Sudah Cair' : 'Menunggu Verifikasi'}
+                            size="small"
+                            color={m.released ? 'success' : 'default'}
+                            variant={m.released ? 'filled' : 'outlined'}
+                          />
+                        </Stack>
+                      ))}
+                    </Stack>
+                  )}
                   <Divider sx={{ my: 2 }} />
                   <Typography variant="caption" color="text.secondary">
                     Dana dicairkan bertahap setelah verifikasi komunitas & admin platform{guarantor ? `, dijamin oleh ${guarantor.name} (Ksatria Komunitas)` : ''}.
@@ -145,11 +169,8 @@ export default function ThreadDetail() {
                   <Typography variant="h6" fontWeight={800} sx={{ mb: 2 }}>📢 Update Transparansi</Typography>
                   <Stack spacing={2.5}>
                     {thread.updates.map((u) => (
-                      <Box key={u.id} sx={{ pl: 2, borderLeft: '3px solid #1E5FE0' }}>
-                        <Stack direction="row" spacing={1} alignItems="center">
-                          {u.imageEmoji && <Typography>{u.imageEmoji}</Typography>}
-                          <Typography fontWeight={700}>{u.title}</Typography>
-                        </Stack>
+                      <Box key={u.id} sx={{ pl: 2, borderLeft: '3px solid #4267B2' }}>
+                        <Typography fontWeight={700}>{u.title}</Typography>
                         <Typography variant="caption" color="text.secondary">{timeAgo(u.date)}</Typography>
                         <Typography variant="body2" sx={{ mt: 0.5 }}>{u.content}</Typography>
                       </Box>
@@ -161,26 +182,30 @@ export default function ThreadDetail() {
 
             <Card sx={{ p: { xs: 2.5, md: 3.5 } }}>
               <Typography variant="h6" fontWeight={800} sx={{ mb: 2 }}>
-                💬 Diskusi & Komentar ({localComments.length})
+                💬 Diskusi & Komentar ({thread.comments.length})
               </Typography>
+              {commentError && <Typography variant="body2" color="error" sx={{ mb: 1.5 }}>{commentError}</Typography>}
               <Stack direction="row" spacing={1.5} sx={{ mb: 3 }}>
-                <Avatar sx={{ bgcolor: currentUser.avatarColor, width: 38, height: 38, fontWeight: 700, fontSize: 14 }}>
-                  {currentUser.avatarInitial}
+                <Avatar sx={{ bgcolor: user?.avatarColor || '#94A3B8', width: 38, height: 38, fontWeight: 700, fontSize: 14 }}>
+                  {user ? user.name.charAt(0).toUpperCase() : '?'}
                 </Avatar>
                 <Stack direction="row" spacing={1} sx={{ flex: 1 }}>
                   <TextField
                     fullWidth
                     size="small"
-                    placeholder="Tulis komentar, pertanyaan, atau dukungan..."
+                    placeholder={user ? 'Tulis komentar, pertanyaan, atau dukungan...' : 'Masuk untuk berkomentar'}
                     value={comment}
                     onChange={(e) => setComment(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && handleSendComment()}
+                    onFocus={() => !user && navigate('/masuk')}
                   />
-                  <IconButton color="primary" onClick={handleSendComment}><SendIcon /></IconButton>
+                  <IconButton color="primary" onClick={handleSendComment} disabled={addComment.isPending}>
+                    <SendIcon />
+                  </IconButton>
                 </Stack>
               </Stack>
               <Stack spacing={2.5} divider={<Divider />}>
-                {localComments.map((c) => {
+                {thread.comments.map((c) => {
                   const u = users[c.authorId];
                   return (
                     <Stack direction="row" spacing={1.5} key={c.id} sx={{ display: 'flex' }}>
@@ -191,11 +216,11 @@ export default function ThreadDetail() {
                         <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap">
                           <Typography variant="body2" fontWeight={700}>{u?.name}</Typography>
                           {u?.isKsatria && <VerifiedBadge size={14} />}
-                          {c.isDonor && <Chip label="Donatur" size="small" color="primary" sx={{ height: 18, fontSize: 10 }} />}
+                          {c.isDonor && <Chip label="Donatur" size="small" color="primary" />}
                           <Typography variant="caption" color="text.secondary">· {timeAgo(c.date)}</Typography>
                         </Stack>
                         <Typography variant="body2" sx={{ mt: 0.5 }}>{c.content}</Typography>
-                        {c.karmaGiven && (
+                        {c.karmaGiven > 0 && (
                           <Stack direction="row" spacing={0.5} alignItems="center" sx={{ mt: 0.5 }}>
                             <ThumbUpAltOutlinedIcon sx={{ fontSize: 14, color: 'text.disabled' }} />
                             <Typography variant="caption" color="text.disabled">+{c.karmaGiven} Poin Kebaikan</Typography>
@@ -219,6 +244,7 @@ export default function ThreadDetail() {
                       fullWidth
                       size="large"
                       variant="contained"
+                      color="warning"
                       startIcon={<VolunteerActivismIcon />}
                       sx={{ mt: 2.5 }}
                       onClick={() => setDonateOpen(true)}
@@ -255,24 +281,26 @@ export default function ThreadDetail() {
                 </Card>
               )}
 
-              <Card sx={{ p: 3 }}>
-                <Typography variant="subtitle2" fontWeight={800} sx={{ mb: 1.5 }}>Tentang Pembuat Thread</Typography>
-                <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 1.5 }}>
-                  <Avatar sx={{ bgcolor: author.avatarColor, fontWeight: 700 }}>{author.avatarInitial}</Avatar>
-                  <Box>
-                    <Stack direction="row" spacing={0.5} alignItems="center">
-                      <Typography variant="body2" fontWeight={700}>{author.name}</Typography>
-                      {author.isKsatria && <VerifiedBadge size={14} />}
-                    </Stack>
-                    <Typography variant="caption" color="text.secondary">Bergabung {new Date(author.joinedAt).getFullYear()}</Typography>
-                  </Box>
-                </Stack>
-                <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
-                  {author.badges.map((b) => (
-                    <Chip key={b} label={b} size="small" variant="outlined" />
-                  ))}
-                </Stack>
-              </Card>
+              {author && (
+                <Card sx={{ p: 3 }}>
+                  <Typography variant="subtitle2" fontWeight={800} sx={{ mb: 1.5 }}>Tentang Pembuat Thread</Typography>
+                  <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 1.5 }}>
+                    <Avatar sx={{ bgcolor: author.avatarColor, fontWeight: 700 }}>{author.avatarInitial}</Avatar>
+                    <Box>
+                      <Stack direction="row" spacing={0.5} alignItems="center">
+                        <Typography variant="body2" fontWeight={700}>{author.name}</Typography>
+                        {author.isKsatria && <VerifiedBadge size={14} />}
+                      </Stack>
+                      <Typography variant="caption" color="text.secondary">Bergabung {new Date(author.joinedAt).getFullYear()}</Typography>
+                    </Box>
+                  </Stack>
+                  <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+                    {author.badges.map((b) => (
+                      <Chip key={b} label={b} size="small" variant="outlined" />
+                    ))}
+                  </Stack>
+                </Card>
+              )}
             </Box>
           </Grid>
         </Grid>

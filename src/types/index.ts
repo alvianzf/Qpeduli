@@ -76,6 +76,7 @@ export interface FjbItem {
   category: string;
   emoji: string;
   campaignId: string;
+  campaignTitle?: string;
   sold: boolean;
   description: string;
 }

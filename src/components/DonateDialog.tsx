@@ -15,6 +15,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { motion, AnimatePresence } from 'framer-motion';
 import { formatRupiah } from '../data/mockData';
+import { useDonate, apiErrorMessage } from '../lib/queries';
 import type { Thread } from '../types';
 
 const amounts = [50000, 100000, 250000, 500000];
@@ -24,16 +25,29 @@ export default function DonateDialog({ open, onClose, thread }: { open: boolean;
   const [custom, setCustom] = useState('');
   const [anon, setAnon] = useState(false);
   const [done, setDone] = useState(false);
+  const [error, setError] = useState('');
+  const donate = useDonate(thread?.campaign?.id || '');
 
   const handleClose = () => {
     setDone(false);
     setAmount(100000);
     setCustom('');
+    setError('');
     onClose();
   };
 
   if (!thread) return null;
   const finalAmount = custom ? Number(custom) : amount;
+
+  const handleDonate = async () => {
+    setError('');
+    try {
+      await donate.mutateAsync({ amount: finalAmount, anonymous: anon });
+      setDone(true);
+    } catch (err) {
+      setError(apiErrorMessage(err, 'Gagal mencatat donasi.'));
+    }
+  };
 
   return (
     <Dialog open={open} onClose={handleClose} fullWidth maxWidth="xs">
@@ -56,13 +70,14 @@ export default function DonateDialog({ open, onClose, thread }: { open: boolean;
                 </motion.div>
                 <Typography variant="h6" fontWeight={800}>Terima kasih!</Typography>
                 <Typography variant="body2" color="text.secondary" textAlign="center">
-                  Donasi {formatRupiah(finalAmount)} kamu untuk "{thread.title}" berhasil disimulasikan. Kamu mendapat +{Math.round(finalAmount / 10000)} Poin Kebaikan.
+                  Donasi {formatRupiah(finalAmount)} kamu untuk "{thread.title}" sudah tercatat dan menunggu konfirmasi pembayaran oleh admin sebelum masuk ke total kampanye.
                 </Typography>
               </Stack>
             </motion.div>
           ) : (
             <motion.div key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
               <Stack spacing={2.5} sx={{ mt: 1 }}>
+                {error && <Alert severity="error" sx={{ borderRadius: 3 }}>{error}</Alert>}
                 <Typography variant="body2" color="text.secondary" noWrap>
                   Untuk: <b>{thread.title}</b>
                 </Typography>
@@ -71,7 +86,7 @@ export default function DonateDialog({ open, onClose, thread }: { open: boolean;
                     <Chip
                       key={a}
                       label={formatRupiah(a)}
-                      color={amount === a && !custom ? 'primary' : 'default'}
+                      color={amount === a && !custom ? 'warning' : 'default'}
                       onClick={() => {
                         setAmount(a);
                         setCustom('');
@@ -105,8 +120,8 @@ export default function DonateDialog({ open, onClose, thread }: { open: boolean;
         ) : (
           <>
             <Button onClick={handleClose} color="inherit">Batal</Button>
-            <Button onClick={() => setDone(true)} variant="contained" disabled={!finalAmount}>
-              Donasi {finalAmount ? formatRupiah(finalAmount) : ''}
+            <Button onClick={handleDonate} variant="contained" color="warning" disabled={!finalAmount || donate.isPending}>
+              {donate.isPending ? 'Memproses...' : `Donasi ${finalAmount ? formatRupiah(finalAmount) : ''}`}
             </Button>
           </>
         )}

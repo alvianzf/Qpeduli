@@ -1,4 +1,4 @@
-import { useMemo, useState, type ReactElement } from 'react';
+import { useState, type ReactElement } from 'react';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Typography from '../components/ui/Txt';
@@ -15,8 +15,9 @@ import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
 import LandslideIcon from '@mui/icons-material/Landslide';
 import GroupsIcon from '@mui/icons-material/Groups';
 import ParkIcon from '@mui/icons-material/Park';
-import { categories, threads } from '../data/mockData';
+import { useCategories, useThreads } from '../lib/queries';
 import ThreadCard from '../components/ThreadCard';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const iconMap: Record<string, ReactElement> = {
   LocationCity: <LocationCityIcon />,
@@ -31,15 +32,12 @@ export default function Komunitas() {
   const { slug } = useParams();
   const navigate = useNavigate();
   const [filter, setFilter] = useState<'all' | 'aksi' | 'diskusi'>('all');
+  const { data: categories = [] } = useCategories();
   const activeCategory = categories.find((c) => c.slug === slug);
-
-  const filteredThreads = useMemo(() => {
-    let list = threads;
-    if (activeCategory) list = list.filter((t) => t.categoryId === activeCategory.id);
-    if (filter === 'aksi') list = list.filter((t) => t.isAksiSosial);
-    if (filter === 'diskusi') list = list.filter((t) => !t.isAksiSosial);
-    return [...list].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-  }, [activeCategory, filter]);
+  const { data: filteredThreads = [], isLoading } = useThreads({
+    category: slug,
+    filter: filter === 'all' ? undefined : filter,
+  });
 
   return (
     <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', pb: 8 }}>
@@ -111,7 +109,9 @@ export default function Komunitas() {
         </Tabs>
 
         <Stack spacing={2.5}>
-          {filteredThreads.length ? (
+          {isLoading ? (
+            <Stack alignItems="center" sx={{ py: 6 }}><CircularProgress /></Stack>
+          ) : filteredThreads.length ? (
             filteredThreads.map((t, i) => <ThreadCard thread={t} key={t.id} index={i} />)
           ) : (
             <Typography color="text.secondary" textAlign="center" sx={{ py: 6 }}>
