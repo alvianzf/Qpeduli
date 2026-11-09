@@ -121,14 +121,14 @@ export default function FjbAmal() {
                   whileHover={{ y: -5 }}
                 >
                   <Card sx={{ height: '100%', opacity: item.sold ? 0.6 : 1 }}>
-                    <CardActionArea onClick={() => !item.sold && setSelected(item)} disabled={item.sold}>
+                    <CardActionArea onClick={() => !item.sold && setSelected(item)} disabled={item.sold} sx={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'stretch', justifyContent: 'flex-start' }}>
                       <Box sx={{
                         height: 140, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 56,
                         background: 'linear-gradient(135deg, rgba(66,103,178,0.08), rgba(246,196,83,0.18))',
                       }}>
                         {item.emoji}
                       </Box>
-                      <CardContent>
+                      <CardContent sx={{ flex: 1, width: '100%', display: 'flex', flexDirection: 'column' }}>
                         {item.sold && <Chip label="Terjual" size="small" color="default" sx={{ mb: 1 }} />}
                         <Typography fontWeight={700} sx={{ mb: 0.5 }} noWrap>{item.title}</Typography>
                         <Typography variant="h6" fontWeight={800} color="primary.dark" sx={{ mb: 1 }}>
@@ -138,7 +138,7 @@ export default function FjbAmal() {
                           <Chip label={item.condition} size="small" variant="outlined" />
                           <Chip label={item.category} size="small" variant="outlined" />
                         </Stack>
-                        <Typography variant="caption" color="text.secondary">
+                        <Typography variant="caption" color="text.secondary" sx={{ mt: 'auto' }}>
                           Oleh {seller?.name}
                           {item.campaignTitle && ` · untuk kampanye "${item.campaignTitle.replace('[Aksi Sosial] ', '').slice(0, 40)}..."`}
                         </Typography>

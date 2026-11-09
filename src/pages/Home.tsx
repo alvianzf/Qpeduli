@@ -45,22 +45,22 @@ const iconMap: Record<string, ReactElement> = {
 const steps = [
   {
     icon: <ForumIcon fontSize="large" />,
-    title: '1. Diskusi di Komunitas',
+    title: '1. Diskusi',
     desc: 'Bagikan cerita, isu, atau masalah sosial di ruang diskusi regional, pendidikan, kesehatan, dan lainnya.',
   },
   {
     icon: <VolunteerActivismIcon fontSize="large" />,
-    title: '2. Naikkan Jadi Aksi Sosial',
+    title: '2. Jadi Aksi',
     desc: 'Jika butuh solusi dana, ubah thread menjadi kampanye lengkap dengan target & tombol donasi.',
   },
   {
     icon: <VerifiedIcon fontSize="large" />,
-    title: '3. Dikawal Komunitas',
+    title: '3. Dikawal',
     desc: 'Ksatria Komunitas bisa jadi penjamin, donatur ikut mengawasi lewat update & diskusi transparan.',
   },
   {
     icon: <StorefrontIcon fontSize="large" />,
-    title: '4. Aksi Nyata Terukur',
+    title: '4. Nyata',
     desc: 'Dana cair bertahap sesuai progres, hasil FJB Amal pun bisa ikut disalurkan ke kampanye pilihan.',
   },
 ];
@@ -300,18 +300,18 @@ export default function Home() {
                 whileHover={{ y: -4 }}
               >
                 <Card sx={{ height: '100%' }}>
-                  <CardActionArea onClick={() => navigate(`/komunitas/${c.slug}`)} sx={{ height: '100%', p: 3 }}>
-                    <Stack direction="row" spacing={2} alignItems="flex-start">
+                  <CardActionArea onClick={() => navigate(`/komunitas/${c.slug}`)} sx={{ height: '100%', p: 3, alignItems: 'stretch', display: 'flex' }}>
+                    <Stack direction="row" spacing={2} alignItems="flex-start" sx={{ flex: 1 }}>
                       <Box sx={{
                         width: 52, height: 52, borderRadius: 3, display: 'flex', alignItems: 'center', justifyContent: 'center',
                         bgcolor: `${c.color}1A`, color: c.color, flexShrink: 0,
                       }}>
                         {iconMap[c.icon]}
                       </Box>
-                      <Box>
+                      <Box sx={{ display: 'flex', flexDirection: 'column', alignSelf: 'stretch', flex: 1 }}>
                         <Typography fontWeight={800}>{c.name}</Typography>
-                        <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>{c.description}</Typography>
-                        <Chip label={`${c.threadCount} thread`} size="small" />
+                        <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5 }}>{c.description}</Typography>
+                        <Chip label={`${c.threadCount} thread`} size="small" sx={{ mt: 'auto', alignSelf: 'flex-start' }} />
                       </Box>
                     </Stack>
                   </CardActionArea>
@@ -341,7 +341,7 @@ export default function Home() {
                 <Grid container spacing={2}>
                   {fjbItems.slice(0, 4).map((item) => (
                     <Grid size={6} key={item.id}>
-                      <Card sx={{ p: 2 }}>
+                      <Card sx={{ p: 2, height: '100%' }}>
                         <Typography variant="h4" sx={{ mb: 1 }}>{item.emoji}</Typography>
                         <Typography variant="body2" fontWeight={700} noWrap>{item.title}</Typography>
                         <Typography variant="caption" color="primary.dark" fontWeight={800}>{formatRupiah(item.price)}</Typography>

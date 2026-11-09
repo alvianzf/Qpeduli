@@ -21,6 +21,8 @@ export const brand = {
 };
 
 export const heroGradient = `linear-gradient(170deg, ${brand.deep} 0%, ${brand.primary} 55%, ${brand.bright} 100%)`;
+// Same gradient, translucent, so the animated sky shows through hero bands.
+export const heroGradientSoft = `linear-gradient(170deg, rgba(47,79,138,0.88) 0%, rgba(66,103,178,0.8) 55%, rgba(90,126,196,0.72) 100%)`;
 export const pageGradient = `linear-gradient(180deg, #E8EFFB 0%, #F8FAFC 100%)`;
 
 // Spread into a hero band's sx so <HeroDecor /> (zIndex -1) paints between the
@@ -29,9 +31,40 @@ export const heroBase = {
   position: 'relative',
   overflow: 'hidden',
   isolation: 'isolate',
-  background: heroGradient,
+  background: heroGradientSoft,
   color: '#fff',
+  mx: { xs: 1, md: 2.5 },
+  mt: 1,
+  borderRadius: { xs: '24px', md: '36px' },
+  border: '1px solid rgba(255,255,255,0.45)',
+  boxShadow:
+    'inset 0 1.5px 0 rgba(255,255,255,0.6), inset 0 -24px 48px rgba(255,255,255,0.07), 0 28px 60px rgba(47,79,138,0.32)',
+  // top specular sheen
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    inset: 0,
+    zIndex: -1,
+    pointerEvents: 'none',
+    background: 'linear-gradient(180deg, rgba(255,255,255,0.32) 0%, rgba(255,255,255,0.08) 38%, rgba(255,255,255,0) 52%)',
+  },
+  // slow diagonal light sweep
+  '&::after': {
+    content: '""',
+    position: 'absolute',
+    top: '-20%',
+    bottom: '-20%',
+    width: '34%',
+    left: 0,
+    zIndex: -1,
+    pointerEvents: 'none',
+    background: 'linear-gradient(105deg, transparent 0%, rgba(255,255,255,0.22) 50%, transparent 100%)',
+    animation: 'hero-sweep 9s ease-in-out infinite',
+  },
 } as const;
+
+// Full-bleed variant for pages where the band fills the screen (login/register).
+export const heroFull = { mx: 0, mt: 0, borderRadius: 0, border: 'none' } as const;
 
 const HEAD = `'Montserrat', 'Segoe UI', sans-serif`;
 
@@ -92,20 +125,24 @@ const theme = createTheme({
         {
           props: { variant: 'contained', color: 'primary' },
           style: {
-            boxShadow: `0 6px 16px ${alpha(brand.primary, 0.28)}`,
+            backgroundImage: `linear-gradient(180deg, ${brand.bright} 0%, ${brand.primary} 52%, #3A5CA3 100%)`,
+            border: '1px solid rgba(255,255,255,0.28)',
+            boxShadow: `inset 0 1.5px 0 rgba(255,255,255,0.5), inset 0 -2px 4px rgba(0,0,0,0.12), 0 8px 18px ${alpha(brand.primary, 0.34)}`,
             '&:hover': {
-              backgroundColor: brand.deep,
-              boxShadow: `0 8px 20px ${alpha(brand.primary, 0.36)}`,
+              backgroundImage: `linear-gradient(180deg, #6C8FD3 0%, ${brand.mid} 52%, ${brand.deep} 100%)`,
+              boxShadow: `inset 0 1.5px 0 rgba(255,255,255,0.55), inset 0 -2px 4px rgba(0,0,0,0.14), 0 10px 22px ${alpha(brand.primary, 0.42)}`,
             },
           },
         },
         {
           props: { variant: 'contained', color: 'warning' },
           style: {
-            boxShadow: `0 6px 16px ${alpha(brand.cta, 0.3)}`,
+            backgroundImage: `linear-gradient(180deg, ${brand.ctaLight} 0%, ${brand.cta} 52%, ${brand.ctaDark} 100%)`,
+            border: '1px solid rgba(255,255,255,0.3)',
+            boxShadow: `inset 0 1.5px 0 rgba(255,255,255,0.55), inset 0 -2px 4px rgba(0,0,0,0.14), 0 8px 18px ${alpha(brand.cta, 0.38)}`,
             '&:hover': {
-              backgroundColor: brand.ctaDark,
-              boxShadow: `0 8px 20px ${alpha(brand.cta, 0.4)}`,
+              backgroundImage: `linear-gradient(180deg, #FF8C4D 0%, #FF6A1A 52%, ${brand.ctaDark} 100%)`,
+              boxShadow: `inset 0 1.5px 0 rgba(255,255,255,0.6), inset 0 -2px 4px rgba(0,0,0,0.16), 0 10px 22px ${alpha(brand.cta, 0.46)}`,
             },
           },
         },
@@ -124,8 +161,9 @@ const theme = createTheme({
         root: {
           borderRadius: 20,
           border: `1px solid ${alpha(brand.primary, 0.14)}`,
-          backgroundColor: alpha('#FFFFFF', 0.92),
-          boxShadow: `0 6px 22px ${alpha(brand.deep, 0.07)}`,
+          backgroundColor: alpha('#FFFFFF', 0.9),
+          backgroundImage: 'linear-gradient(180deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.78) 100%)',
+          boxShadow: `inset 0 1.5px 0 rgba(255,255,255,1), 0 10px 28px ${alpha(brand.deep, 0.1)}`,
         },
       },
     },

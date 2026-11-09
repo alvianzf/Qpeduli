@@ -11,7 +11,7 @@ export default function HeroDecor({ divider = true }: { divider?: boolean }) {
       <Leaf size={130} color="rgba(255,255,255,.07)" className="leaf-sway" style={{ position: 'absolute', left: '-2%', top: '28%', animationDelay: '-5s' }} />
       {divider && (
         <Box sx={{ position: 'absolute', left: 0, right: 0, bottom: -1 }}>
-          <HillsDivider fill="#EEF3FB" height={56} />
+          <HillsDivider fill="rgba(238,243,251,0.8)" height={56} />
         </Box>
       )}
     </Box>

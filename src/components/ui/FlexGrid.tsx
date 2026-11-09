@@ -58,6 +58,7 @@ export default function Grid({ container, spacing, size, sx, children, ...rest }
 
   return (
     <Box
+      className="grid-item"
       sx={[
         {
           boxSizing: 'border-box',

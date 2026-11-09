@@ -55,7 +55,7 @@ export default function Profile() {
 
   return (
     <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', pb: 10 }}>
-      <Box sx={{ ...heroBase, height: 160 }}><HeroDecor divider={false} /></Box>
+      <Box sx={{ ...heroBase, height: 160, mb: 0 }}><HeroDecor divider={false} /></Box>
       <Container maxWidth="lg" sx={{ mt: -10 }}>
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
           <Card sx={{ p: { xs: 2.5, md: 4 }, mb: 3 }}>
