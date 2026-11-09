@@ -7,7 +7,7 @@ interface SectionProps {
   title?: ReactNode;
   subtitle?: ReactNode;
   action?: ReactNode;
-  /** Tuck the first section up over the hero's hills. */
+  /** Tuck a title-less first section up over the hero's hills; titled sections just sit close under it. */
   overlap?: boolean;
   id?: string;
   children: ReactNode;
@@ -16,7 +16,7 @@ interface SectionProps {
 /** Wide centered block: 72px between blocks on desktop. Overlapping sections are positioned above the hero. */
 export default function Section({ title, subtitle, action, overlap = false, id, children }: SectionProps) {
   return (
-    <Container id={id} maxWidth="xl" sx={{ position: 'relative', zIndex: 1, mt: overlap ? { xs: -6, md: -9 } : { xs: 6, md: 9 } }}>
+    <Container id={id} maxWidth="xl" sx={{ position: 'relative', zIndex: 1, mt: overlap && !title ? { xs: -6, md: -9 } : overlap ? { xs: 4, md: 5 } : { xs: 6, md: 9 } }}>
       {(title || action) && (
         <Box sx={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 3, mb: 3 }}>
           <Box sx={{ minWidth: 0 }}>
