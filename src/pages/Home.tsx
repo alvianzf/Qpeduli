@@ -82,7 +82,7 @@ function ModalUsahaPreview() {
         </Typography>
         <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5} sx={{ position: 'relative' }}>
           <Button variant="contained" endIcon={<ArrowForwardIcon />} onClick={() => navigate('/modal-usaha')}>
-            {top.length ? `Lihat ${projects.length} Usaha` : 'Jelajahi Modal Usaha'}
+            {top.length ? `${projects.length} Usaha` : 'Lihat Usaha'}
           </Button>
         </Stack>
       </Card>
@@ -130,7 +130,7 @@ export default function Home() {
                 <Typography variant="h6" sx={{ opacity: 0.88, fontWeight: 400, mb: 4, maxWidth: 520 }}>
                   Ruang diskusi komunitas yang menanam benih kebaikan — dari bantuan darurat hingga modal usaha bagi mereka yang ingin bangkit dengan kakinya sendiri.
                 </Typography>
-                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5} useFlexGap>
                   <Button
                     size="large"
                     variant="contained"
@@ -138,7 +138,7 @@ export default function Home() {
                     endIcon={<ArrowForwardIcon />}
                     sx={{ bgcolor: '#fff', color: 'primary.dark', '&:hover': { bgcolor: '#E3F3E8' }, backgroundImage: 'none', boxShadow: '0 10px 30px rgba(0,0,0,0.2)' }}
                   >
-                    Jelajahi Komunitas
+                    Komunitas
                   </Button>
                   <Button
                     size="large"
@@ -146,15 +146,7 @@ export default function Home() {
                     color="warning"
                     onClick={() => navigate('/modal-usaha')}
                   >
-                    Danai Usaha Kecil
-                  </Button>
-                  <Button
-                    size="large"
-                    variant="outlined"
-                    onClick={() => navigate('/keamanan')}
-                    sx={{ borderColor: 'rgba(255,255,255,0.5)', color: '#fff', '&:hover': { borderColor: '#fff', bgcolor: 'rgba(255,255,255,0.08)' } }}
-                  >
-                    Cara Kerja & Keamanan Dana
+                    Danai Usaha
                   </Button>
                 </Stack>
               </motion.div>
@@ -189,7 +181,7 @@ export default function Home() {
                         sx={{ mt: 2 }}
                         onClick={() => navigate(`/thread/${featured[0].id}`)}
                       >
-                        Lihat & Donasi
+                        Donasi
                       </Button>
                     </CardContent>
                   </Card>
@@ -262,7 +254,7 @@ export default function Home() {
             <Typography color="text.secondary">Kampanye yang sedang butuh dukunganmu sekarang</Typography>
           </Box>
           <Button endIcon={<ArrowForwardIcon />} onClick={() => navigate('/komunitas')} sx={{ display: { xs: 'none', sm: 'inline-flex' } }}>
-            Lihat Semua
+            Semua
           </Button>
         </Stack>
         {featured.length > 0 ? (
@@ -341,7 +333,7 @@ export default function Home() {
                 Jual barang atau jasa di Forum Jual Beli Amal — hasil penjualan otomatis masuk ke dompet kampanye sosial pilihanmu.
               </Typography>
               <Button variant="contained" endIcon={<ArrowForwardIcon />} onClick={() => navigate('/fjb')}>
-                Buka FJB Amal
+                Buka FJB
               </Button>
             </Grid>
             <Grid size={{ xs: 12, md: 6 }}>
@@ -390,7 +382,7 @@ export default function Home() {
             onClick={() => navigate('/daftar')}
             sx={{ bgcolor: '#fff', color: 'primary.dark', '&:hover': { bgcolor: '#E3F3E8' }, backgroundImage: 'none' }}
           >
-            Daftar Gratis
+            Daftar
           </Button>
         </Box>
       </Container>

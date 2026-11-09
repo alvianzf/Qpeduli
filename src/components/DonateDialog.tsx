@@ -121,7 +121,7 @@ export default function DonateDialog({ open, onClose, thread }: { open: boolean;
           <>
             <Button onClick={handleClose} color="inherit">Batal</Button>
             <Button onClick={handleDonate} variant="contained" color="warning" disabled={!finalAmount || donate.isPending}>
-              {donate.isPending ? 'Memproses...' : `Donasi ${finalAmount ? formatRupiah(finalAmount) : ''}`}
+              {donate.isPending ? 'Memproses...' : finalAmount ? formatRupiah(finalAmount) : 'Donasi'}
             </Button>
           </>
         )}

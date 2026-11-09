@@ -57,7 +57,7 @@ export default function ThreadDetail() {
     return (
       <Container sx={{ py: 10, textAlign: 'center' }}>
         <Typography variant="h5" fontWeight={800}>Thread tidak ditemukan</Typography>
-        <Button sx={{ mt: 2 }} onClick={() => navigate('/komunitas')}>Kembali ke Komunitas</Button>
+        <Button sx={{ mt: 2 }} onClick={() => navigate('/komunitas')}>Ke Komunitas</Button>
       </Container>
     );
   }
@@ -266,7 +266,7 @@ export default function ThreadDetail() {
                       onClick={() => setDonateOpen(true)}
                       disabled={thread.campaign.status === 'completed'}
                     >
-                      {thread.campaign.status === 'completed' ? 'Target Tercapai 🎉' : 'Donasi Sekarang'}
+                      {thread.campaign.status === 'completed' ? 'Target tercapai' : 'Donasi'}
                     </Button>
                     {thread.campaign.status === 'pending-verification' && (
                       <Stack

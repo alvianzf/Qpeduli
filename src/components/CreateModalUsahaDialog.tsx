@@ -153,7 +153,7 @@ export default function CreateModalUsahaDialog({ open, onClose }: { open: boolea
               ))}
               {rewards.length < 8 && (
                 <Button startIcon={<AddIcon />} onClick={() => setRewards((rs) => [...rs, emptyReward()])} sx={{ alignSelf: 'flex-start' }}>
-                  Tambah hadiah
+                  Hadiah
                 </Button>
               )}
             </Stack>
@@ -167,7 +167,7 @@ export default function CreateModalUsahaDialog({ open, onClose }: { open: boolea
           <>
             <Button onClick={close} color="inherit">Batal</Button>
             <Button onClick={submit} variant="contained" disabled={!valid || create.isPending}>
-              {create.isPending ? 'Mengirim...' : 'Kirim untuk Verifikasi'}
+              {create.isPending ? 'Mengirim...' : 'Kirim'}
             </Button>
           </>
         )}

@@ -16,7 +16,7 @@ export default function NotFound() {
           <Typography color="text.secondary" maxWidth={400}>
             Sepertinya kamu tersesat. Yuk kembali ke komunitas dan temukan aksi sosial yang butuh dukunganmu.
           </Typography>
-          <Button variant="contained" onClick={() => navigate('/')}>Kembali ke Beranda</Button>
+          <Button variant="contained" onClick={() => navigate('/')}>Ke Beranda</Button>
         </Stack>
       </motion.div>
     </Box>

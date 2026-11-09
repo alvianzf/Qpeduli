@@ -56,7 +56,7 @@ export default function ModalUsaha() {
             Dukung warga yang ingin memulai usaha sendiri. Dana ditahan di eskrow dan dicairkan bertahap sesuai milestone, dan pendukung mendapat hadiah dari pemilik usaha.
           </Typography>
           <Button variant="contained" color="warning" startIcon={<AddCircleIcon />} onClick={handleCreate}>
-            Ajukan Usahamu
+            Ajukan Usaha
           </Button>
         </Container>
       </Box>

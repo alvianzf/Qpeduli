@@ -220,7 +220,7 @@ export default function Navbar() {
             }}
             sx={{ mt: 1 }}
           >
-            Buat Aksi Sosial
+            Buat Aksi
           </Button>
         </Box>
       </Drawer>

@@ -73,7 +73,7 @@ export default function FjbAmal() {
             startIcon={<AddCircleIcon />}
             onClick={handleSellClick}
           >
-            Jual Barang / Jasa
+            Jual
           </Button>
         </Container>
       </Box>
@@ -175,7 +175,7 @@ export default function FjbAmal() {
             </DialogContent>
             <DialogActions sx={{ p: 2 }}>
               <Button onClick={() => setSelected(null)} color="inherit">Tutup</Button>
-              <Button variant="contained" color="warning" onClick={() => setSelected(null)}>Beli Sekarang</Button>
+              <Button variant="contained" color="warning" onClick={() => setSelected(null)}>Beli</Button>
             </DialogActions>
           </>
         )}

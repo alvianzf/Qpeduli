@@ -129,7 +129,7 @@ export default function BackProjectDialog({
           <>
             <Button onClick={onClose} color="inherit">Batal</Button>
             <Button onClick={submit} variant="contained" color="warning" disabled={!value || value <= 0 || Boolean(tooLow) || donate.isPending}>
-              {donate.isPending ? 'Memproses...' : `Dukung ${value > 0 ? formatRupiah(value) : ''}`}
+              {donate.isPending ? 'Memproses...' : value > 0 ? formatRupiah(value) : 'Dukung'}
             </Button>
           </>
         )}

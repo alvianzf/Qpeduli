@@ -59,7 +59,7 @@ export default function ModalUsahaDetail() {
         <HeroDecor />
         <Container maxWidth="lg">
           <Button startIcon={<ArrowBackIcon />} onClick={() => navigate('/modal-usaha')} sx={{ color: '#fff', opacity: 0.85, mb: 2 }}>
-            Semua usaha
+            Usaha
           </Button>
           <Stack direction="row" spacing={1} sx={{ mb: 1.5 }} flexWrap="wrap" useFlexGap>
             {project.businessType && <Chip label={project.businessType} size="small" sx={{ bgcolor: 'rgba(255,255,255,0.18)', color: '#fff', fontWeight: 700 }} />}
@@ -135,7 +135,7 @@ export default function ModalUsahaDetail() {
               <Card sx={{ p: 3 }}>
                 <CampaignProgress campaign={project.campaign} />
                 <Button fullWidth variant="contained" color="warning" size="large" sx={{ mt: 2.5 }} disabled={!open} onClick={() => back()}>
-                  {open ? 'Dukung Usaha Ini' : 'Belum menerima dukungan'}
+                  {open ? 'Dukung' : 'Belum dibuka'}
                 </Button>
                 {guarantor && (
                   <Alert icon={<VerifiedBadge />} severity="success" sx={{ mt: 2, borderRadius: 3 }}>
