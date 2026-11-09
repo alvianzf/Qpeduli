@@ -3,7 +3,7 @@ import type { CSSProperties } from 'react';
 
 type P = { size?: number; className?: string; style?: CSSProperties };
 
-export function Leaf({ size = 80, color = '#58B07A', className, style }: P & { color?: string }) {
+export function Leaf({ size = 80, color = '#5A7EC4', className, style }: P & { color?: string }) {
   return (
     <svg width={size} height={size} viewBox="0 0 80 80" className={className} style={style} aria-hidden>
       <path d="M12 68C12 34 34 12 70 10C70 46 48 68 12 68Z" fill={color} />
@@ -15,10 +15,10 @@ export function Leaf({ size = 80, color = '#58B07A', className, style }: P & { c
 export function Sprout({ size = 80, className, style }: P) {
   return (
     <svg width={size} height={size} viewBox="0 0 80 80" className={className} style={style} aria-hidden>
-      <path d="M40 72V40" stroke="#2F7D4F" strokeWidth="4" strokeLinecap="round" />
-      <path d="M40 44C40 30 30 22 16 22C16 36 26 44 40 44Z" fill="#58B07A" />
-      <path d="M40 38C40 26 48 18 64 18C64 32 54 38 40 38Z" fill="#8FD0A8" />
-      <ellipse cx="40" cy="73" rx="16" ry="4" fill="#1B4A33" opacity=".15" />
+      <path d="M40 72V40" stroke="#4267B2" strokeWidth="4" strokeLinecap="round" />
+      <path d="M40 44C40 30 30 22 16 22C16 36 26 44 40 44Z" fill="#5A7EC4" />
+      <path d="M40 38C40 26 48 18 64 18C64 32 54 38 40 38Z" fill="#9DB6E3" />
+      <ellipse cx="40" cy="73" rx="16" ry="4" fill="#2F4F8A" opacity=".15" />
     </svg>
   );
 }
@@ -26,10 +26,10 @@ export function Sprout({ size = 80, className, style }: P) {
 export function HandHeart({ size = 120, className, style }: P) {
   return (
     <svg width={size} height={size} viewBox="0 0 120 120" className={className} style={style} aria-hidden>
-      <path d="M60 58C60 58 38 44 38 30C38 22 44 17 51 17C55 17 58 19 60 23C62 19 65 17 69 17C76 17 82 22 82 30C82 44 60 58 60 58Z" fill="#E2711D" />
-      <path d="M12 82C20 76 30 74 40 78L60 86C66 88 66 96 60 96L44 96" stroke="#2F7D4F" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-      <path d="M44 96L78 96C88 96 98 88 108 74" stroke="#2F7D4F" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-      <path d="M12 82L12 100" stroke="#2F7D4F" strokeWidth="7" strokeLinecap="round" />
+      <path d="M60 58C60 58 38 44 38 30C38 22 44 17 51 17C55 17 58 19 60 23C62 19 65 17 69 17C76 17 82 22 82 30C82 44 60 58 60 58Z" fill="#FF5A00" />
+      <path d="M12 82C20 76 30 74 40 78L60 86C66 88 66 96 60 96L44 96" stroke="#4267B2" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+      <path d="M44 96L78 96C88 96 98 88 108 74" stroke="#4267B2" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+      <path d="M12 82L12 100" stroke="#4267B2" strokeWidth="7" strokeLinecap="round" />
     </svg>
   );
 }
@@ -38,9 +38,9 @@ export function Tree({ size = 120, className, style }: P) {
   return (
     <svg width={size} height={size} viewBox="0 0 120 120" className={className} style={style} aria-hidden>
       <rect x="54" y="68" width="12" height="44" rx="5" fill="#8B6A43" />
-      <circle cx="60" cy="48" r="30" fill="#3F9461" />
-      <circle cx="40" cy="62" r="20" fill="#58B07A" />
-      <circle cx="82" cy="60" r="20" fill="#2F7D4F" />
+      <circle cx="60" cy="48" r="30" fill="#4D70B8" />
+      <circle cx="40" cy="62" r="20" fill="#5A7EC4" />
+      <circle cx="82" cy="60" r="20" fill="#4267B2" />
     </svg>
   );
 }
@@ -48,11 +48,11 @@ export function Tree({ size = 120, className, style }: P) {
 export function Flower({ size = 60, color = '#F6C453', className, style }: P & { color?: string }) {
   return (
     <svg width={size} height={size} viewBox="0 0 60 60" className={className} style={style} aria-hidden>
-      <path d="M30 58V34" stroke="#2F7D4F" strokeWidth="3" strokeLinecap="round" />
+      <path d="M30 58V34" stroke="#4267B2" strokeWidth="3" strokeLinecap="round" />
       {[0, 72, 144, 216, 288].map((r) => (
         <ellipse key={r} cx="30" cy="16" rx="7" ry="11" fill={color} transform={`rotate(${r} 30 28)`} />
       ))}
-      <circle cx="30" cy="28" r="6" fill="#E2711D" />
+      <circle cx="30" cy="28" r="6" fill="#FF5A00" />
     </svg>
   );
 }
@@ -66,7 +66,7 @@ export function Cloud({ width = 220, opacity = 0.8 }: { width?: number; opacity?
 }
 
 /** Row of swaying grass blades; stretches to its container width. */
-export function GrassRow({ height = 46, color = '#3F9461', count = 40 }: { height?: number; color?: string; count?: number }) {
+export function GrassRow({ height = 46, color = '#4D70B8', count = 40 }: { height?: number; color?: string; count?: number }) {
   const blades = Array.from({ length: count }, (_, i) => {
     const x = (i / count) * 1200 + ((i * 37) % 17);
     const h = 18 + ((i * 53) % 28);
@@ -102,8 +102,8 @@ export function GoodwillMark({ size = 40 }: { size?: number }) {
     <svg width={size} height={size} viewBox="0 0 64 64" aria-hidden>
       <defs>
         <linearGradient id={g} x1="0" y1="0" x2="0" y2="64" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#58B07A" />
-          <stop offset="1" stopColor="#1B4A33" />
+          <stop stopColor="#5A7EC4" />
+          <stop offset="1" stopColor="#2F4F8A" />
         </linearGradient>
       </defs>
       <rect width="64" height="64" rx="18" fill={`url(#${g})`} />

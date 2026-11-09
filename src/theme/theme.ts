@@ -4,24 +4,24 @@ import { createTheme, alpha } from '@mui/material/styles';
 // Radius scale (8/16/24) intentionally mirrors tiketq.com's own theme so the
 // two products read as siblings, not lookalikes by coincidence.
 export const brand = {
-  deep: '#1B4A33',
-  primary: '#2F7D4F',
-  mid: '#3F9461',
-  bright: '#58B07A',
-  sky: '#8FD0A8',
-  ice: '#E3F3E8',
-  cta: '#E2711D',
-  ctaLight: '#F29544',
-  ctaDark: '#C45A10',
-  ink: '#1B2E22',
-  slate: '#56695C',
-  line: '#DCE8DC',
-  cream: '#F7F4E9',
+  deep: '#2F4F8A',
+  primary: '#4267B2',
+  mid: '#4D70B8',
+  bright: '#5A7EC4',
+  sky: '#9DB6E3',
+  ice: '#DBEAFE',
+  cta: '#FF5A00',
+  ctaLight: '#FF7A33',
+  ctaDark: '#E65100',
+  ink: '#0F172A',
+  slate: '#5B6B85',
+  line: '#E1E8F2',
+  cream: '#F8FAFC',
   sun: '#F6C453',
 };
 
-export const heroGradient = `linear-gradient(170deg, ${brand.deep} 0%, ${brand.primary} 55%, ${brand.mid} 100%)`;
-export const pageGradient = `linear-gradient(180deg, #EAF6EE 0%, #F7F4E9 100%)`;
+export const heroGradient = `linear-gradient(170deg, ${brand.deep} 0%, ${brand.primary} 55%, ${brand.bright} 100%)`;
+export const pageGradient = `linear-gradient(180deg, #E8EFFB 0%, #F8FAFC 100%)`;
 
 // Spread into a hero band's sx so <HeroDecor /> (zIndex -1) paints between the
 // gradient and the band's content.

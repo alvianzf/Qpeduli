@@ -182,7 +182,7 @@ export default function ThreadDetail() {
                   </Stack>
                   <Stack spacing={2.5}>
                     {thread.updates.map((u) => (
-                      <Box key={u.id} sx={{ pl: 2, borderLeft: '3px solid #2F7D4F' }}>
+                      <Box key={u.id} sx={{ pl: 2, borderLeft: '3px solid #4267B2' }}>
                         <Typography fontWeight={700}>{u.title}</Typography>
                         <Typography variant="caption" color="text.secondary">{timeAgo(u.date)}</Typography>
                         <Typography variant="body2" sx={{ mt: 0.5 }}>{u.content}</Typography>

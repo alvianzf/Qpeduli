@@ -124,7 +124,7 @@ export default function FjbAmal() {
                     <CardActionArea onClick={() => !item.sold && setSelected(item)} disabled={item.sold}>
                       <Box sx={{
                         height: 140, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 56,
-                        background: 'linear-gradient(135deg, rgba(47,125,79,0.08), rgba(246,196,83,0.18))',
+                        background: 'linear-gradient(135deg, rgba(66,103,178,0.08), rgba(246,196,83,0.18))',
                       }}>
                         {item.emoji}
                       </Box>
@@ -162,7 +162,7 @@ export default function FjbAmal() {
             <DialogContent dividers>
               <Box sx={{
                 height: 140, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 64, borderRadius: 3, mb: 2,
-                background: 'linear-gradient(135deg, rgba(47,125,79,0.08), rgba(246,196,83,0.18))',
+                background: 'linear-gradient(135deg, rgba(66,103,178,0.08), rgba(246,196,83,0.18))',
               }}>
                 {selected.emoji}
               </Box>

@@ -71,7 +71,7 @@ function ModalUsahaPreview() {
   const top = projects.slice(0, 3);
   return (
     <Container maxWidth="lg" sx={{ mt: { xs: 8, md: 12 } }}>
-      <Card sx={{ p: { xs: 3, md: 5 }, position: 'relative', overflow: 'hidden', background: 'linear-gradient(135deg, rgba(88,176,122,0.16), rgba(246,196,83,0.22))' }}>
+      <Card sx={{ p: { xs: 3, md: 5 }, position: 'relative', overflow: 'hidden', background: 'linear-gradient(135deg, rgba(90,126,196,0.16), rgba(246,196,83,0.22))' }}>
         <Box className="float-slow" sx={{ position: 'absolute', right: { xs: -20, md: 40 }, bottom: -10, opacity: { xs: 0.25, md: 1 }, pointerEvents: 'none' }}>
           <Tree size={150} />
         </Box>
@@ -136,7 +136,7 @@ export default function Home() {
                     variant="contained"
                     onClick={() => navigate('/komunitas')}
                     endIcon={<ArrowForwardIcon />}
-                    sx={{ bgcolor: '#fff', color: 'primary.dark', '&:hover': { bgcolor: '#E3F3E8' }, backgroundImage: 'none', boxShadow: '0 10px 30px rgba(0,0,0,0.2)' }}
+                    sx={{ bgcolor: '#fff', color: 'primary.dark', '&:hover': { bgcolor: '#DBEAFE' }, backgroundImage: 'none', boxShadow: '0 10px 30px rgba(0,0,0,0.2)' }}
                   >
                     Komunitas
                   </Button>
@@ -324,7 +324,7 @@ export default function Home() {
 
       {/* FJB PREVIEW */}
       <Container maxWidth="lg" sx={{ mt: { xs: 8, md: 12 } }}>
-        <Card sx={{ p: { xs: 3, md: 5 }, backgroundImage: 'linear-gradient(135deg, rgba(47,125,79,0.08), rgba(246,196,83,0.16))' }}>
+        <Card sx={{ p: { xs: 3, md: 5 }, backgroundImage: 'linear-gradient(135deg, rgba(66,103,178,0.08), rgba(246,196,83,0.16))' }}>
           <Grid container spacing={4} sx={{ alignItems: "center" }}>
             <Grid size={{ xs: 12, md: 6 }}>
               <Chip icon={<StorefrontIcon sx={{ fontSize: '14px !important' }} />} label="FJB Amal" color="primary" size="small" sx={{ mb: 1.5 }} />
@@ -380,7 +380,7 @@ export default function Home() {
             size="large"
             variant="contained"
             onClick={() => navigate('/daftar')}
-            sx={{ bgcolor: '#fff', color: 'primary.dark', '&:hover': { bgcolor: '#E3F3E8' }, backgroundImage: 'none' }}
+            sx={{ bgcolor: '#fff', color: 'primary.dark', '&:hover': { bgcolor: '#DBEAFE' }, backgroundImage: 'none' }}
           >
             Daftar
           </Button>

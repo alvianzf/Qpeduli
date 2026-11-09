@@ -3,7 +3,7 @@
 html, body, #root { margin: 0; padding: 0; width: 100%; min-height: 100%; }
 
 body {
-  background: #EAF6EE;
+  background: #E8EFFB;
   overflow-x: hidden;
 }
 
@@ -12,14 +12,14 @@ body {
 
 ::-webkit-scrollbar { width: 10px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(47, 125, 79, 0.3); border-radius: 10px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(47, 125, 79, 0.5); }
+::-webkit-scrollbar-thumb { background: rgba(66, 103, 178, 0.3); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(66, 103, 178, 0.5); }
 
 /* ---------- Living background (no particles): sun, clouds, hills, grass ---------- */
 .nb-blob { position: absolute; border-radius: 42% 58% 60% 40% / 45% 40% 60% 55%; filter: blur(46px); opacity: .55; will-change: transform, border-radius; }
-.nb-blob.a { width: 52vmax; height: 52vmax; left: -14vmax; top: -12vmax; background: radial-gradient(circle at 40% 40%, #BFE8CB, transparent 70%); animation: nb-morph 38s ease-in-out infinite alternate; }
-.nb-blob.b { width: 46vmax; height: 46vmax; right: -12vmax; top: 18vh; background: radial-gradient(circle at 50% 50%, #FBE9A8, transparent 70%); animation: nb-morph 46s ease-in-out -12s infinite alternate; }
-.nb-blob.c { width: 50vmax; height: 50vmax; left: 22vw; bottom: -26vmax; background: radial-gradient(circle at 50% 50%, #A9DDE3, transparent 70%); animation: nb-morph 52s ease-in-out -24s infinite alternate; }
+.nb-blob.a { width: 52vmax; height: 52vmax; left: -14vmax; top: -12vmax; background: radial-gradient(circle at 40% 40%, #C9DAF5, transparent 70%); animation: nb-morph 38s ease-in-out infinite alternate; }
+.nb-blob.b { width: 46vmax; height: 46vmax; right: -12vmax; top: 18vh; background: radial-gradient(circle at 50% 50%, #FFDCC2, transparent 70%); animation: nb-morph 46s ease-in-out -12s infinite alternate; }
+.nb-blob.c { width: 50vmax; height: 50vmax; left: 22vw; bottom: -26vmax; background: radial-gradient(circle at 50% 50%, #BDEBFA, transparent 70%); animation: nb-morph 52s ease-in-out -24s infinite alternate; }
 
 @keyframes nb-morph {
   0%   { transform: translate(0, 0) scale(1) rotate(0deg);        border-radius: 42% 58% 60% 40% / 45% 40% 60% 55%; }

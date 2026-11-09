@@ -115,7 +115,7 @@ export default function TrustSafety() {
             </motion.div>
 
             <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-              <Card sx={{ p: { xs: 3, md: 4 }, mt: 3, backgroundImage: 'linear-gradient(135deg, rgba(47,125,79,0.07), rgba(246,196,83,0.14))' }}>
+              <Card sx={{ p: { xs: 3, md: 4 }, mt: 3, backgroundImage: 'linear-gradient(135deg, rgba(66,103,178,0.07), rgba(246,196,83,0.14))' }}>
                 <Typography variant="h6" fontWeight={800} sx={{ mb: 1.5 }}>Kenapa Bukan Murni Komunitas atau Murni Admin?</Typography>
                 <Stack spacing={1.5}>
                   <Typography variant="body2">

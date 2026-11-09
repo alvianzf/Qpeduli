@@ -105,7 +105,7 @@ export default function Komunitas() {
                 >
                   <Box sx={{
                     p: 2, borderRadius: 4, textAlign: 'center', bgcolor: '#fff',
-                    border: '1px solid rgba(47,125,79,0.14)', boxShadow: '0 6px 18px rgba(27,74,51,0.07)',
+                    border: '1px solid rgba(66,103,178,0.14)', boxShadow: '0 6px 18px rgba(47,79,138,0.07)',
                   }}>
                     <Box sx={{ color: c.color, mb: 0.5 }}>{iconMap[c.icon]}</Box>
                     <Typography variant="body2" fontWeight={700} noWrap>{c.name}</Typography>

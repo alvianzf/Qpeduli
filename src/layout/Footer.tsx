@@ -37,9 +37,9 @@ export default function Footer() {
         <Box sx={{ position: 'absolute', right: '12%', bottom: 12, display: { xs: 'none', md: 'block' } }}>
           <Flower size={44} color="#fff" />
         </Box>
-        <GrassRow height={52} color="#2F7D4F" count={70} />
+        <GrassRow height={52} color="#4267B2" count={70} />
       </Box>
-      <Box sx={{ background: 'linear-gradient(180deg,#2F7D4F 0%, #1B4A33 100%)', color: 'rgba(255,255,255,0.88)', pt: 5, pb: 3 }}>
+      <Box sx={{ background: 'linear-gradient(180deg,#4267B2 0%, #2F4F8A 100%)', color: 'rgba(255,255,255,0.88)', pt: 5, pb: 3 }}>
       <Container maxWidth="lg">
         <Grid container spacing={4}>
           <Grid size={{ xs: 12, md: 4 }}>

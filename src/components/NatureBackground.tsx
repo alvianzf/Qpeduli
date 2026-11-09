@@ -18,7 +18,7 @@ export default function NatureBackground() {
         zIndex: 0,
         pointerEvents: 'none',
         overflow: 'hidden',
-        background: 'linear-gradient(180deg, #E4F4EA 0%, #F2F6E8 55%, #F7F4E9 100%)',
+        background: 'linear-gradient(180deg, #E8EFFB 0%, #F0F4F8 55%, #F8FAFC 100%)',
       }}
     >
       <div className="nb-blob a" />
@@ -53,9 +53,9 @@ export default function NatureBackground() {
 
       <Box sx={{ position: 'absolute', left: '-3%', right: '-3%', bottom: 0, height: { xs: '20vh', md: '26vh' } }}>
         <svg width="100%" height="100%" viewBox="0 0 1440 300" preserveAspectRatio="none" style={{ position: 'absolute', inset: 0 }}>
-          <path className="nb-hill h3" d="M0 140C180 70 340 70 520 120C700 170 860 150 1040 100C1220 50 1340 70 1440 110V300H0Z" fill="#BFE3C7" opacity=".55" />
-          <path className="nb-hill h2" d="M0 190C200 130 380 140 560 180C740 220 920 200 1100 160C1250 126 1360 140 1440 160V300H0Z" fill="#8FD0A8" opacity=".5" />
-          <path className="nb-hill h1" d="M0 240C220 200 420 210 640 236C860 262 1060 240 1240 214C1330 202 1400 206 1440 214V300H0Z" fill="#58B07A" opacity=".42" />
+          <path className="nb-hill h3" d="M0 140C180 70 340 70 520 120C700 170 860 150 1040 100C1220 50 1340 70 1440 110V300H0Z" fill="#C5D6F0" opacity=".55" />
+          <path className="nb-hill h2" d="M0 190C200 130 380 140 560 180C740 220 920 200 1100 160C1250 126 1360 140 1440 160V300H0Z" fill="#9DB6E3" opacity=".5" />
+          <path className="nb-hill h1" d="M0 240C220 200 420 210 640 236C860 262 1060 240 1240 214C1330 202 1400 206 1440 214V300H0Z" fill="#5A7EC4" opacity=".42" />
         </svg>
       </Box>
     </Box>
