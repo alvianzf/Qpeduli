@@ -5,6 +5,7 @@ router.use("/auth", require("./auth"));
 router.use("/categories", require("./categories"));
 router.use("/threads", require("./threads"));
 router.use("/campaigns", require("./campaigns"));
+router.use("/modal-usaha", require("./modalUsaha"));
 router.use("/fjb", require("./fjb"));
 router.use("/users", require("./users"));
 router.use("/stats", require("./stats"));

@@ -10,7 +10,8 @@ import Link from '@mui/material/Link';
 import Alert from '@mui/material/Alert';
 import { motion } from 'framer-motion';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
-import { heroGradient } from '../theme/theme';
+import { heroBase } from '../theme/theme';
+import HeroDecor from '../components/HeroDecor';
 import Logo from '../components/Logo';
 import { useAuth } from '../context/AuthContext';
 
@@ -39,7 +40,8 @@ export default function Register() {
   };
 
   return (
-    <Box sx={{ minHeight: '100vh', background: heroGradient, display: 'flex', alignItems: 'center', py: 8 }}>
+    <Box sx={{ ...heroBase, minHeight: '100vh', display: 'flex', alignItems: 'center', py: 8 }}>
+      <HeroDecor />
       <Container maxWidth="xs">
         <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
           <Card sx={{ p: 4 }}>

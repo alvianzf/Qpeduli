@@ -1,30 +1,9 @@
-import { useId } from 'react';
+import { GoodwillMark } from './art/Nature';
 
 export default function Logo({ size = 40 }: { size?: number }) {
-  const gradId = useId();
-
   return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 64 64"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      role="img"
-      aria-label="Qpeduli"
-    >
-      <defs>
-        <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="64" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#5A7EC4" />
-          <stop offset="1" stopColor="#2F4F8A" />
-        </linearGradient>
-      </defs>
-      <rect width="64" height="64" rx="16" fill={`url(#${gradId})`} />
-      <circle cx="29" cy="28" r="12" fill="none" stroke="#fff" strokeWidth="7" />
-      <path
-        d="M39 46C39 46 33 42 33 38.2C33 36 34.8 34.5 36.6 34.8C37.8 35 38.5 35.9 39 36.7C39.5 35.9 40.2 35 41.4 34.8C43.2 34.5 45 36 45 38.2C45 42 39 46 39 46Z"
-        fill="#FF5A00"
-      />
-    </svg>
+    <span role="img" aria-label="Qpeduli" style={{ display: 'inline-flex', lineHeight: 0 }}>
+      <GoodwillMark size={size} />
+    </span>
   );
 }

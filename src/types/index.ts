@@ -67,6 +67,28 @@ export interface Thread {
   hot?: boolean;
 }
 
+export interface Reward {
+  id: string;
+  title: string;
+  description: string;
+  minAmount: number;
+  stock: number | null;
+}
+
+export interface ModalUsaha {
+  id: string;
+  title: string;
+  story: string;
+  businessType: string;
+  city: string;
+  emoji: string;
+  ownerId: string;
+  guarantorId?: string;
+  campaign: Campaign;
+  rewards: Reward[];
+  updates: CampaignUpdate[];
+}
+
 export interface FjbItem {
   id: string;
   title: string;

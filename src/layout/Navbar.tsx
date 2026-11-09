@@ -25,6 +25,7 @@ import { useCreateThreadDialog } from '../context/CreateThreadContext';
 const navLinks = [
   { label: 'Beranda', to: '/' },
   { label: 'Komunitas', to: '/komunitas' },
+  { label: 'Modal Usaha', to: '/modal-usaha' },
   { label: 'FJB Amal', to: '/fjb' },
   { label: 'Transparansi & Keamanan', to: '/keamanan' },
 ];
@@ -51,10 +52,10 @@ export default function Navbar() {
         position="sticky"
         elevation={0}
         sx={{
-          background: scrolled ? alpha('#FFFFFF', 0.7) : 'transparent',
-          backdropFilter: scrolled ? 'blur(16px)' : 'none',
-          borderBottom: scrolled ? `1px solid ${alpha('#4267B2', 0.1)}` : '1px solid transparent',
-          color: '#0B1E4D',
+          background: scrolled ? alpha('#F7F4E9', 0.96) : 'transparent',
+          borderBottom: scrolled ? `1px solid ${alpha('#2F7D4F', 0.18)}` : '1px solid transparent',
+          color: '#1B2E22',
+          zIndex: 10,
           transition: 'all 0.25s ease',
         }}
       >
@@ -66,10 +67,10 @@ export default function Navbar() {
             onClick={() => navigate('/')}
             sx={{ cursor: 'pointer', mr: { xs: 1, md: 4 } }}
           >
-            <Box sx={{ boxShadow: '0 6px 16px rgba(66,103,178,0.35)', borderRadius: '12px', lineHeight: 0 }}>
+            <Box sx={{ boxShadow: '0 6px 16px rgba(47,125,79,0.35)', borderRadius: '14px', lineHeight: 0 }}>
               <Logo size={38} />
             </Box>
-            <Typography variant="h6" fontWeight={800} sx={{ letterSpacing: '-0.02em' }}>
+            <Typography variant="h6" fontWeight={700} sx={{ fontFamily: "'Fraunces Variable', Georgia, serif", fontSize: '1.4rem' }}>
               Qpeduli
             </Typography>
           </Stack>
@@ -82,7 +83,7 @@ export default function Navbar() {
                 sx={{
                   color: location.pathname === link.to ? 'primary.dark' : 'text.secondary',
                   fontWeight: location.pathname === link.to ? 800 : 600,
-                  bgcolor: location.pathname === link.to ? alpha('#4267B2', 0.08) : 'transparent',
+                  bgcolor: location.pathname === link.to ? alpha('#2F7D4F', 0.1) : 'transparent',
                 }}
               >
                 {link.label}
@@ -121,7 +122,7 @@ export default function Navbar() {
       </AppBar>
 
       <Drawer anchor="right" open={open} onClose={() => setOpen(false)}>
-        <Box sx={{ width: 280, p: 2, height: '100%', background: 'linear-gradient(180deg,#F3F7FF,#FFFFFF)' }}>
+        <Box sx={{ width: 280, p: 2, height: '100%', background: 'linear-gradient(180deg,#E4F4EA,#F7F4E9)' }}>
           {user ? (
             <Stack direction="row" alignItems="center" spacing={1.5} sx={{ mb: 2, p: 1 }}>
               <Avatar sx={{ bgcolor: user.avatarColor, fontWeight: 700 }}>{user.name.charAt(0).toUpperCase()}</Avatar>

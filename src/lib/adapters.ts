@@ -1,4 +1,4 @@
-import type { Campaign, CampaignUpdate, Category, Comment, FjbItem, Thread, User } from '../types';
+import type { Campaign, CampaignUpdate, Category, Comment, FjbItem, ModalUsaha, Thread, User } from '../types';
 
 export const userCache: Record<string, User> = {};
 export const categoryCache: Record<string, Category> = {};
@@ -128,7 +128,7 @@ export function adaptUserProfile(u: any): UserProfile {
   const user = adaptUser(u);
   const threads = (u.threads || []).map(adaptThread);
   const donations: DonationHistoryItem[] = (u.donations || []).map((d: any) => ({
-    threadTitle: d.campaign?.thread?.title || 'Kampanye',
+    threadTitle: d.campaign?.thread?.title || d.campaign?.title || 'Kampanye',
     threadId: String(d.campaign?.thread?.id || ''),
     amount: toNum(d.amount),
     date: d.confirmedAt || d.createdAt,
@@ -152,8 +152,32 @@ export function adaptFjbItem(f: any): FjbItem {
     category: f.category,
     emoji: f.emoji || '🎁',
     campaignId: f.campaignId ? String(f.campaignId) : '',
-    campaignTitle: f.campaign?.thread?.title,
+    campaignTitle: f.campaign?.thread?.title ?? f.campaign?.title,
     sold: f.sold,
     description: f.description || '',
+  };
+}
+
+export function adaptModalUsaha(p: any): ModalUsaha {
+  if (p.owner) adaptUser(p.owner);
+  if (p.guarantor) adaptUser(p.guarantor);
+  return {
+    id: String(p.id),
+    title: p.title || 'Usaha',
+    story: p.story || '',
+    businessType: p.businessType || '',
+    city: p.city || '',
+    emoji: p.emoji || '',
+    ownerId: String(p.ownerId ?? ''),
+    guarantorId: p.guarantorId ? String(p.guarantorId) : undefined,
+    campaign: adaptCampaign(p),
+    rewards: (p.rewards || []).map((r: any) => ({
+      id: String(r.id),
+      title: r.title,
+      description: r.description || '',
+      minAmount: Number(r.minAmount),
+      stock: r.stock ?? null,
+    })),
+    updates: (p.updates || []).map(adaptUpdate),
   };
 }

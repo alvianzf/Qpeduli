@@ -3,6 +3,9 @@ import { Routes, Route, useLocation } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import { AnimatePresence, motion } from 'framer-motion';
 import Navbar from './layout/Navbar';
+import NatureBackground from './components/NatureBackground';
+import ModalUsaha from './pages/ModalUsaha';
+import ModalUsahaDetail from './pages/ModalUsahaDetail';
 import Footer from './layout/Footer';
 import { CreateThreadProvider } from './context/CreateThreadContext';
 import Home from './pages/Home';
@@ -34,7 +37,8 @@ export default function App() {
 
   return (
     <CreateThreadProvider>
-      <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <NatureBackground />
+      <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', position: 'relative', zIndex: 1 }}>
         {!hideChrome && <Navbar />}
         <Box sx={{ flex: 1 }}>
           <AnimatePresence mode="wait">
@@ -43,6 +47,8 @@ export default function App() {
               <Route path="/komunitas" element={<PageTransition><Komunitas /></PageTransition>} />
               <Route path="/komunitas/:slug" element={<PageTransition><Komunitas /></PageTransition>} />
               <Route path="/thread/:id" element={<PageTransition><ThreadDetail /></PageTransition>} />
+              <Route path="/modal-usaha" element={<PageTransition><ModalUsaha /></PageTransition>} />
+              <Route path="/modal-usaha/:id" element={<PageTransition><ModalUsahaDetail /></PageTransition>} />
               <Route path="/fjb" element={<PageTransition><FjbAmal /></PageTransition>} />
               <Route path="/profil/:username" element={<PageTransition><Profile /></PageTransition>} />
               <Route path="/keamanan" element={<PageTransition><TrustSafety /></PageTransition>} />

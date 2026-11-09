@@ -22,7 +22,10 @@ import LandslideIcon from '@mui/icons-material/Landslide';
 import GroupsIcon from '@mui/icons-material/Groups';
 import ParkIcon from '@mui/icons-material/Park';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { heroGradient, brand } from '../theme/theme';
+import { heroBase, brand } from '../theme/theme';
+import HeroDecor from '../components/HeroDecor';
+import { Sprout, HandHeart, Tree } from '../components/art/Nature';
+import { useModalUsahaList } from '../lib/queries';
 import EmptyState from '../components/EmptyState';
 import { formatRupiah } from '../data/mockData';
 import { useCategories, useThreads, useFjbItems, useStats } from '../lib/queries';
@@ -62,6 +65,31 @@ const steps = [
   },
 ];
 
+function ModalUsahaPreview() {
+  const navigate = useNavigate();
+  const { data: projects = [] } = useModalUsahaList();
+  const top = projects.slice(0, 3);
+  return (
+    <Container maxWidth="lg" sx={{ mt: { xs: 8, md: 12 } }}>
+      <Card sx={{ p: { xs: 3, md: 5 }, position: 'relative', overflow: 'hidden', background: 'linear-gradient(135deg, rgba(88,176,122,0.16), rgba(246,196,83,0.22))' }}>
+        <Box className="float-slow" sx={{ position: 'absolute', right: { xs: -20, md: 40 }, bottom: -10, opacity: { xs: 0.25, md: 1 }, pointerEvents: 'none' }}>
+          <Tree size={150} />
+        </Box>
+        <Chip icon={<Sprout size={18} />} label="Modal Usaha" color="primary" size="small" sx={{ mb: 1.5 }} />
+        <Typography variant="h4" fontWeight={700} sx={{ mb: 1.5, maxWidth: 560 }}>Bantu Usaha Kecil Bertunas</Typography>
+        <Typography color="text.secondary" sx={{ mb: 3, maxWidth: 560 }}>
+          Warung, tani, kerajinan — modal kecil dari banyak orang bisa membuka jalan mandiri. Danai usahanya, dapatkan hadiah dari pemiliknya, dan pantau tumbuhnya.
+        </Typography>
+        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5} sx={{ position: 'relative' }}>
+          <Button variant="contained" endIcon={<ArrowForwardIcon />} onClick={() => navigate('/modal-usaha')}>
+            {top.length ? `Lihat ${projects.length} Usaha` : 'Jelajahi Modal Usaha'}
+          </Button>
+        </Stack>
+      </Card>
+    </Container>
+  );
+}
+
 export default function Home() {
   const navigate = useNavigate();
   const { data: categories = [] } = useCategories();
@@ -82,35 +110,25 @@ export default function Home() {
       {/* HERO */}
       <Box
         sx={{
-          position: 'relative',
-          background: heroGradient,
-          color: '#fff',
+          ...heroBase,
           pt: { xs: 10, md: 14 },
           pb: { xs: 16, md: 20 },
-          overflow: 'hidden',
         }}
       >
-        <Box
-          sx={{
-            position: 'absolute',
-            inset: 0,
-            backgroundImage:
-              'radial-gradient(circle at 20% 20%, rgba(255,255,255,0.12) 0, transparent 40%), radial-gradient(circle at 80% 60%, rgba(255,255,255,0.10) 0, transparent 45%)',
-          }}
-        />
+        <HeroDecor />
         <Container maxWidth="lg" sx={{ position: 'relative' }}>
           <Grid container spacing={4} sx={{ alignItems: "center" }}>
             <Grid size={{ xs: 12, md: 7 }}>
               <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
                 <Chip
-                  label="Community-Driven Crowdfunding"
-                  sx={{ bgcolor: 'rgba(255,255,255,0.15)', color: '#fff', fontWeight: 700, mb: 2.5, backdropFilter: 'blur(6px)' }}
+                  label="Tumbuh Bersama, Berbagi Bersama"
+                  sx={{ bgcolor: 'rgba(255,255,255,0.16)', color: '#fff', fontWeight: 700, mb: 2.5 }}
                 />
                 <Typography variant="h2" sx={{ fontSize: { xs: '2.1rem', sm: '2.8rem', md: '3.4rem' }, mb: 2, lineHeight: 1.15 }}>
-                  Dari Diskusi,<br /> Menjadi Aksi.
+                  Dari Diskusi,<br /> Tumbuh Jadi Aksi.
                 </Typography>
                 <Typography variant="h6" sx={{ opacity: 0.88, fontWeight: 400, mb: 4, maxWidth: 520 }}>
-                  Ruang diskusi komunitas yang mengubah simpati menjadi bantuan nyata dan terukur — bukan cuma komentar, tapi aksi.
+                  Ruang diskusi komunitas yang menanam benih kebaikan — dari bantuan darurat hingga modal usaha bagi mereka yang ingin bangkit dengan kakinya sendiri.
                 </Typography>
                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
                   <Button
@@ -118,9 +136,17 @@ export default function Home() {
                     variant="contained"
                     onClick={() => navigate('/komunitas')}
                     endIcon={<ArrowForwardIcon />}
-                    sx={{ bgcolor: '#fff', color: 'primary.dark', '&:hover': { bgcolor: '#EAF1FF' }, backgroundImage: 'none', boxShadow: '0 10px 30px rgba(0,0,0,0.25)' }}
+                    sx={{ bgcolor: '#fff', color: 'primary.dark', '&:hover': { bgcolor: '#E3F3E8' }, backgroundImage: 'none', boxShadow: '0 10px 30px rgba(0,0,0,0.2)' }}
                   >
                     Jelajahi Komunitas
+                  </Button>
+                  <Button
+                    size="large"
+                    variant="contained"
+                    color="warning"
+                    onClick={() => navigate('/modal-usaha')}
+                  >
+                    Danai Usaha Kecil
                   </Button>
                   <Button
                     size="large"
@@ -139,6 +165,11 @@ export default function Home() {
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: 0.15 }}
               >
+                {!featured[0] && (
+                  <Box className="float-slow" sx={{ display: { xs: 'none', md: 'flex' }, justifyContent: 'center' }}>
+                    <HandHeart size={220} />
+                  </Box>
+                )}
                 {featured[0] && (
                   <Card
                     sx={{
@@ -255,6 +286,9 @@ export default function Home() {
         )}
       </Container>
 
+      {/* MODAL USAHA */}
+      <ModalUsahaPreview />
+
       {/* CATEGORIES */}
       <Container maxWidth="lg" sx={{ mt: { xs: 8, md: 12 } }}>
         <Stack alignItems="center" textAlign="center" spacing={1.5} sx={{ mb: 5 }}>
@@ -298,7 +332,7 @@ export default function Home() {
 
       {/* FJB PREVIEW */}
       <Container maxWidth="lg" sx={{ mt: { xs: 8, md: 12 } }}>
-        <Card sx={{ p: { xs: 3, md: 5 }, backgroundImage: 'linear-gradient(135deg, rgba(30,95,224,0.08), rgba(96,165,250,0.12))' }}>
+        <Card sx={{ p: { xs: 3, md: 5 }, backgroundImage: 'linear-gradient(135deg, rgba(47,125,79,0.08), rgba(246,196,83,0.16))' }}>
           <Grid container spacing={4} sx={{ alignItems: "center" }}>
             <Grid size={{ xs: 12, md: 6 }}>
               <Chip icon={<StorefrontIcon sx={{ fontSize: '14px !important' }} />} label="FJB Amal" color="primary" size="small" sx={{ mb: 1.5 }} />
@@ -343,9 +377,7 @@ export default function Home() {
             p: { xs: 4, md: 7 },
             textAlign: 'center',
             color: '#fff',
-            background: heroGradient,
-            position: 'relative',
-            overflow: 'hidden',
+            ...heroBase,
           }}
         >
           <Typography variant="h4" fontWeight={800} sx={{ mb: 1.5 }}>Siap mengubah kepedulianmu jadi aksi?</Typography>
@@ -356,7 +388,7 @@ export default function Home() {
             size="large"
             variant="contained"
             onClick={() => navigate('/daftar')}
-            sx={{ bgcolor: '#fff', color: 'primary.dark', '&:hover': { bgcolor: '#EAF1FF' }, backgroundImage: 'none' }}
+            sx={{ bgcolor: '#fff', color: 'primary.dark', '&:hover': { bgcolor: '#E3F3E8' }, backgroundImage: 'none' }}
           >
             Daftar Gratis
           </Button>

@@ -27,6 +27,10 @@ Donating, verifying an update, or posting consistent progress reports earns Poin
 
 A secondary marketplace for preloved goods and services, where the entire sale price routes into a campaign wallet the seller picks. It's a second reason to open the app that isn't "I want to donate."
 
+## Modal Usaha
+
+A Kickstarter-style section (`/modal-usaha`) where people fund struggling UMKM and underprivileged people starting their own business. Backers donate (not lend or invest) and can pick reward tiers set by the owner. It reuses the campaign engine: escrow, milestones, guarantor, and manual donation confirmation. A submitted project stays hidden (`PENDING_VERIFICATION`) until an admin or a Ksatria Komunitas guarantor activates it.
+
 ## What this repo is right now
 
 A frontend build — React, TypeScript, Vite, MUI, Framer Motion, React Router — running against in-memory mock data. No backend, auth, or payments are wired up yet. Every screen (forum, campaign pages, FJB Amal, profile, trust & safety) works end to end against fixtures, which made it possible to design the full disbursement and reputation flow before committing to a backend.

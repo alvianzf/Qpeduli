@@ -7,10 +7,12 @@ import Divider from '@mui/material/Divider';
 import Link from '@mui/material/Link';
 import { Link as RouterLink } from 'react-router-dom';
 import Logo from '../components/Logo';
+import { GrassRow, Flower } from '../components/art/Nature';
 
 const footerLinks = {
   Platform: [
     { label: 'Ruang Komunitas', to: '/komunitas' },
+    { label: 'Modal Usaha', to: '/modal-usaha' },
     { label: 'FJB Amal', to: '/fjb' },
     { label: 'Transparansi & Keamanan', to: '/keamanan' },
   ],
@@ -27,16 +29,17 @@ const footerLinks = {
 
 export default function Footer() {
   return (
-    <Box
-      component="footer"
-      sx={{
-        mt: 8,
-        background: 'linear-gradient(180deg,#1E3A6E 0%, #2F4F8A 100%)',
-        color: 'rgba(255,255,255,0.85)',
-        pt: 6,
-        pb: 3,
-      }}
-    >
+    <Box component="footer" sx={{ mt: 8, position: 'relative', zIndex: 1 }}>
+      <Box sx={{ position: 'relative', lineHeight: 0, mb: '-1px' }}>
+        <Box sx={{ position: 'absolute', left: '8%', bottom: 12, display: { xs: 'none', md: 'block' } }}>
+          <Flower size={54} />
+        </Box>
+        <Box sx={{ position: 'absolute', right: '12%', bottom: 12, display: { xs: 'none', md: 'block' } }}>
+          <Flower size={44} color="#fff" />
+        </Box>
+        <GrassRow height={52} color="#2F7D4F" count={70} />
+      </Box>
+      <Box sx={{ background: 'linear-gradient(180deg,#2F7D4F 0%, #1B4A33 100%)', color: 'rgba(255,255,255,0.88)', pt: 5, pb: 3 }}>
       <Container maxWidth="lg">
         <Grid container spacing={4}>
           <Grid size={{ xs: 12, md: 4 }}>
@@ -45,7 +48,7 @@ export default function Footer() {
               <Typography variant="h6" fontWeight={800} color="#fff">Qpeduli</Typography>
             </Stack>
             <Typography variant="body2" sx={{ opacity: 0.75, maxWidth: 320 }}>
-              Dari diskusi menjadi aksi. Platform community-driven crowdfunding tempat simpati berubah menjadi bantuan nyata dan terukur.
+              Dari diskusi menjadi aksi. Tempat kebaikan tumbuh: simpati berubah menjadi bantuan nyata, dan usaha kecil mendapat modal untuk bertunas.
             </Typography>
           </Grid>
           {Object.entries(footerLinks).map(([title, links]) => (
@@ -97,7 +100,7 @@ export default function Footer() {
               rel="noreferrer"
               variant="caption"
               underline="none"
-              sx={{ color: '#93C5FD', fontWeight: 700 }}
+              sx={{ color: '#F6C453', fontWeight: 700 }}
             >
               PT INI TIKET QUE
             </Link>{' '}
@@ -105,6 +108,7 @@ export default function Footer() {
           </Typography>
         </Stack>
       </Container>
+      </Box>
     </Box>
   );
 }

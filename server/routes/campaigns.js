@@ -16,15 +16,36 @@ router.post(
   async (req, res, next) => {
     try {
       const campaignId = Number(req.params.id);
-      const { amount, anonymous } = req.body;
+      const { amount, anonymous, rewardId } = req.body;
 
       const campaign = await prisma.campaign.findUnique({ where: { id: campaignId } });
       if (!campaign) return res.status(404).json({ error: "Kampanye tidak ditemukan." });
+      if (campaign.kind === "MODAL_USAHA" && campaign.status !== "ACTIVE") {
+        return res.status(409).json({ error: "Usaha ini belum menerima dukungan." });
+      }
+
+      let reward = null;
+      if (rewardId) {
+        reward = await prisma.reward.findUnique({ where: { id: Number(rewardId) } });
+        if (!reward || reward.campaignId !== campaignId) {
+          return res.status(400).json({ error: "Hadiah tidak valid." });
+        }
+        if (Number(amount) < Number(reward.minAmount)) {
+          return res.status(400).json({ error: "Nominal kurang dari minimal untuk hadiah ini." });
+        }
+        if (reward.stock !== null) {
+          const taken = await prisma.donation.count({
+            where: { rewardId: reward.id, status: { not: "FAILED" } },
+          });
+          if (taken >= reward.stock) return res.status(409).json({ error: "Stok hadiah ini sudah habis." });
+        }
+      }
 
       const donation = await prisma.donation.create({
         data: {
           campaignId,
           donorId: req.user ? req.user.id : null,
+          rewardId: reward ? reward.id : null,
           amount,
           anonymous: Boolean(anonymous) || !req.user,
         },

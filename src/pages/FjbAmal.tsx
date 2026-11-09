@@ -1,5 +1,7 @@
 import { useMemo, useState } from 'react';
 import Box from '@mui/material/Box';
+import HeroDecor from '../components/HeroDecor';
+import { heroBase } from '../theme/theme';
 import Container from '@mui/material/Container';
 import Typography from '../components/ui/Txt';
 import Grid from '../components/ui/FlexGrid';
@@ -55,7 +57,8 @@ export default function FjbAmal() {
 
   return (
     <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', pb: 10 }}>
-      <Box sx={{ background: 'linear-gradient(180deg,#2F4F8A,#4267B2)', color: '#fff', pt: { xs: 6, md: 8 }, pb: { xs: 8, md: 10 } }}>
+      <Box sx={{ ...heroBase, pt: { xs: 6, md: 8 }, pb: { xs: 8, md: 10 } }}>
+        <HeroDecor />
         <Container maxWidth="lg">
           <Chip icon={<StorefrontIcon sx={{ fontSize: '14px !important', color: '#fff !important' }} />} label="Forum Jual Beli Amal" sx={{ bgcolor: 'rgba(255,255,255,0.18)', color: '#fff', fontWeight: 700, mb: 2 }} />
           <Typography variant="h3" fontWeight={800} sx={{ fontSize: { xs: '1.9rem', md: '2.6rem' }, mb: 1.5 }}>
@@ -121,7 +124,7 @@ export default function FjbAmal() {
                     <CardActionArea onClick={() => !item.sold && setSelected(item)} disabled={item.sold}>
                       <Box sx={{
                         height: 140, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 56,
-                        background: 'linear-gradient(135deg, rgba(30,95,224,0.08), rgba(96,165,250,0.15))',
+                        background: 'linear-gradient(135deg, rgba(47,125,79,0.08), rgba(246,196,83,0.18))',
                       }}>
                         {item.emoji}
                       </Box>
@@ -159,7 +162,7 @@ export default function FjbAmal() {
             <DialogContent dividers>
               <Box sx={{
                 height: 140, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 64, borderRadius: 3, mb: 2,
-                background: 'linear-gradient(135deg, rgba(30,95,224,0.08), rgba(96,165,250,0.15))',
+                background: 'linear-gradient(135deg, rgba(47,125,79,0.08), rgba(246,196,83,0.18))',
               }}>
                 {selected.emoji}
               </Box>

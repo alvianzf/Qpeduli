@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import api, { apiErrorMessage } from './api';
-import { adaptCategory, adaptFjbItem, adaptThread, adaptUserProfile } from './adapters';
+import { adaptCategory, adaptFjbItem, adaptModalUsaha, adaptThread, adaptUserProfile } from './adapters';
 
 export function useStats() {
   return useQuery({
@@ -135,3 +135,66 @@ export function useCreateFjbItem() {
 }
 
 export { apiErrorMessage };
+
+export function useModalUsahaList() {
+  return useQuery({
+    queryKey: ['modal-usaha'],
+    queryFn: async () => {
+      const { data } = await api.get('/modal-usaha');
+      return data.map(adaptModalUsaha);
+    },
+  });
+}
+
+export function useMyModalUsaha(enabled: boolean) {
+  return useQuery({
+    queryKey: ['modal-usaha', 'mine'],
+    queryFn: async () => {
+      const { data } = await api.get('/modal-usaha/mine');
+      return data.map(adaptModalUsaha);
+    },
+    enabled,
+  });
+}
+
+export function useModalUsaha(id?: string) {
+  return useQuery({
+    queryKey: ['modal-usaha', id],
+    queryFn: async () => {
+      const { data } = await api.get(`/modal-usaha/${id}`);
+      return adaptModalUsaha(data);
+    },
+    enabled: !!id,
+  });
+}
+
+export function useCreateModalUsaha() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (payload: {
+      title: string;
+      story: string;
+      businessType?: string;
+      city?: string;
+      emoji?: string;
+      target: number;
+      deadline: string;
+      rewards: { title: string; description?: string; minAmount: number; stock?: number }[];
+    }) => {
+      const { data } = await api.post('/modal-usaha', payload);
+      return data;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['modal-usaha'] });
+    },
+  });
+}
+
+export function useDonateToProject(campaignId: string) {
+  return useMutation({
+    mutationFn: async (payload: { amount: number; anonymous: boolean; rewardId?: string }) => {
+      const { data } = await api.post(`/campaigns/${campaignId}/donate`, payload);
+      return data;
+    },
+  });
+}

@@ -1,5 +1,7 @@
 import { useParams } from 'react-router-dom';
 import Box from '@mui/material/Box';
+import HeroDecor from '../components/HeroDecor';
+import { heroBase } from '../theme/theme';
 import Container from '@mui/material/Container';
 import Grid from '../components/ui/FlexGrid';
 import Card from '@mui/material/Card';
@@ -53,7 +55,7 @@ export default function Profile() {
 
   return (
     <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', pb: 10 }}>
-      <Box sx={{ background: 'linear-gradient(180deg,#2F4F8A,#4267B2)', height: 160 }} />
+      <Box sx={{ ...heroBase, height: 160 }}><HeroDecor divider={false} /></Box>
       <Container maxWidth="lg" sx={{ mt: -10 }}>
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
           <Card sx={{ p: { xs: 2.5, md: 4 }, mb: 3 }}>

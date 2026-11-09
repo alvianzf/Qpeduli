@@ -1,5 +1,7 @@
 import { useState, type ReactElement } from 'react';
 import Box from '@mui/material/Box';
+import HeroDecor from '../components/HeroDecor';
+import { heroBase } from '../theme/theme';
 import Container from '@mui/material/Container';
 import Typography from '../components/ui/Txt';
 import Grid from '../components/ui/FlexGrid';
@@ -57,7 +59,8 @@ export default function Komunitas() {
 
   return (
     <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', pb: 8 }}>
-      <Box sx={{ background: 'linear-gradient(180deg,#2F4F8A,#4267B2)', color: '#fff', pt: { xs: 6, md: 8 }, pb: { xs: 6, md: 8 } }}>
+      <Box sx={{ ...heroBase, pt: { xs: 6, md: 8 }, pb: { xs: 9, md: 11 } }}>
+        <HeroDecor />
         <Container maxWidth="lg">
           <Typography variant="h3" fontWeight={800} sx={{ fontSize: { xs: '1.9rem', md: '2.6rem' } }}>
             {activeCategory ? activeCategory.name : 'Ruang Komunitas'}
@@ -102,7 +105,7 @@ export default function Komunitas() {
                 >
                   <Box sx={{
                     p: 2, borderRadius: 4, textAlign: 'center', bgcolor: '#fff',
-                    border: '1px solid rgba(30,95,224,0.1)', boxShadow: '0 6px 18px rgba(18,58,140,0.06)',
+                    border: '1px solid rgba(47,125,79,0.14)', boxShadow: '0 6px 18px rgba(27,74,51,0.07)',
                   }}>
                     <Box sx={{ color: c.color, mb: 0.5 }}>{iconMap[c.icon]}</Box>
                     <Typography variant="body2" fontWeight={700} noWrap>{c.name}</Typography>

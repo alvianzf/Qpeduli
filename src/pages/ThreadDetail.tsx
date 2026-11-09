@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
+import HeroDecor from '../components/HeroDecor';
 import Container from '@mui/material/Container';
 import Grid from '../components/ui/FlexGrid';
 import Typography from '../components/ui/Txt';
@@ -26,7 +27,7 @@ import CampaignIcon from '@mui/icons-material/Campaign';
 import ForumIcon from '@mui/icons-material/Forum';
 import { alpha } from '@mui/material/styles';
 import { formatRupiah, timeAgo } from '../data/mockData';
-import { brand } from '../theme/theme';
+import { brand, heroBase } from '../theme/theme';
 import { userCache as users, categoryCache } from '../lib/adapters';
 import { useThread, useAddComment, apiErrorMessage } from '../lib/queries';
 import { useAuth } from '../context/AuthContext';
@@ -82,7 +83,8 @@ export default function ThreadDetail() {
 
   return (
     <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', pb: 10 }}>
-      <Box sx={{ background: 'linear-gradient(180deg,#2F4F8A,#4267B2)', pt: { xs: 4, md: 5 }, pb: { xs: 12, md: 14 } }}>
+      <Box sx={{ ...heroBase, pt: { xs: 4, md: 5 }, pb: { xs: 12, md: 14 } }}>
+        <HeroDecor />
         <Container maxWidth="lg">
           <Button
             startIcon={<ArrowBackIcon />}
@@ -180,7 +182,7 @@ export default function ThreadDetail() {
                   </Stack>
                   <Stack spacing={2.5}>
                     {thread.updates.map((u) => (
-                      <Box key={u.id} sx={{ pl: 2, borderLeft: '3px solid #4267B2' }}>
+                      <Box key={u.id} sx={{ pl: 2, borderLeft: '3px solid #2F7D4F' }}>
                         <Typography fontWeight={700}>{u.title}</Typography>
                         <Typography variant="caption" color="text.secondary">{timeAgo(u.date)}</Typography>
                         <Typography variant="body2" sx={{ mt: 0.5 }}>{u.content}</Typography>

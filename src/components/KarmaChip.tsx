@@ -10,7 +10,7 @@ export default function KarmaChip({ karma, size = 'small' }: { karma: number; si
       size={size}
       sx={{
         bgcolor: alpha('#EF4444', 0.08),
-        color: '#0B1E4D',
+        color: '#1B2E22',
         fontWeight: 700,
         border: `1px solid ${alpha('#EF4444', 0.2)}`,
       }}

@@ -19,6 +19,11 @@ enum CampaignStatus {
   COMPLETED
 }
 
+enum CampaignKind {
+  AKSI_SOSIAL
+  MODAL_USAHA
+}
+
 enum FjbCondition {
   BARU
   SEPERTI_BARU
@@ -46,13 +51,14 @@ model User {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  threads      Thread[]
-  comments     Comment[]
-  donations    Donation[]
-  fjbItems     FjbItem[]
-  updates      CampaignUpdate[]
-  guaranteeing Campaign[]       @relation("Guarantor")
-  karmaLogs    KarmaLog[]
+  threads        Thread[]
+  comments       Comment[]
+  donations      Donation[]
+  fjbItems       FjbItem[]
+  updates        CampaignUpdate[]
+  guaranteeing   Campaign[]       @relation("Guarantor")
+  ownedCampaigns Campaign[]       @relation("CampaignOwner")
+  karmaLogs      KarmaLog[]
 
   @@map("users")
 }
@@ -90,8 +96,8 @@ model Thread {
 
 model Campaign {
   id          Int            @id @default(autoincrement())
-  threadId    Int            @unique
-  thread      Thread         @relation(fields: [threadId], references: [id])
+  threadId    Int?           @unique
+  thread      Thread?        @relation(fields: [threadId], references: [id])
   target      Decimal
   collected   Decimal        @default(0)
   disbursed   Decimal        @default(0)
@@ -102,6 +108,17 @@ model Campaign {
   guarantor   User?          @relation("Guarantor", fields: [guarantorId], references: [id])
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
+
+  // Modal Usaha (business-start crowdfunding) projects have no forum thread.
+  kind         CampaignKind @default(AKSI_SOSIAL)
+  title        String?
+  story        String?
+  businessType String?
+  city         String?
+  emoji        String?
+  ownerId      Int?
+  owner        User?        @relation("CampaignOwner", fields: [ownerId], references: [id])
+  rewards      Reward[]
 
   milestones Milestone[]
   updates    CampaignUpdate[]
@@ -158,6 +175,8 @@ model Donation {
   donor       User?          @relation(fields: [donorId], references: [id])
   amount      Decimal
   anonymous   Boolean        @default(false)
+  rewardId    Int?
+  reward      Reward?        @relation(fields: [rewardId], references: [id])
   status      DonationStatus @default(PENDING)
   createdAt   DateTime       @default(now())
   confirmedAt DateTime?
@@ -192,4 +211,19 @@ model KarmaLog {
   createdAt DateTime @default(now())
 
   @@map("karma_logs")
+}
+
+model Reward {
+  id          Int      @id @default(autoincrement())
+  campaignId  Int
+  campaign    Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  title       String
+  description String?
+  minAmount   Decimal
+  stock       Int?
+  order       Int      @default(0)
+
+  donations Donation[]
+
+  @@map("rewards")
 }

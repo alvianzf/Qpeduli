@@ -1,4 +1,5 @@
 import Box from '@mui/material/Box';
+import HeroDecor from '../components/HeroDecor';
 import Container from '@mui/material/Container';
 import Typography from '../components/ui/Txt';
 import Grid from '../components/ui/FlexGrid';
@@ -14,7 +15,7 @@ import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutlined';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import { heroGradient } from '../theme/theme';
+import { heroBase } from '../theme/theme';
 
 const pillars = [
   {
@@ -59,7 +60,8 @@ const karmaRules = [
 export default function TrustSafety() {
   return (
     <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', pb: 10 }}>
-      <Box sx={{ background: heroGradient, color: '#fff', pt: { xs: 6, md: 9 }, pb: { xs: 8, md: 11 } }}>
+      <Box sx={{ ...heroBase, pt: { xs: 6, md: 9 }, pb: { xs: 8, md: 11 } }}>
+        <HeroDecor />
         <Container maxWidth="lg">
           <Chip icon={<ShieldIcon sx={{ fontSize: '14px !important', color: '#fff !important' }} />} label="Transparansi & Keamanan" sx={{ bgcolor: 'rgba(255,255,255,0.18)', color: '#fff', fontWeight: 700, mb: 2 }} />
           <Typography variant="h3" fontWeight={800} sx={{ fontSize: { xs: '1.9rem', md: '2.6rem' }, mb: 1.5, maxWidth: 720 }}>
@@ -113,7 +115,7 @@ export default function TrustSafety() {
             </motion.div>
 
             <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-              <Card sx={{ p: { xs: 3, md: 4 }, mt: 3, backgroundImage: 'linear-gradient(135deg, rgba(30,95,224,0.06), rgba(96,165,250,0.1))' }}>
+              <Card sx={{ p: { xs: 3, md: 4 }, mt: 3, backgroundImage: 'linear-gradient(135deg, rgba(47,125,79,0.07), rgba(246,196,83,0.14))' }}>
                 <Typography variant="h6" fontWeight={800} sx={{ mb: 1.5 }}>Kenapa Bukan Murni Komunitas atau Murni Admin?</Typography>
                 <Stack spacing={1.5}>
                   <Typography variant="body2">
