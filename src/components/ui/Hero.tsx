@@ -14,6 +14,8 @@ interface HeroProps {
   /** Large visual on the right on desktop (illustration, featured card). */
   aside?: ReactNode;
   size?: 'sm' | 'md' | 'lg';
+  /** 'warm' paints the hero in the orange call-to-action palette (used for donation-led pages). */
+  tone?: 'blue' | 'warm';
   /** Kept for compatibility. */
   overlap?: boolean;
   children?: ReactNode;
@@ -26,11 +28,13 @@ const pad = {
 };
 
 /** Full-bleed translucent glossy hero with a big visual and rolling hills at its foot. */
-export default function Hero({ eyebrow, title, subtitle, actions, aside, size = 'md', children }: HeroProps) {
+const warm = 'linear-gradient(170deg, rgba(190,60,0,0.9) 0%, rgba(242,84,0,0.84) 50%, rgba(255,138,61,0.78) 100%)';
+
+export default function Hero({ eyebrow, title, subtitle, actions, aside, size = 'md', tone = 'blue', children }: HeroProps) {
   return (
-    <Box sx={{ ...heroBase, ...pad[size], borderRadius: 0, border: 'none', borderBottom: '1px solid rgba(255,255,255,0.4)' }}>
+    <Box sx={{ ...heroBase, ...(tone === 'warm' ? { background: warm } : {}), ...pad[size], borderRadius: 0, border: 'none', borderBottom: '1px solid rgba(255,255,255,0.4)' }}>
       <HeroDecor />
-      <Container maxWidth="xl">
+      <Container maxWidth="xl" sx={{ px: { xs: 3, sm: 5, md: 8 } }}>
         <Box
           sx={{
             display: 'grid',

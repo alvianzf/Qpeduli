@@ -104,3 +104,42 @@ export function GoodwillMark({ size = 40, light = false }: { size?: number; ligh
     </svg>
   );
 }
+
+/** Hero illustration for giving: two cupped hands lifting a heart that sprouts, with coins and a sun. */
+export function DonationArt({ size = 260 }: { size?: number }) {
+  return (
+    <svg width={size} height={size * 0.82} viewBox="0 0 320 262" fill="none" aria-hidden>
+      <defs>
+        <radialGradient id="da-glow" cx="50%" cy="45%" r="55%">
+          <stop offset="0%" stopColor="#FFF3B8" stopOpacity=".9" />
+          <stop offset="100%" stopColor="#FFF3B8" stopOpacity="0" />
+        </radialGradient>
+        <linearGradient id="da-heart" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#FF8A8A" />
+          <stop offset="100%" stopColor="#E5484D" />
+        </linearGradient>
+      </defs>
+      <circle cx="160" cy="112" r="112" fill="url(#da-glow)" />
+      {/* coins */}
+      <g className="float-slow">
+        <circle cx="62" cy="70" r="16" fill="#F6C453" stroke="#fff" strokeWidth="3" />
+        <path d="M62 62v16M57 66h8a3 3 0 010 6h-8" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" />
+      </g>
+      <g className="float-slow" style={{ animationDelay: '-2s' }}>
+        <circle cx="262" cy="52" r="12" fill="#F6C453" stroke="#fff" strokeWidth="3" />
+        <circle cx="282" cy="118" r="9" fill="#FFD978" stroke="#fff" strokeWidth="2.5" />
+      </g>
+      {/* sprout */}
+      <path d="M160 86V58" stroke="#16A34A" strokeWidth="5" strokeLinecap="round" />
+      <path d="M160 64C146 62 138 52 138 40c14 0 24 8 22 24Z" fill="#22C55E" />
+      <path d="M160 58C172 56 182 48 182 36c-14 0-24 6-22 22Z" fill="#4ADE80" />
+      {/* heart */}
+      <path className="float-slow" d="M160 170C118 142 104 118 118 98c11-15 32-12 42 4 10-16 31-19 42-4 14 20 0 44-42 72Z" fill="url(#da-heart)" stroke="#fff" strokeWidth="4" strokeLinejoin="round" />
+      <path d="M130 108c4-8 12-10 18-6" stroke="#fff" strokeOpacity=".7" strokeWidth="4" strokeLinecap="round" />
+      {/* hands */}
+      <path d="M36 196c22-14 44-8 66 4l40 20c10 5 8 18-4 18H56c-14 0-26-8-34-20Z" fill="#FFD9B8" stroke="#fff" strokeWidth="4" strokeLinejoin="round" />
+      <path d="M284 196c-22-14-44-8-66 4l-40 20c-10 5-8 18 4 18h86c14 0 26-8 34-20Z" fill="#F7C79B" stroke="#fff" strokeWidth="4" strokeLinejoin="round" />
+      <path d="M102 200c18 8 38 12 58 12s40-4 58-12" stroke="#fff" strokeOpacity=".6" strokeWidth="3" strokeLinecap="round" />
+    </svg>
+  );
+}

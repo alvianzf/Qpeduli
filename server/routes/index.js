@@ -10,6 +10,7 @@ router.use("/admin", require("./admin"));
 router.use("/fjb", require("./fjb"));
 router.use("/users", require("./users"));
 router.use("/stats", require("./stats"));
+router.use("/hotspots", require("./hotspots"));
 
 router.get("/health", (req, res) => res.json({ ok: true, service: "qpeduli-backend" }));
 

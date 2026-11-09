@@ -18,6 +18,7 @@ import TrustSafety from './pages/TrustSafety';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Wilayah from './pages/Wilayah';
+import Karhutla from './pages/Karhutla';
 import Mitra from './pages/Mitra';
 import NotFound from './pages/NotFound';
 
@@ -56,6 +57,7 @@ export default function App() {
               <Route path="/fjb" element={<PageTransition><FjbAmal /></PageTransition>} />
               <Route path="/profil/:username" element={<PageTransition><Profile /></PageTransition>} />
               <Route path="/wilayah/:id" element={<PageTransition><Wilayah /></PageTransition>} />
+              <Route path="/karhutla" element={<PageTransition><Karhutla /></PageTransition>} />
               <Route path="/mitra" element={<PageTransition><Mitra /></PageTransition>} />
               <Route path="/keamanan" element={<PageTransition><TrustSafety /></PageTransition>} />
               <Route path="/masuk" element={<PageTransition><Login /></PageTransition>} />

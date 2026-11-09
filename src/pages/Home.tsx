@@ -12,13 +12,14 @@ import Section from '../components/ui/Section';
 import CardGrid from '../components/ui/CardGrid';
 import GlossCard from '../components/ui/GlossCard';
 import IconTile from '../components/ui/IconTile';
+import Stack from '../components/ui/FlexStack';
 import Typography from '../components/ui/Txt';
 import EmptyState from '../components/EmptyState';
 import ThreadCard from '../components/ThreadCard';
 import IndonesiaMap from '../components/IndonesiaMap';
 import { useRegions } from '../lib/useRegions';
 import ProjectCard from '../components/ProjectCard';
-import { HandHeart, Sprout, Tree, Flower } from '../components/art/Nature';
+import { Sprout, DonationArt } from '../components/art/Nature';
 import { categoryIcon } from '../components/categoryIcons';
 import { formatRupiah } from '../data/mockData';
 import { brand } from '../theme/theme';
@@ -57,31 +58,27 @@ export default function Home() {
     <Box>
       <Hero
         size="lg"
-        eyebrow={<Chip label="Tumbuh bersama" sx={{ bgcolor: 'rgba(255,255,255,0.18)', color: '#fff' }} />}
-        title={<>Modal kecil.<br />Usaha bertunas.</>}
-        subtitle="Danai warga yang memulai usahanya, dukung aksi di sekitarmu, dan awasi bersama."
+        tone="warm"
+        eyebrow={<Chip icon={<VolunteerActivismIcon sx={{ color: '#fff !important' }} />} label="Donasi" sx={{ bgcolor: 'rgba(255,255,255,0.22)', color: '#fff' }} />}
+        title={<>Satu donasi,<br />satu harapan.</>}
+        subtitle="Beri langsung ke warga yang butuh modal usaha dan aksi sosial di sekitarmu. Dana cair bertahap, diawasi bersama."
         actions={
           <>
-            <Button size="large" variant="contained" color="warning" startIcon={<VolunteerActivismIcon />} onClick={() => document.getElementById('donasi')?.scrollIntoView({ behavior: 'smooth' })}>Donasi</Button>
-            <Button size="large" variant="contained" onClick={() => navigate('/modal-usaha')} sx={{ bgcolor: '#fff', color: 'primary.dark', backgroundImage: 'none', '&:hover': { bgcolor: brand.ice } }}>Danai Usaha</Button>
+            <Button size="large" variant="contained" startIcon={<VolunteerActivismIcon />} onClick={() => document.getElementById('donasi')?.scrollIntoView({ behavior: 'smooth' })} sx={{ bgcolor: '#fff', color: '#C2410C', backgroundImage: 'none', '&:hover': { bgcolor: '#FFF1E6' } }}>Donasi sekarang</Button>
+            <Button size="large" variant="outlined" onClick={() => navigate('/modal-usaha')} sx={{ color: '#fff', borderColor: 'rgba(255,255,255,0.7)', '&:hover': { borderColor: '#fff', bgcolor: 'rgba(255,255,255,0.12)' } }}>Danai Usaha</Button>
           </>
         }
         aside={
-          featured[0]?.campaign ? (
-            <GlossCard sx={{ gap: 2, p: 3 }}>
-              <Chip icon={<VolunteerActivismIcon />} label="Butuh dukungan" color="primary" size="small" sx={{ alignSelf: 'flex-start' }} />
-              <Typography variant="h5" sx={{ fontSize: '1.3rem', color: 'text.primary' }}>{featured[0].title}</Typography>
-              <CampaignProgress campaign={featured[0].campaign} />
-              <Button fullWidth size="large" variant="contained" color="warning" startIcon={<VolunteerActivismIcon />} onClick={() => setDonateOpen(true)}>Donasi sekarang</Button>
-              <Button fullWidth onClick={() => navigate(`/thread/${featured[0].id}`)}>Lihat kampanye</Button>
-            </GlossCard>
-          ) : (
-            <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'flex-end', justifyContent: 'center', gap: 2 }}>
-              <Box className="float-slow"><Tree size={200} /></Box>
-              <Box className="float-slow" sx={{ animationDelay: '-2s' }}><HandHeart size={260} /></Box>
-              <Box className="float-slow" sx={{ animationDelay: '-4s' }}><Flower size={110} /></Box>
-            </Box>
-          )
+          <Stack alignItems="stretch" spacing={2}>
+            <Box className="float-slow" sx={{ display: { xs: 'none', md: 'flex' }, justifyContent: 'center' }}><DonationArt size={300} /></Box>
+            {featured[0]?.campaign && (
+              <GlossCard sx={{ gap: 2, p: 3 }}>
+                <Typography variant="h5" sx={{ fontSize: '1.2rem', color: 'text.primary' }}>{featured[0].title}</Typography>
+                <CampaignProgress campaign={featured[0].campaign} />
+                <Button fullWidth size="large" variant="contained" color="warning" startIcon={<VolunteerActivismIcon />} onClick={() => setDonateOpen(true)}>Donasi</Button>
+              </GlossCard>
+            )}
+          </Stack>
         }
       />
 

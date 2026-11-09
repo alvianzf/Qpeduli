@@ -22,6 +22,7 @@ const links = [
   { label: 'Beranda', to: '/' },
   { label: 'Komunitas', to: '/komunitas' },
   { label: 'Modal Usaha', to: '/modal-usaha' },
+  { label: 'Karhutla', to: '/karhutla' },
   { label: 'Keamanan', to: '/keamanan' },
   { label: 'Mitra', to: '/mitra' },
 ];

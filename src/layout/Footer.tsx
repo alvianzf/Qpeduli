@@ -13,6 +13,7 @@ const footerLinks = {
     { label: 'Komunitas', to: '/komunitas' },
     { label: 'Modal Usaha', to: '/modal-usaha' },
     { label: 'FJB', to: '/fjb' },
+    { label: 'Karhutla', to: '/karhutla' },
     { label: 'Keamanan', to: '/keamanan' },
     { label: 'Mitra', to: '/mitra' },
   ],
