@@ -33,8 +33,8 @@ export const heroBase = {
   isolation: 'isolate',
   background: heroGradientSoft,
   color: '#fff',
-  mx: { xs: 1, md: 2.5 },
-  mt: 1,
+  mx: 0,
+  mt: 0,
   borderRadius: '24px',
   border: '1px solid rgba(255,255,255,0.45)',
   boxShadow:
@@ -63,8 +63,6 @@ export const heroBase = {
   },
 } as const;
 
-// Full-bleed variant for pages where the band fills the screen (login/register).
-export const heroFull = { mx: 0, mt: 0, borderRadius: 0, border: 'none' } as const;
 
 const HEAD = `'Montserrat', 'Segoe UI', sans-serif`;
 
@@ -211,7 +209,7 @@ const theme = createTheme({
     },
     MuiCardContent: {
       styleOverrides: {
-        root: { padding: 24, '&:last-child': { paddingBottom: 24 } },
+        root: { padding: 18, '&:last-child': { paddingBottom: 18 } },
       },
     },
     MuiDialog: {

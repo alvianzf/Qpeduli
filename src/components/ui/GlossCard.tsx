@@ -13,7 +13,7 @@ interface GlossCardProps {
 }
 
 /**
- * The one card. 16px radius, 24px padding, column layout that fills its grid cell,
+ * The one card. 16px radius, 18px padding, column layout that fills its grid cell,
  * so a footer with `mt: 'auto'` always lands on the same line across a row.
  */
 export default function GlossCard({ children, onClick, flush = false, delay = 0, sx }: GlossCardProps) {
@@ -43,7 +43,7 @@ export default function GlossCard({ children, onClick, flush = false, delay = 0,
             display: 'flex',
             flexDirection: 'column',
             overflow: 'hidden',
-            p: flush ? 0 : 3,
+            p: flush ? 0 : 2.25,
             transition: 'transform .2s ease, box-shadow .2s ease',
             ...(interactive && {
               cursor: 'pointer',

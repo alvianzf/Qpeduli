@@ -3,6 +3,7 @@ import { Routes, Route, useLocation } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import { AnimatePresence, motion } from 'framer-motion';
 import Navbar from './layout/Navbar';
+import { CONTENT_ML, CONTENT_MAX } from './layout/layoutConst';
 import NatureBackground from './components/NatureBackground';
 import Admin from './pages/Admin';
 import ModalUsaha from './pages/ModalUsaha';
@@ -42,7 +43,7 @@ export default function App() {
       <NatureBackground />
       <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', position: 'relative', zIndex: 1 }}>
         {!hideChrome && <Navbar />}
-        <Box sx={{ flex: 1 }}>
+        <Box sx={{ flex: 1, minWidth: 0, ...(hideChrome ? {} : { ml: { md: `${CONTENT_ML}px` }, mr: { md: 2 }, px: { xs: 1, md: 0 }, pt: 1.5, maxWidth: { md: CONTENT_MAX } }) }}>
           <AnimatePresence mode="wait">
             <Routes location={location} key={location.pathname}>
               <Route path="/" element={<PageTransition><Home /></PageTransition>} />
@@ -62,7 +63,7 @@ export default function App() {
             </Routes>
           </AnimatePresence>
         </Box>
-        {!hideChrome && <Footer />}
+        {!hideChrome && <Box sx={{ ml: { md: `${CONTENT_ML}px` }, mr: { md: 2 }, px: { xs: 1, md: 0 }, maxWidth: { md: CONTENT_MAX } }}><Footer /></Box>}
       </Box>
     </CreateThreadProvider>
   );

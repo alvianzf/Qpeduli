@@ -64,7 +64,7 @@ export default function TrustSafety() {
       </Section>
 
       <Section>
-        <Box sx={{ display: 'grid', gap: 3, gridTemplateColumns: { xs: '1fr', md: 'minmax(0,7fr) minmax(0,5fr)' }, alignItems: 'start' }}>
+        <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: 'minmax(0,7fr) minmax(0,5fr)' }, alignItems: 'start' }}>
           <Stack spacing={3}>
             <GlossCard sx={{ p: { xs: 3, md: 4 }, gap: 3 }}>
               <Typography variant="h5">Alur pencairan</Typography>
