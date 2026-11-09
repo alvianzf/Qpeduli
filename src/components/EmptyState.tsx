@@ -1,9 +1,9 @@
 import type { ReactNode } from 'react';
 import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import Typography from './ui/Txt';
 import Stack from './ui/FlexStack';
-import { alpha } from '@mui/material/styles';
+import Typography from './ui/Txt';
+import GlossCard from './ui/GlossCard';
+import IconTile from './ui/IconTile';
 import { brand } from '../theme/theme';
 
 export default function EmptyState({
@@ -20,32 +20,17 @@ export default function EmptyState({
   color?: string;
 }) {
   return (
-    <Card sx={{ p: { xs: 4, md: 6 }, textAlign: 'center' }}>
-      <Stack alignItems="center" spacing={2}>
-        <Box
-          sx={{
-            width: 64,
-            height: 64,
-            borderRadius: '50%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            bgcolor: alpha(color, 0.1),
-            color,
-          }}
-        >
-          {icon}
-        </Box>
+    <GlossCard sx={{ p: { xs: 4, md: 6 }, alignItems: 'center', textAlign: 'center' }}>
+      <Stack alignItems="center" spacing={2.5}>
+        <IconTile color={color}>{icon}</IconTile>
         <Box>
-          <Typography fontWeight={700} sx={{ mb: 0.5 }}>{title}</Typography>
+          <Typography variant="h6" sx={{ mb: 0.75 }}>{title}</Typography>
           {description && (
-            <Typography variant="body2" color="text.secondary" sx={{ maxWidth: 360, mx: 'auto' }}>
-              {description}
-            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ maxWidth: 380, mx: 'auto' }}>{description}</Typography>
           )}
         </Box>
         {action}
       </Stack>
-    </Card>
+    </GlossCard>
   );
 }

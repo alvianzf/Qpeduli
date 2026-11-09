@@ -84,7 +84,9 @@ router.post(
     body("rewards").optional().isArray({ max: 8 }),
     body("rewards.*.title").optional().trim().notEmpty().withMessage("Judul hadiah wajib diisi."),
     body("rewards.*.minAmount").optional().isFloat({ gt: 0 }).withMessage("Nominal hadiah tidak valid."),
-    body("milestones").optional().isArray({ max: 8 }),
+    body("milestones").isArray({ min: 1, max: 8 }).withMessage("Tambahkan minimal satu tahap pencairan."),
+    body("milestones.*.label").trim().notEmpty().withMessage("Nama tahap wajib diisi."),
+    body("milestones.*.amount").isFloat({ gt: 0 }).withMessage("Nominal tahap tidak valid."),
   ],
   validate,
   async (req, res, next) => {
@@ -93,6 +95,10 @@ router.post(
 
       if (new Date(deadline) <= new Date()) {
         return res.status(400).json({ error: "Batas waktu harus di masa depan." });
+      }
+      const milestoneTotal = milestones.reduce((sum, m) => sum + Number(m.amount), 0);
+      if (Math.abs(milestoneTotal - Number(target)) > 1) {
+        return res.status(400).json({ error: "Total semua tahap harus sama dengan target dana." });
       }
 
       const project = await prisma.campaign.create({

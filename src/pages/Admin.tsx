@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
 import Typography from '../components/ui/Txt';
-import Grid from '../components/ui/FlexGrid';
+import Hero from '../components/ui/Hero';
+import Section from '../components/ui/Section';
+import CardGrid from '../components/ui/CardGrid';
+import GlossCard from '../components/ui/GlossCard';
 import Card from '@mui/material/Card';
 import Stack from '../components/ui/FlexStack';
 import Chip from '@mui/material/Chip';
@@ -17,10 +19,8 @@ import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import CircularProgress from '@mui/material/CircularProgress';
 import { Navigate } from 'react-router-dom';
-import HeroDecor from '../components/HeroDecor';
 import EmptyState from '../components/EmptyState';
 import { Sprout } from '../components/art/Nature';
-import { heroBase } from '../theme/theme';
 import { formatRupiah, timeAgo } from '../data/mockData';
 import { useAuth, type Role } from '../context/AuthContext';
 import { useAdminOverview, useAdminList, useAdminAction, apiErrorMessage } from '../lib/queries';
@@ -56,18 +56,21 @@ function Overview() {
     { label: 'Pengguna', value: data.users },
     { label: 'Dana terkumpul', value: formatRupiah(Number(data.totalCollected)) },
     { label: 'Dana dicairkan', value: formatRupiah(Number(data.totalDisbursed)) },
+    { label: 'Donasi terkonfirmasi', value: data.confirmedDonations ?? 0 },
+    { label: 'Rata-rata donasi', value: formatRupiah(Number(data.avgDonation ?? 0)) },
+    { label: 'Donatur', value: data.donors ?? 0 },
+    { label: 'Donatur berulang', value: data.repeatDonors ?? 0 },
+    { label: 'Kampanye terdanai', value: data.fundedCampaigns ?? 0 },
   ];
   return (
-    <Grid container spacing={3}>
+    <CardGrid cols={{ xs: 2, md: 4 }}>
       {cards.map((c) => (
-        <Grid size={{ xs: 6, md: 4 }} key={c.label}>
-          <Card sx={{ p: 3 }}>
-            <Typography variant="h5" color="primary.dark">{c.value}</Typography>
-            <Typography variant="body2" color="text.secondary">{c.label}</Typography>
-          </Card>
-        </Grid>
+        <GlossCard key={c.label} sx={{ gap: 0.5 }}>
+          <Typography variant="h5" color="primary.dark">{c.value}</Typography>
+          <Typography variant="body2" color="text.secondary">{c.label}</Typography>
+        </GlossCard>
       ))}
-    </Grid>
+    </CardGrid>
   );
 }
 
@@ -234,26 +237,20 @@ export default function Admin() {
   if (!user || user.role !== 'ADMIN') return <Navigate to="/" replace />;
 
   return (
-    <Box sx={{ minHeight: '100vh', pb: 10 }}>
-      <Box sx={{ ...heroBase, pt: { xs: 5, md: 7 }, pb: { xs: 8, md: 10 } }}>
-        <HeroDecor />
-        <Container maxWidth="lg">
-          <Typography variant="h3" sx={{ fontSize: { xs: '1.8rem', md: '2.4rem' } }}>Panel Admin</Typography>
-          <Typography sx={{ opacity: 0.85 }}>Verifikasi usaha, konfirmasi donasi, cairkan milestone, kelola peran.</Typography>
-        </Container>
-      </Box>
-      <Container maxWidth="lg" sx={{ mt: -3, position: 'relative', zIndex: 1 }}>
-        <Card sx={{ mb: 3 }}>
+    <Box>
+      <Hero size="sm" title="Panel Admin" subtitle="Verifikasi, konfirmasi donasi, pencairan, peran." />
+      <Section overlap>
+        <GlossCard flush sx={{ mb: 3, height: 'auto' }}>
           <Tabs value={tab} onChange={(_, v) => setTab(v)} variant="scrollable" scrollButtons="auto">
             {tabs.map((t) => <Tab key={t} label={t} />)}
           </Tabs>
-        </Card>
+        </GlossCard>
         {tab === 0 && <Overview />}
         {tab === 1 && <Verification />}
         {tab === 2 && <Donations />}
         {tab === 3 && <Disbursement />}
         {tab === 4 && <Users />}
-      </Container>
+      </Section>
     </Box>
   );
 }

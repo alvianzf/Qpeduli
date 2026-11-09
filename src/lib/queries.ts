@@ -180,6 +180,7 @@ export function useCreateModalUsaha() {
       target: number;
       deadline: string;
       rewards: { title: string; description?: string; minAmount: number; stock?: number }[];
+      milestones: { label: string; amount: number }[];
     }) => {
       const { data } = await api.post('/modal-usaha', payload);
       return data;

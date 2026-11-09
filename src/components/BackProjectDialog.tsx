@@ -18,7 +18,7 @@ import { alpha } from '@mui/material/styles';
 import { formatRupiah } from '../data/mockData';
 import { useDonateToProject, apiErrorMessage } from '../lib/queries';
 import { brand } from '../theme/theme';
-import { HandHeart } from './art/Nature';
+import PaymentSummary, { type DonationResult } from './PaymentSummary';
 import type { ModalUsaha } from '../types';
 
 export default function BackProjectDialog({
@@ -36,7 +36,7 @@ export default function BackProjectDialog({
   const [rewardId, setRewardId] = useState<string>(initialRewardId || '');
   const [amount, setAmount] = useState(initial ? String(initial.minAmount) : '');
   const [anon, setAnon] = useState(false);
-  const [done, setDone] = useState(false);
+  const [result, setResult] = useState<DonationResult | null>(null);
   const [error, setError] = useState('');
   const donate = useDonateToProject(project.campaign.id);
 
@@ -53,8 +53,8 @@ export default function BackProjectDialog({
   const submit = async () => {
     setError('');
     try {
-      await donate.mutateAsync({ amount: value, anonymous: anon, rewardId: rewardId || undefined });
-      setDone(true);
+      const data = await donate.mutateAsync({ amount: value, anonymous: anon, rewardId: rewardId || undefined });
+      setResult({ payAmount: data.payAmount, reference: data.reference, instructions: data.instructions });
     } catch (err) {
       setError(apiErrorMessage(err, 'Gagal mencatat dukungan.'));
     }
@@ -67,15 +67,12 @@ export default function BackProjectDialog({
         <IconButton onClick={onClose} size="small"><CloseIcon /></IconButton>
       </DialogTitle>
       <DialogContent dividers>
-        {done ? (
-          <Stack alignItems="center" spacing={1.5} sx={{ py: 2 }}>
-            <Box className="float-slow"><HandHeart size={110} /></Box>
-            <Typography variant="h6" fontWeight={700}>Terima kasih, benihmu sudah ditanam!</Typography>
-            <Typography variant="body2" color="text.secondary" textAlign="center">
-              Dukungan {formatRupiah(value)} untuk "{project.title}" tercatat dan menunggu konfirmasi pembayaran admin
-              sebelum masuk ke total dana.{chosen ? ` Hadiah "${chosen.title}" akan dikirim pemilik usaha.` : ''}
-            </Typography>
-          </Stack>
+        {result ? (
+          <PaymentSummary
+            result={result}
+            title={project.title}
+            note={chosen ? `Hadiah "${chosen.title}" dikirim pemilik usaha setelah dana dikonfirmasi.` : undefined}
+          />
         ) : (
           <Stack spacing={2.5} sx={{ mt: 0.5 }}>
             {error && <Alert severity="error" sx={{ borderRadius: '12px' }}>{error}</Alert>}
@@ -117,14 +114,14 @@ export default function BackProjectDialog({
               label={<Typography variant="body2">Sembunyikan nama saya</Typography>}
             />
             <Alert severity="info" sx={{ borderRadius: '12px' }}>
-              Dana ditahan di eskrow Qpeduli dan dicairkan bertahap sesuai milestone usaha yang terverifikasi.
+              Dana dicairkan bertahap sesuai milestone usaha yang terverifikasi.
             </Alert>
           </Stack>
         )}
       </DialogContent>
       <DialogActions sx={{ p: 2 }}>
-        {done ? (
-          <Button onClick={onClose} variant="contained" fullWidth>Tutup</Button>
+        {result ? (
+          <Button onClick={onClose} variant="contained" fullWidth>Selesai</Button>
         ) : (
           <>
             <Button onClick={onClose} color="inherit">Batal</Button>

@@ -61,8 +61,3 @@ body {
 }
 @media (prefers-reduced-motion: reduce) { *::after { animation: none !important; } }
 
-/* Cards in a row share one height: the grid item, its motion wrapper and the card all stretch. */
-.grid-item > .MuiCard-root { flex: 1; }
-.grid-item:has(> .MuiCard-root), .grid-item:has(> div > .MuiCard-root) { display: flex; }
-.grid-item > div:has(> .MuiCard-root) { flex: 1; min-width: 0; display: flex; flex-direction: column; }
-.grid-item > div > .MuiCard-root { flex: 1; }

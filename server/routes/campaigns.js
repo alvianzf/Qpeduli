@@ -41,18 +41,33 @@ router.post(
         }
       }
 
+      // A 3-digit code added to the amount lets an admin match a bank transfer to a pledge.
+      const base = Number(amount);
+      let payAmount = base;
+      for (let i = 0; i < 25; i += 1) {
+        const candidate = base + 1 + Math.floor(Math.random() * 999);
+        const clash = await prisma.donation.count({ where: { status: "PENDING", amount: candidate } });
+        if (!clash) {
+          payAmount = candidate;
+          break;
+        }
+      }
+
       const donation = await prisma.donation.create({
         data: {
           campaignId,
           donorId: req.user ? req.user.id : null,
           rewardId: reward ? reward.id : null,
-          amount,
+          amount: payAmount,
           anonymous: Boolean(anonymous) || !req.user,
         },
       });
 
       res.status(201).json({
         donation,
+        payAmount,
+        reference: `QP-${donation.id}`,
+        instructions: process.env.PAYMENT_INSTRUCTIONS || null,
         message: "Donasi tercatat, menunggu konfirmasi pembayaran oleh admin.",
       });
     } catch (err) {

@@ -24,6 +24,12 @@ interface RewardDraft {
   stock: string;
 }
 
+interface MilestoneDraft {
+  label: string;
+  amount: string;
+}
+
+const emptyMilestone = (): MilestoneDraft => ({ label: '', amount: '' });
 const emptyReward = (): RewardDraft => ({ title: '', description: '', minAmount: '', stock: '' });
 
 export default function CreateModalUsahaDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
@@ -35,6 +41,7 @@ export default function CreateModalUsahaDialog({ open, onClose }: { open: boolea
   const [target, setTarget] = useState('');
   const [deadline, setDeadline] = useState('');
   const [rewards, setRewards] = useState<RewardDraft[]>([emptyReward()]);
+  const [milestones, setMilestones] = useState<MilestoneDraft[]>([emptyMilestone()]);
   const [error, setError] = useState('');
   const [done, setDone] = useState(false);
 
@@ -46,6 +53,7 @@ export default function CreateModalUsahaDialog({ open, onClose }: { open: boolea
     setTarget('');
     setDeadline('');
     setRewards([emptyReward()]);
+    setMilestones([emptyMilestone()]);
     setError('');
     setDone(false);
   };
@@ -58,8 +66,18 @@ export default function CreateModalUsahaDialog({ open, onClose }: { open: boolea
   const updateReward = (i: number, patch: Partial<RewardDraft>) =>
     setRewards((rs) => rs.map((r, idx) => (idx === i ? { ...r, ...patch } : r)));
 
+  const updateMilestone = (i: number, patch: Partial<MilestoneDraft>) =>
+    setMilestones((ms) => ms.map((m, idx) => (idx === i ? { ...m, ...patch } : m)));
+
+  const msTotal = milestones.reduce((sum, m) => sum + (Number(m.amount) || 0), 0);
+  const msOk = milestones.every((m) => m.label.trim() && Number(m.amount) > 0) && Math.abs(msTotal - Number(target)) <= 1;
+
   const submit = async () => {
     setError('');
+    if (!msOk) {
+      setError('Total semua tahap harus sama dengan target dana.');
+      return;
+    }
     const filled = rewards.filter((r) => r.title.trim() || r.minAmount);
     for (const r of filled) {
       if (!r.title.trim() || !Number(r.minAmount)) {
@@ -75,6 +93,7 @@ export default function CreateModalUsahaDialog({ open, onClose }: { open: boolea
         city: city.trim() || undefined,
         target: Number(target),
         deadline: new Date(deadline).toISOString(),
+        milestones: milestones.map((m) => ({ label: m.label.trim(), amount: Number(m.amount) })),
         rewards: filled.map((r) => ({
           title: r.title.trim(),
           description: r.description.trim() || undefined,
@@ -88,7 +107,7 @@ export default function CreateModalUsahaDialog({ open, onClose }: { open: boolea
     }
   };
 
-  const valid = title.trim().length >= 5 && story.trim().length >= 30 && Number(target) > 0 && deadline;
+  const valid = title.trim().length >= 5 && story.trim().length >= 30 && Number(target) > 0 && deadline && msOk;
 
   return (
     <Dialog open={open} onClose={close} fullWidth maxWidth="md">
@@ -134,6 +153,28 @@ export default function CreateModalUsahaDialog({ open, onClose }: { open: boolea
                 slotProps={{ inputLabel: { shrink: true } }}
                 fullWidth
               />
+            </Stack>
+
+            <Stack spacing={1.5}>
+              <Typography variant="subtitle2">Tahap pencairan</Typography>
+              <Typography variant="caption" color="text.secondary">
+                Dana cair per tahap setelah diverifikasi. Total harus sama dengan target
+                ({msTotal.toLocaleString('id-ID')} dari {(Number(target) || 0).toLocaleString('id-ID')}).
+              </Typography>
+              {milestones.map((m, i) => (
+                <Stack key={i} direction={{ xs: 'column', sm: 'row' }} spacing={1.5} alignItems={{ sm: 'flex-start' }}>
+                  <TextField label="Nama tahap" value={m.label} onChange={(e) => updateMilestone(i, { label: e.target.value })} fullWidth />
+                  <TextField label="Nominal (Rp)" type="number" value={m.amount} onChange={(e) => updateMilestone(i, { amount: e.target.value })} sx={{ minWidth: 170 }} />
+                  <IconButton aria-label="Hapus tahap" onClick={() => setMilestones((ms) => ms.filter((_, idx) => idx !== i))} disabled={milestones.length === 1}>
+                    <DeleteOutlinedIcon />
+                  </IconButton>
+                </Stack>
+              ))}
+              {milestones.length < 8 && (
+                <Button startIcon={<AddIcon />} onClick={() => setMilestones((ms) => [...ms, emptyMilestone()])} sx={{ alignSelf: 'flex-start' }}>
+                  Tahap
+                </Button>
+              )}
             </Stack>
 
             <Stack spacing={1.5}>

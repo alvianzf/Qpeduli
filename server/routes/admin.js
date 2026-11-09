@@ -12,13 +12,16 @@ const personSelect = { id: true, username: true, name: true, city: true, role: t
 
 router.get("/overview", async (req, res, next) => {
   try {
-    const [pendingCampaigns, pendingDonations, activeCampaigns, users, collected, disbursed] = await Promise.all([
+    const [pendingCampaigns, pendingDonations, activeCampaigns, users, collected, disbursed, confirmed, donors, funded] = await Promise.all([
       prisma.campaign.count({ where: { status: "PENDING_VERIFICATION" } }),
       prisma.donation.count({ where: { status: "PENDING" } }),
       prisma.campaign.count({ where: { status: "ACTIVE" } }),
       prisma.user.count(),
       prisma.campaign.aggregate({ _sum: { collected: true } }),
       prisma.campaign.aggregate({ _sum: { disbursed: true } }),
+      prisma.donation.aggregate({ where: { status: "CONFIRMED" }, _count: true, _avg: { amount: true } }),
+      prisma.donation.groupBy({ by: ["donorId"], where: { status: "CONFIRMED", donorId: { not: null } }, _count: true }),
+      prisma.$queryRaw`SELECT COUNT(*)::int AS n FROM campaigns WHERE collected >= target AND target > 0`,
     ]);
     res.json({
       pendingCampaigns,
@@ -27,6 +30,11 @@ router.get("/overview", async (req, res, next) => {
       users,
       totalCollected: collected._sum.collected || 0,
       totalDisbursed: disbursed._sum.disbursed || 0,
+      confirmedDonations: confirmed._count,
+      avgDonation: confirmed._avg.amount || 0,
+      donors: donors.length,
+      repeatDonors: donors.filter((d) => d._count >= 2).length,
+      fundedCampaigns: funded[0] ? funded[0].n : 0,
     });
   } catch (err) {
     next(err);
