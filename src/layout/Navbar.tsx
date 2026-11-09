@@ -67,10 +67,8 @@ export default function Navbar() {
             onClick={() => navigate('/')}
             sx={{ cursor: 'pointer', mr: { xs: 1, md: 3 } }}
           >
-            <Box sx={{ boxShadow: '0 6px 16px rgba(66,103,178,0.35)', borderRadius: '14px', lineHeight: 0 }}>
-              <Logo size={38} />
-            </Box>
-            <Typography variant="h6" fontWeight={700} sx={{ fontFamily: "'Fraunces Variable', Georgia, serif", fontSize: '1.4rem' }}>
+            <Logo size={34} />
+            <Typography variant="h6" fontWeight={700} sx={{ fontSize: '1.3rem', letterSpacing: '-0.01em' }}>
               Qpeduli
             </Typography>
           </Stack>

@@ -44,7 +44,7 @@ export default function Footer() {
         <Grid container spacing={4}>
           <Grid size={{ xs: 12, md: 4 }}>
             <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 1.5 }}>
-              <Logo size={34} />
+              <Logo size={34} light />
               <Typography variant="h6" fontWeight={800} color="#fff">Qpeduli</Typography>
             </Stack>
             <Typography variant="body2" sx={{ opacity: 0.75, maxWidth: 320 }}>

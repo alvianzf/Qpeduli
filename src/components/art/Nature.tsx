@@ -1,4 +1,3 @@
-import { useId } from 'react';
 import type { CSSProperties } from 'react';
 
 type P = { size?: number; className?: string; style?: CSSProperties };
@@ -96,20 +95,12 @@ export function HillsDivider({ fill = '#EEF6EF', height = 70 }: { fill?: string;
   );
 }
 
-export function GoodwillMark({ size = 40 }: { size?: number }) {
-  const g = useId();
+/** The Qpeduli "Q": a ring with an orange tail. Transparent, tight to its glyph, no background box. */
+export function GoodwillMark({ size = 40, light = false }: { size?: number; light?: boolean }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 64 64" aria-hidden>
-      <defs>
-        <linearGradient id={g} x1="0" y1="0" x2="0" y2="64" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#5A7EC4" />
-          <stop offset="1" stopColor="#2F4F8A" />
-        </linearGradient>
-      </defs>
-      <rect width="64" height="64" rx="18" fill={`url(#${g})`} />
-      <path d="M32 50V30" stroke="#fff" strokeWidth="4" strokeLinecap="round" />
-      <path d="M32 33C32 23 24 17 14 17C14 27 21 33 32 33Z" fill="#fff" />
-      <path d="M32 29C32 20 38 14 50 14C50 24 43 29 32 29Z" fill="#F6C453" />
+    <svg width={size} height={size} viewBox="0 0 64 64" fill="none" aria-hidden>
+      <circle cx="30" cy="30" r="21.5" stroke={light ? '#fff' : '#4267B2'} strokeWidth="9" />
+      <path d="M40 40L58 58" stroke="#FF5A00" strokeWidth="9" strokeLinecap="round" />
     </svg>
   );
 }

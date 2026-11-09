@@ -33,7 +33,7 @@ export const heroBase = {
   color: '#fff',
 } as const;
 
-const HEAD = `'Fraunces Variable', 'Fraunces', Georgia, serif`;
+const HEAD = `'Montserrat', 'Segoe UI', sans-serif`;
 
 const theme = createTheme({
   palette: {
@@ -65,7 +65,7 @@ const theme = createTheme({
     borderRadius: 18,
   },
   typography: {
-    fontFamily: `'Plus Jakarta Sans', 'Inter', 'Segoe UI', sans-serif`,
+    fontFamily: `'Montserrat', 'Segoe UI', sans-serif`,
     h1: { fontFamily: HEAD, fontWeight: 700, letterSpacing: '-0.01em' },
     h2: { fontFamily: HEAD, fontWeight: 700, letterSpacing: '-0.01em' },
     h3: { fontFamily: HEAD, fontWeight: 700 },
