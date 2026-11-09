@@ -26,8 +26,8 @@ const navLinks = [
   { label: 'Beranda', to: '/' },
   { label: 'Komunitas', to: '/komunitas' },
   { label: 'Modal Usaha', to: '/modal-usaha' },
-  { label: 'FJB Amal', to: '/fjb' },
-  { label: 'Transparansi & Keamanan', to: '/keamanan' },
+  { label: 'FJB', to: '/fjb' },
+  { label: 'Keamanan', to: '/keamanan' },
 ];
 
 export default function Navbar() {
@@ -65,7 +65,7 @@ export default function Navbar() {
             alignItems="center"
             spacing={1}
             onClick={() => navigate('/')}
-            sx={{ cursor: 'pointer', mr: { xs: 1, md: 4 } }}
+            sx={{ cursor: 'pointer', mr: { xs: 1, md: 3 } }}
           >
             <Box sx={{ boxShadow: '0 6px 16px rgba(47,125,79,0.35)', borderRadius: '14px', lineHeight: 0 }}>
               <Logo size={38} />
@@ -81,6 +81,8 @@ export default function Navbar() {
                 key={link.to}
                 onClick={() => navigate(link.to)}
                 sx={{
+                  px: 1.75,
+                  py: 0.75,
                   color: location.pathname === link.to ? 'primary.dark' : 'text.secondary',
                   fontWeight: location.pathname === link.to ? 800 : 600,
                   bgcolor: location.pathname === link.to ? alpha('#2F7D4F', 0.1) : 'transparent',
@@ -93,16 +95,16 @@ export default function Navbar() {
 
           <Box sx={{ flex: { xs: 1, md: 0 } }} />
 
-          <Stack direction="row" spacing={1.5} alignItems="center" sx={{ display: { xs: 'none', md: 'flex' } }}>
-            <Button variant="contained" startIcon={<AddCircleIcon />} onClick={handleCreateClick}>
-              Buat Aksi Sosial
+          <Stack direction="row" spacing={1} alignItems="center" sx={{ display: { xs: 'none', md: 'flex' } }}>
+            <Button variant="contained" startIcon={<AddCircleIcon />} onClick={handleCreateClick} sx={{ px: 2.5 }}>
+              Buat
             </Button>
             {user?.role === 'ADMIN' && (
-              <Button onClick={() => navigate('/admin')}>Admin</Button>
+              <Button onClick={() => navigate('/admin')} sx={{ px: 1.5 }}>Admin</Button>
             )}
             {user ? (
               <>
-                <KarmaChip karma={user.karma} />
+                <KarmaChip karma={user.karma} compact />
                 <Avatar
                   sx={{ bgcolor: user.avatarColor, cursor: 'pointer', width: 40, height: 40, fontWeight: 700 }}
                   onClick={() => navigate(`/profil/${user.username}`)}
@@ -112,8 +114,8 @@ export default function Navbar() {
               </>
             ) : (
               <>
-                <Button onClick={() => navigate('/masuk')}>Masuk</Button>
-                <Button variant="outlined" onClick={() => navigate('/daftar')}>Daftar</Button>
+                <Button onClick={() => navigate('/masuk')} sx={{ px: 1.5 }}>Masuk</Button>
+                <Button variant="outlined" onClick={() => navigate('/daftar')} sx={{ px: 2.5 }}>Daftar</Button>
               </>
             )}
           </Stack>
