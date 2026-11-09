@@ -139,6 +139,11 @@ router.post("/:id/milestones/:milestoneId/release", authMiddleware, requireRole(
     }
     if (milestone.released) return res.status(409).json({ error: "Milestone sudah dicairkan." });
 
+    const campaign = await prisma.campaign.findUnique({ where: { id: campaignId } });
+    if (Number(campaign.disbursed) + Number(milestone.amount) > Number(campaign.collected)) {
+      return res.status(409).json({ error: "Dana terkumpul belum cukup untuk mencairkan milestone ini." });
+    }
+
     const [updatedMilestone] = await prisma.$transaction([
       prisma.milestone.update({
         where: { id: milestoneId },

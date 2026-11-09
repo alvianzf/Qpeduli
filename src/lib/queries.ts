@@ -198,3 +198,32 @@ export function useDonateToProject(campaignId: string) {
     },
   });
 }
+
+// ---- Admin ----
+export function useAdminOverview() {
+  return useQuery({
+    queryKey: ['admin', 'overview'],
+    queryFn: async () => (await api.get('/admin/overview')).data,
+  });
+}
+
+export function useAdminList<T = any>(kind: 'campaigns' | 'donations' | 'users', params: Record<string, string> = {}) {
+  return useQuery<T[]>({
+    queryKey: ['admin', kind, params],
+    queryFn: async () => (await api.get(`/admin/${kind}`, { params })).data,
+  });
+}
+
+export function useAdminAction() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (req: { method: 'post' | 'patch'; url: string; data?: unknown }) =>
+      (await api.request({ method: req.method, url: req.url, data: req.data })).data,
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['admin'] });
+      qc.invalidateQueries({ queryKey: ['modal-usaha'] });
+      qc.invalidateQueries({ queryKey: ['threads'] });
+      qc.invalidateQueries({ queryKey: ['stats'] });
+    },
+  });
+}

@@ -4,6 +4,7 @@ import Box from '@mui/material/Box';
 import { AnimatePresence, motion } from 'framer-motion';
 import Navbar from './layout/Navbar';
 import NatureBackground from './components/NatureBackground';
+import Admin from './pages/Admin';
 import ModalUsaha from './pages/ModalUsaha';
 import ModalUsahaDetail from './pages/ModalUsahaDetail';
 import Footer from './layout/Footer';
@@ -47,6 +48,7 @@ export default function App() {
               <Route path="/komunitas" element={<PageTransition><Komunitas /></PageTransition>} />
               <Route path="/komunitas/:slug" element={<PageTransition><Komunitas /></PageTransition>} />
               <Route path="/thread/:id" element={<PageTransition><ThreadDetail /></PageTransition>} />
+              <Route path="/admin" element={<PageTransition><Admin /></PageTransition>} />
               <Route path="/modal-usaha" element={<PageTransition><ModalUsaha /></PageTransition>} />
               <Route path="/modal-usaha/:id" element={<PageTransition><ModalUsahaDetail /></PageTransition>} />
               <Route path="/fjb" element={<PageTransition><FjbAmal /></PageTransition>} />

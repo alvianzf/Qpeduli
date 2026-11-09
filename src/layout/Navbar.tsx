@@ -97,6 +97,9 @@ export default function Navbar() {
             <Button variant="contained" startIcon={<AddCircleIcon />} onClick={handleCreateClick}>
               Buat Aksi Sosial
             </Button>
+            {user?.role === 'ADMIN' && (
+              <Button onClick={() => navigate('/admin')}>Admin</Button>
+            )}
             {user ? (
               <>
                 <KarmaChip karma={user.karma} />
@@ -170,6 +173,17 @@ export default function Navbar() {
                 <ListItemText sx={{ '& .MuiListItemText-primary': { fontWeight: 700 } }} primary={link.label} />
               </ListItemButton>
             ))}
+            {user?.role === 'ADMIN' && (
+              <ListItemButton
+                onClick={() => {
+                  navigate('/admin');
+                  setOpen(false);
+                }}
+                sx={{ borderRadius: 2, mb: 0.5 }}
+              >
+                <ListItemText sx={{ '& .MuiListItemText-primary': { fontWeight: 700 } }} primary="Panel Admin" />
+              </ListItemButton>
+            )}
             {user && (
               <>
                 <ListItemButton
