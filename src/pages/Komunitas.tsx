@@ -71,7 +71,7 @@ export default function Komunitas() {
         </Container>
       </Box>
 
-      <Container maxWidth="lg" sx={{ mt: -4 }}>
+      <Container maxWidth="lg" sx={{ mt: -4, position: 'relative', zIndex: 1 }}>
         <Stack direction="row" spacing={1.5} sx={{ overflowX: 'auto', pb: 2 }}>
           <Chip
             label="Semua Kategori"
@@ -92,7 +92,7 @@ export default function Komunitas() {
         </Stack>
 
         {!activeCategory && (
-          <Grid container spacing={2} sx={{ mb: 4 }}>
+          <Grid container spacing={3} sx={{ mb: 4 }}>
             {categories.map((c, i) => (
               <Grid size={{ xs: 6, sm: 4, md: 2 }} key={c.id}>
                 <motion.div
@@ -104,7 +104,7 @@ export default function Komunitas() {
                   style={{ cursor: 'pointer' }}
                 >
                   <Box sx={{
-                    p: 2, borderRadius: 4, textAlign: 'center', bgcolor: '#fff',
+                    p: 2.5, borderRadius: '16px', textAlign: 'center', bgcolor: '#fff',
                     border: '1px solid rgba(66,103,178,0.14)', boxShadow: '0 6px 18px rgba(47,79,138,0.07)',
                   }}>
                     <Box sx={{ color: c.color, mb: 0.5 }}>{iconMap[c.icon]}</Box>

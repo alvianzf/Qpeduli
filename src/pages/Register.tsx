@@ -50,7 +50,7 @@ export default function Register() {
               <Typography variant="h5" fontWeight={800}>Gabung Qpeduli</Typography>
               <Typography variant="body2" color="text.secondary">Dari diskusi, menjadi aksi</Typography>
             </Stack>
-            {error && <Alert severity="error" sx={{ mb: 2, borderRadius: 3 }}>{error}</Alert>}
+            {error && <Alert severity="error" sx={{ mb: 2, borderRadius: '12px' }}>{error}</Alert>}
             <Stack spacing={2} component="form" onSubmit={handleSubmit}>
               <TextField label="Nama Lengkap" fullWidth required value={form.name} onChange={set('name')} />
               <TextField label="Username" fullWidth required value={form.username} onChange={set('username')} />

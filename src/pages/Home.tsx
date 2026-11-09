@@ -193,9 +193,9 @@ export default function Home() {
       </Box>
 
       {/* STATS */}
-      <Container maxWidth="lg" sx={{ mt: { xs: -9, md: -11 }, position: 'relative', zIndex: 2 }}>
-        <Card sx={{ p: { xs: 2.5, md: 4 } }}>
-          <Grid container spacing={2}>
+      <Container maxWidth="lg" sx={{ mt: { xs: -9, md: -11 }, position: 'relative', zIndex: 1 }}>
+        <Card sx={{ p: { xs: 3, md: 4 } }}>
+          <Grid container spacing={3}>
             {statCards.map((s, i) => (
               <Grid size={{ xs: 6, md: 3 }} key={s.label}>
                 <motion.div
@@ -289,7 +289,7 @@ export default function Home() {
             Diskusi bebas layaknya forum, dari isu regional hingga hobi — sambil membuka peluang aksi sosial.
           </Typography>
         </Stack>
-        <Grid container spacing={2.5}>
+        <Grid container spacing={3}>
           {categories.map((c, i) => (
             <Grid size={{ xs: 12, sm: 6, md: 4 }} key={c.id}>
               <motion.div
@@ -303,7 +303,7 @@ export default function Home() {
                   <CardActionArea onClick={() => navigate(`/komunitas/${c.slug}`)} sx={{ height: '100%', p: 3, alignItems: 'stretch', display: 'flex' }}>
                     <Stack direction="row" spacing={2} alignItems="flex-start" sx={{ flex: 1 }}>
                       <Box sx={{
-                        width: 52, height: 52, borderRadius: 3, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        width: 52, height: 52, borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center',
                         bgcolor: `${c.color}1A`, color: c.color, flexShrink: 0,
                       }}>
                         {iconMap[c.icon]}
@@ -338,10 +338,10 @@ export default function Home() {
             </Grid>
             <Grid size={{ xs: 12, md: 6 }}>
               {fjbItems.length > 0 ? (
-                <Grid container spacing={2}>
+                <Grid container spacing={3}>
                   {fjbItems.slice(0, 4).map((item) => (
                     <Grid size={6} key={item.id}>
-                      <Card sx={{ p: 2, height: '100%' }}>
+                      <Card sx={{ p: 3, height: '100%' }}>
                         <Typography variant="h4" sx={{ mb: 1 }}>{item.emoji}</Typography>
                         <Typography variant="body2" fontWeight={700} noWrap>{item.title}</Typography>
                         <Typography variant="caption" color="primary.dark" fontWeight={800}>{formatRupiah(item.price)}</Typography>
@@ -365,7 +365,7 @@ export default function Home() {
       <Container maxWidth="lg" sx={{ my: { xs: 8, md: 12 } }}>
         <Box
           sx={{
-            borderRadius: 6,
+            borderRadius: '24px',
             p: { xs: 4, md: 7 },
             textAlign: 'center',
             color: '#fff',

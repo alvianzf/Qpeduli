@@ -58,10 +58,10 @@ function Overview() {
     { label: 'Dana dicairkan', value: formatRupiah(Number(data.totalDisbursed)) },
   ];
   return (
-    <Grid container spacing={2}>
+    <Grid container spacing={3}>
       {cards.map((c) => (
         <Grid size={{ xs: 6, md: 4 }} key={c.label}>
-          <Card sx={{ p: 2.5 }}>
+          <Card sx={{ p: 3 }}>
             <Typography variant="h5" color="primary.dark">{c.value}</Typography>
             <Typography variant="body2" color="text.secondary">{c.label}</Typography>
           </Card>
@@ -242,7 +242,7 @@ export default function Admin() {
           <Typography sx={{ opacity: 0.85 }}>Verifikasi usaha, konfirmasi donasi, cairkan milestone, kelola peran.</Typography>
         </Container>
       </Box>
-      <Container maxWidth="lg" sx={{ mt: -3, position: 'relative' }}>
+      <Container maxWidth="lg" sx={{ mt: -3, position: 'relative', zIndex: 1 }}>
         <Card sx={{ mb: 3 }}>
           <Tabs value={tab} onChange={(_, v) => setTab(v)} variant="scrollable" scrollButtons="auto">
             {tabs.map((t) => <Tab key={t} label={t} />)}

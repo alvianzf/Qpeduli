@@ -107,7 +107,7 @@ export default function CreateModalUsahaDialog({ open, onClose }: { open: boolea
           </Stack>
         ) : (
           <Stack spacing={2.5} sx={{ mt: 0.5 }}>
-            {error && <Alert severity="error" sx={{ borderRadius: 3 }}>{error}</Alert>}
+            {error && <Alert severity="error" sx={{ borderRadius: '12px' }}>{error}</Alert>}
             <TextField label="Nama usaha" value={title} onChange={(e) => setTitle(e.target.value)} fullWidth />
             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
               <TextField select label="Jenis usaha" value={businessType} onChange={(e) => setBusinessType(e.target.value)} fullWidth>

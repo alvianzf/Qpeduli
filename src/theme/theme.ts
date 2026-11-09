@@ -35,7 +35,7 @@ export const heroBase = {
   color: '#fff',
   mx: { xs: 1, md: 2.5 },
   mt: 1,
-  borderRadius: { xs: '24px', md: '36px' },
+  borderRadius: '24px',
   border: '1px solid rgba(255,255,255,0.45)',
   boxShadow:
     'inset 0 1.5px 0 rgba(255,255,255,0.6), inset 0 -24px 48px rgba(255,255,255,0.07), 0 28px 60px rgba(47,79,138,0.32)',
@@ -95,7 +95,7 @@ const theme = createTheme({
     divider: brand.line,
   },
   shape: {
-    borderRadius: 18,
+    borderRadius: 12,
   },
   typography: {
     fontFamily: `'Montserrat', 'Segoe UI', sans-serif`,
@@ -159,7 +159,7 @@ const theme = createTheme({
       defaultProps: { elevation: 0 },
       styleOverrides: {
         root: {
-          borderRadius: 20,
+          borderRadius: 16,
           border: `1px solid ${alpha(brand.primary, 0.14)}`,
           backgroundColor: alpha('#FFFFFF', 0.9),
           backgroundImage: 'linear-gradient(180deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.78) 100%)',
@@ -208,6 +208,14 @@ const theme = createTheme({
           marginRight: -4,
         },
       },
+    },
+    MuiCardContent: {
+      styleOverrides: {
+        root: { padding: 24, '&:last-child': { paddingBottom: 24 } },
+      },
+    },
+    MuiDialog: {
+      styleOverrides: { paper: { borderRadius: 16 } },
     },
     MuiLinearProgress: {
       styleOverrides: {

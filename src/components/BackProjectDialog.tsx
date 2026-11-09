@@ -78,7 +78,7 @@ export default function BackProjectDialog({
           </Stack>
         ) : (
           <Stack spacing={2.5} sx={{ mt: 0.5 }}>
-            {error && <Alert severity="error" sx={{ borderRadius: 3 }}>{error}</Alert>}
+            {error && <Alert severity="error" sx={{ borderRadius: '12px' }}>{error}</Alert>}
             <Typography variant="body2" color="text.secondary">
               Untuk: <b>{project.title}</b>
             </Typography>
@@ -116,7 +116,7 @@ export default function BackProjectDialog({
               control={<Checkbox checked={anon} onChange={(e) => setAnon(e.target.checked)} />}
               label={<Typography variant="body2">Sembunyikan nama saya</Typography>}
             />
-            <Alert severity="info" sx={{ borderRadius: 3 }}>
+            <Alert severity="info" sx={{ borderRadius: '12px' }}>
               Dana ditahan di eskrow Qpeduli dan dicairkan bertahap sesuai milestone usaha yang terverifikasi.
             </Alert>
           </Stack>
@@ -159,7 +159,7 @@ function RewardOption({
         gap: 1,
         alignItems: 'flex-start',
         p: 1.5,
-        borderRadius: 3,
+        borderRadius: '12px',
         cursor: 'pointer',
         border: `1.5px solid ${selected ? brand.primary : brand.line}`,
         bgcolor: selected ? alpha(brand.primary, 0.07) : '#fff',

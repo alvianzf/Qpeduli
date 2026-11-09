@@ -110,11 +110,11 @@ export default function ThreadDetail() {
         </Container>
       </Box>
 
-      <Container maxWidth="lg" sx={{ mt: { xs: -8, md: -9 } }}>
+      <Container maxWidth="lg" sx={{ mt: { xs: -8, md: -9 }, position: 'relative', zIndex: 1 }}>
         <Grid container spacing={3}>
           <Grid size={{ xs: 12, md: 8 }}>
             <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
-              <Card sx={{ p: { xs: 2.5, md: 3.5 }, mb: 3 }}>
+              <Card sx={{ p: { xs: 3, md: 4 }, mb: 3 }}>
                 <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 2 }}>
                   <Avatar sx={{ bgcolor: author?.avatarColor, width: 46, height: 46, fontWeight: 700 }}>{author?.avatarInitial}</Avatar>
                   <Box>
@@ -133,7 +133,7 @@ export default function ThreadDetail() {
 
             {thread.isAksiSosial && thread.campaign && (
               <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.1 }}>
-                <Card sx={{ p: { xs: 2.5, md: 3.5 }, mb: 3 }}>
+                <Card sx={{ p: { xs: 3, md: 4 }, mb: 3 }}>
                   <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 2 }}>
                     <PaymentsIcon color="primary" />
                     <Typography variant="h6" fontWeight={800}>Progres Pencairan Dana Bertahap</Typography>
@@ -175,7 +175,7 @@ export default function ThreadDetail() {
 
             {thread.updates.length > 0 && (
               <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.15 }}>
-                <Card sx={{ p: { xs: 2.5, md: 3.5 }, mb: 3 }}>
+                <Card sx={{ p: { xs: 3, md: 4 }, mb: 3 }}>
                   <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 2 }}>
                     <CampaignIcon color="primary" />
                     <Typography variant="h6" fontWeight={800}>Update Transparansi</Typography>
@@ -193,7 +193,7 @@ export default function ThreadDetail() {
               </motion.div>
             )}
 
-            <Card sx={{ p: { xs: 2.5, md: 3.5 } }}>
+            <Card sx={{ p: { xs: 3, md: 4 } }}>
               <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 2 }}>
                 <ForumIcon color="primary" />
                 <Typography variant="h6" fontWeight={800}>
@@ -276,7 +276,7 @@ export default function ThreadDetail() {
                         sx={{
                           mt: 1.5,
                           p: 1,
-                          borderRadius: 2,
+                          borderRadius: '12px',
                           bgcolor: alpha(brand.cta, 0.08),
                         }}
                       >

@@ -56,9 +56,9 @@ export default function Profile() {
   return (
     <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', pb: 10 }}>
       <Box sx={{ ...heroBase, height: 160, mb: 0 }}><HeroDecor divider={false} /></Box>
-      <Container maxWidth="lg" sx={{ mt: -10 }}>
+      <Container maxWidth="lg" sx={{ mt: -10, position: 'relative', zIndex: 1 }}>
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
-          <Card sx={{ p: { xs: 2.5, md: 4 }, mb: 3 }}>
+          <Card sx={{ p: { xs: 3, md: 4 }, mb: 3 }}>
             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={3} alignItems={{ xs: 'flex-start', sm: 'center' }}>
               <Avatar sx={{ bgcolor: user.avatarColor, width: 96, height: 96, fontSize: 36, fontWeight: 700, border: '4px solid #fff', boxShadow: '0 8px 24px rgba(47,79,138,0.2)' }}>
                 {user.avatarInitial}

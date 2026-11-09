@@ -81,14 +81,14 @@ export default function CreateFjbItemDialog({ open, onClose }: { open: boolean; 
       </DialogTitle>
       <DialogContent dividers>
         {done ? (
-          <Alert severity="success" sx={{ borderRadius: 3 }}>
+          <Alert severity="success" sx={{ borderRadius: '12px' }}>
             Barangmu berhasil ditambahkan ke FJB Amal! Hasil penjualan akan disalurkan ke kampanye yang kamu pilih.
           </Alert>
         ) : (
           <Stack spacing={2.5} sx={{ mt: 1 }}>
-            {error && <Alert severity="error" sx={{ borderRadius: 3 }}>{error}</Alert>}
+            {error && <Alert severity="error" sx={{ borderRadius: '12px' }}>{error}</Alert>}
             {aksiThreads.length === 0 && (
-              <Alert severity="info" sx={{ borderRadius: 3 }}>
+              <Alert severity="info" sx={{ borderRadius: '12px' }}>
                 Belum ada kampanye Aksi Sosial aktif untuk dituju. Buat atau tunggu kampanye tersedia dulu sebelum menjual barang di sini.
               </Alert>
             )}

@@ -78,8 +78,8 @@ export default function FjbAmal() {
         </Container>
       </Box>
 
-      <Container maxWidth="lg" sx={{ mt: -5 }}>
-        <Card sx={{ p: 2, mb: 4 }}>
+      <Container maxWidth="lg" sx={{ mt: -5, position: 'relative', zIndex: 1 }}>
+        <Card sx={{ p: 3, mb: 4 }}>
           <TextField
             fullWidth
             placeholder="Cari barang atau jasa amal..."
@@ -108,7 +108,7 @@ export default function FjbAmal() {
           />
         )}
 
-        <Grid container spacing={2.5}>
+        <Grid container spacing={3}>
           {filtered.map((item, i) => {
             const seller = users[item.sellerId];
             return (
@@ -161,7 +161,7 @@ export default function FjbAmal() {
             </DialogTitle>
             <DialogContent dividers>
               <Box sx={{
-                height: 140, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 64, borderRadius: 3, mb: 2,
+                height: 140, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 64, borderRadius: '12px', mb: 2,
                 background: 'linear-gradient(135deg, rgba(66,103,178,0.08), rgba(246,196,83,0.18))',
               }}>
                 {selected.emoji}
@@ -169,7 +169,7 @@ export default function FjbAmal() {
               <Typography variant="h6" fontWeight={800}>{selected.title}</Typography>
               <Typography variant="h5" fontWeight={800} color="primary.dark" sx={{ my: 1 }}>{formatRupiah(selected.price)}</Typography>
               <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>{selected.description}</Typography>
-              <Alert severity="info" sx={{ borderRadius: 3 }}>
+              <Alert severity="info" sx={{ borderRadius: '12px' }}>
                 100% hasil penjualan akan disalurkan otomatis ke dompet kampanye Aksi Sosial terkait.
               </Alert>
             </DialogContent>

@@ -89,7 +89,7 @@ export default function ModalUsaha() {
                     <Card sx={{ height: '100%', overflow: 'hidden' }}>
                       <CardActionArea onClick={() => navigate(`/modal-usaha/${p.id}`)} sx={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'stretch' }}>
                         <ProjectArt seed={p.id} />
-                        <CardContent sx={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 1.25 }}>
+                        <CardContent sx={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 1.5 }}>
                           <Stack direction="row" spacing={0.75} flexWrap="wrap" useFlexGap>
                             {p.businessType && <Chip label={p.businessType} size="small" color="primary" variant="outlined" />}
                             {p.city && <Chip icon={<PlaceIcon />} label={p.city} size="small" />}

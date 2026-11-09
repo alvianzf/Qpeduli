@@ -168,7 +168,7 @@ export default function Navbar() {
                   navigate(link.to);
                   setOpen(false);
                 }}
-                sx={{ borderRadius: 2, mb: 0.5 }}
+                sx={{ borderRadius: '12px', mb: 0.5 }}
               >
                 <ListItemText sx={{ '& .MuiListItemText-primary': { fontWeight: 700 } }} primary={link.label} />
               </ListItemButton>
@@ -179,7 +179,7 @@ export default function Navbar() {
                   navigate('/admin');
                   setOpen(false);
                 }}
-                sx={{ borderRadius: 2, mb: 0.5 }}
+                sx={{ borderRadius: '12px', mb: 0.5 }}
               >
                 <ListItemText sx={{ '& .MuiListItemText-primary': { fontWeight: 700 } }} primary="Panel Admin" />
               </ListItemButton>
@@ -191,7 +191,7 @@ export default function Navbar() {
                     navigate(`/profil/${user.username}`);
                     setOpen(false);
                   }}
-                  sx={{ borderRadius: 2, mb: 0.5 }}
+                  sx={{ borderRadius: '12px', mb: 0.5 }}
                 >
                   <ListItemText sx={{ '& .MuiListItemText-primary': { fontWeight: 700 } }} primary="Profil Saya" />
                 </ListItemButton>
@@ -201,7 +201,7 @@ export default function Navbar() {
                     setOpen(false);
                     navigate('/');
                   }}
-                  sx={{ borderRadius: 2, mb: 0.5 }}
+                  sx={{ borderRadius: '12px', mb: 0.5 }}
                 >
                   <ListItemText sx={{ '& .MuiListItemText-primary': { fontWeight: 700 } }} primary="Keluar" />
                 </ListItemButton>

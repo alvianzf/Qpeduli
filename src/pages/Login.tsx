@@ -49,7 +49,7 @@ export default function Login() {
               <Typography variant="h5" fontWeight={800}>Masuk ke Qpeduli</Typography>
               <Typography variant="body2" color="text.secondary">Lanjutkan diskusi & aksi sosialmu</Typography>
             </Stack>
-            {error && <Alert severity="error" sx={{ mb: 2, borderRadius: 3 }}>{error}</Alert>}
+            {error && <Alert severity="error" sx={{ mb: 2, borderRadius: '12px' }}>{error}</Alert>}
             <Stack spacing={2} component="form" onSubmit={handleSubmit}>
               <TextField
                 label="Email atau Username"

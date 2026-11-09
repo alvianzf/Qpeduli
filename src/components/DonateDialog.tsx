@@ -77,7 +77,7 @@ export default function DonateDialog({ open, onClose, thread }: { open: boolean;
           ) : (
             <motion.div key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
               <Stack spacing={2.5} sx={{ mt: 1 }}>
-                {error && <Alert severity="error" sx={{ borderRadius: 3 }}>{error}</Alert>}
+                {error && <Alert severity="error" sx={{ borderRadius: '12px' }}>{error}</Alert>}
                 <Typography variant="body2" color="text.secondary" noWrap>
                   Untuk: <b>{thread.title}</b>
                 </Typography>
@@ -106,7 +106,7 @@ export default function DonateDialog({ open, onClose, thread }: { open: boolean;
                   control={<Checkbox checked={anon} onChange={(e) => setAnon(e.target.checked)} />}
                   label={<Typography variant="body2">Sembunyikan nama saya (donasi anonim)</Typography>}
                 />
-                <Alert severity="info" sx={{ borderRadius: 3 }}>
+                <Alert severity="info" sx={{ borderRadius: '12px' }}>
                   Dana kamu ditahan aman di eskrow Qpeduli dan dicairkan bertahap ke penerima sesuai progres yang terverifikasi.
                 </Alert>
               </Stack>

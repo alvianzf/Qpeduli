@@ -73,8 +73,8 @@ export default function TrustSafety() {
         </Container>
       </Box>
 
-      <Container maxWidth="lg" sx={{ mt: { xs: -5, md: -6 } }}>
-        <Grid container spacing={2.5}>
+      <Container maxWidth="lg" sx={{ mt: { xs: -5, md: -6 }, position: 'relative', zIndex: 1 }}>
+        <Grid container spacing={3}>
           {pillars.map((p, i) => (
             <Grid size={{ xs: 12, sm: 6, md: 3 }} key={p.title}>
               <motion.div

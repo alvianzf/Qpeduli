@@ -26,7 +26,7 @@ export default function ProjectUpdateForm({ projectId }: { projectId: string }) 
   return (
     <Stack spacing={1.5} sx={{ mb: 3 }}>
       <Typography variant="subtitle2">Bagikan kabar terbaru</Typography>
-      {error && <Alert severity="error" sx={{ borderRadius: 3 }}>{error}</Alert>}
+      {error && <Alert severity="error" sx={{ borderRadius: '12px' }}>{error}</Alert>}
       <TextField label="Judul" value={title} onChange={(e) => setTitle(e.target.value)} fullWidth />
       <TextField label="Ceritakan perkembangannya" value={content} onChange={(e) => setContent(e.target.value)} multiline minRows={3} fullWidth />
       <Button

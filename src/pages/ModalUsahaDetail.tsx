@@ -70,13 +70,13 @@ export default function ModalUsahaDetail() {
         </Container>
       </Box>
 
-      <Container maxWidth="lg" sx={{ mt: { xs: -8, md: -9 }, position: 'relative' }}>
+      <Container maxWidth="lg" sx={{ mt: { xs: -8, md: -9 }, position: 'relative', zIndex: 1 }}>
         <Grid container spacing={3}>
           <Grid size={{ xs: 12, md: 8 }}>
             <Stack spacing={3}>
               <Card sx={{ overflow: 'hidden' }}>
                 <ProjectArt seed={project.id} height={200} />
-                <Box sx={{ p: { xs: 2.5, md: 3.5 } }}>
+                <Box sx={{ p: { xs: 3, md: 4 } }}>
                   {owner && (
                     <Stack direction="row" spacing={1.25} alignItems="center" sx={{ mb: 2 }}>
                       <Avatar sx={{ bgcolor: owner.avatarColor, fontWeight: 700 }}>{owner.avatarInitial}</Avatar>
@@ -95,7 +95,7 @@ export default function ModalUsahaDetail() {
               </Card>
 
               {project.campaign.milestones.length > 0 && (
-                <Card sx={{ p: { xs: 2.5, md: 3.5 } }}>
+                <Card sx={{ p: { xs: 3, md: 4 } }}>
                   <Typography variant="h6" sx={{ mb: 0.5 }}>Rencana pencairan dana</Typography>
                   <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>Dana cair bertahap setelah tiap tahap terverifikasi.</Typography>
                   <Stack spacing={1.25}>
@@ -110,7 +110,7 @@ export default function ModalUsahaDetail() {
                 </Card>
               )}
 
-              <Card sx={{ p: { xs: 2.5, md: 3.5 } }}>
+              <Card sx={{ p: { xs: 3, md: 4 } }}>
                 <Typography variant="h6" sx={{ mb: 2 }}>Kabar dari pemilik usaha</Typography>
                 {canPost && <ProjectUpdateForm projectId={project.id} />}
                 {project.updates.length === 0 ? (
@@ -138,7 +138,7 @@ export default function ModalUsahaDetail() {
                   {open ? 'Dukung' : 'Belum dibuka'}
                 </Button>
                 {guarantor && (
-                  <Alert icon={<VerifiedBadge />} severity="success" sx={{ mt: 2, borderRadius: 3 }}>
+                  <Alert icon={<VerifiedBadge />} severity="success" sx={{ mt: 2, borderRadius: '12px' }}>
                     Dijamin oleh <b>{guarantor.name}</b>
                   </Alert>
                 )}
@@ -156,8 +156,8 @@ export default function ModalUsahaDetail() {
                         key={r.id}
                         onClick={() => open && back(r.id)}
                         sx={{
-                          p: 1.75,
-                          borderRadius: 3,
+                          p: 2.25,
+                          borderRadius: '12px',
                           border: `1.5px solid ${brand.line}`,
                           cursor: open ? 'pointer' : 'default',
                           transition: 'all .15s ease',

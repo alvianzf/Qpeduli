@@ -85,12 +85,12 @@ export default function CreateThreadDialog({ open, onClose }: { open: boolean; o
       </DialogTitle>
       <DialogContent dividers>
         {createdId ? (
-          <Alert severity="success" sx={{ borderRadius: 3 }}>
+          <Alert severity="success" sx={{ borderRadius: '12px' }}>
             Thread berhasil dibuat! {isAksi ? 'Kampanye Aksi Sosial-mu menunggu verifikasi komunitas & admin sebelum tombol donasi aktif penuh.' : 'Selamat berdiskusi bersama komunitas.'}
           </Alert>
         ) : (
           <Stack spacing={2.5} sx={{ mt: 1 }}>
-            {error && <Alert severity="error" sx={{ borderRadius: 3 }}>{error}</Alert>}
+            {error && <Alert severity="error" sx={{ borderRadius: '12px' }}>{error}</Alert>}
             <TextField select label="Pilih Ruang Komunitas" value={categoryId} onChange={(e) => setCategoryId(e.target.value)} fullWidth>
               {categories.map((c) => (
                 <MenuItem key={c.id} value={c.id}>{c.name}</MenuItem>
@@ -114,7 +114,7 @@ export default function CreateThreadDialog({ open, onClose }: { open: boolean; o
             />
 
             <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{
-              p: 1.5, borderRadius: 3, bgcolor: 'rgba(66,103,178,0.07)', border: '1px solid rgba(66,103,178,0.18)',
+              p: 2, borderRadius: '12px', bgcolor: 'rgba(66,103,178,0.07)', border: '1px solid rgba(66,103,178,0.18)',
             }}>
               <Stack>
                 <Typography fontWeight={700} variant="body2">Jadikan "Aksi Sosial"</Typography>
@@ -141,7 +141,7 @@ export default function CreateThreadDialog({ open, onClose }: { open: boolean; o
                   value={deadline}
                   onChange={(e) => setDeadline(e.target.value)}
                 />
-                <Alert severity="info" sx={{ borderRadius: 3 }}>
+                <Alert severity="info" sx={{ borderRadius: '12px' }}>
                   Dana dicairkan bertahap per-milestone setelah diverifikasi komunitas & admin, atau dijamin (guarantor) oleh Ksatria Komunitas. Pelajari selengkapnya di halaman Transparansi & Keamanan.
                 </Alert>
               </Stack>
