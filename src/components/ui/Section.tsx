@@ -9,13 +9,14 @@ interface SectionProps {
   action?: ReactNode;
   /** Tuck the first section up over the hero's hills. */
   overlap?: boolean;
+  id?: string;
   children: ReactNode;
 }
 
 /** Wide centered block: 72px between blocks on desktop. Overlapping sections are positioned above the hero. */
-export default function Section({ title, subtitle, action, overlap = false, children }: SectionProps) {
+export default function Section({ title, subtitle, action, overlap = false, id, children }: SectionProps) {
   return (
-    <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 1, mt: overlap ? { xs: -6, md: -9 } : { xs: 6, md: 9 } }}>
+    <Container id={id} maxWidth="xl" sx={{ position: 'relative', zIndex: 1, mt: overlap ? { xs: -6, md: -9 } : { xs: 6, md: 9 } }}>
       {(title || action) && (
         <Box sx={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 3, mb: 3 }}>
           <Box sx={{ minWidth: 0 }}>

@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 import PlaceIcon from '@mui/icons-material/Place';
@@ -9,11 +11,14 @@ import Stack from './ui/FlexStack';
 import Typography from './ui/Txt';
 import ProjectArt from './ProjectArt';
 import CampaignProgress from './CampaignProgress';
+import BackProjectDialog from './BackProjectDialog';
 
 /** Kickstarter-style card: tall cover, tags, title, owner, short story, progress pinned to the bottom. */
 export default function ProjectCard({ project, index = 0 }: { project: ModalUsaha; index?: number }) {
   const navigate = useNavigate();
   const owner = userCache[project.ownerId];
+  const [backOpen, setBackOpen] = useState(false);
+  const open = project.campaign.status === 'active';
   return (
     <GlossCard flush onClick={() => navigate(`/modal-usaha/${project.id}`)} delay={(index % 3) * 0.08}>
       <ProjectArt seed={project.id} height={200} />
@@ -29,6 +34,12 @@ export default function ProjectCard({ project, index = 0 }: { project: ModalUsah
         </Typography>
         <Box sx={{ mt: 'auto', pt: 1.5 }}>
           <CampaignProgress campaign={project.campaign} compact />
+        </Box>
+        {open && (
+          <Button fullWidth variant="contained" color="warning" onClick={(e) => { e.stopPropagation(); setBackOpen(true); }}>Dukung</Button>
+        )}
+        <Box onClick={(e) => e.stopPropagation()}>
+          {open && <BackProjectDialog open={backOpen} onClose={() => setBackOpen(false)} project={project} />}
         </Box>
       </Box>
     </GlossCard>

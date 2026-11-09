@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import Chip from '@mui/material/Chip';
@@ -14,12 +16,15 @@ import Stack from './ui/FlexStack';
 import Typography from './ui/Txt';
 import VerifiedBadge from './VerifiedBadge';
 import CampaignProgress from './CampaignProgress';
+import DonateDialog from './DonateDialog';
 
 /** Feed card: author line, tags, title, excerpt, optional progress, stats pinned to the bottom. */
 export default function ThreadCard({ thread, index = 0 }: { thread: Thread; index?: number }) {
   const navigate = useNavigate();
   const author = users[thread.authorId];
   const category = categoryCache[thread.categoryId];
+  const [donateOpen, setDonateOpen] = useState(false);
+  const canDonate = Boolean(thread.isAksiSosial && thread.campaign && thread.campaign.status === 'active');
 
   return (
     <GlossCard onClick={() => navigate(`/thread/${thread.id}`)} delay={Math.min(index, 4) * 0.05} sx={{ gap: 1.5 }}>
@@ -44,7 +49,7 @@ export default function ThreadCard({ thread, index = 0 }: { thread: Thread; inde
       </Typography>
       <Box sx={{ mt: 'auto', pt: 1, display: 'flex', flexDirection: 'column', gap: 2 }}>
         {thread.isAksiSosial && thread.campaign && <CampaignProgress campaign={thread.campaign} compact />}
-        <Stack direction="row" spacing={3}>
+        <Stack direction="row" spacing={3} alignItems="center">
           <Stack direction="row" spacing={0.75} alignItems="center">
             <ChatBubbleOutlineIcon sx={{ fontSize: 16, color: 'text.disabled' }} />
             <Typography variant="caption" color="text.secondary">{thread.comments.length}</Typography>
@@ -53,7 +58,15 @@ export default function ThreadCard({ thread, index = 0 }: { thread: Thread; inde
             <VisibilityOutlinedIcon sx={{ fontSize: 16, color: 'text.disabled' }} />
             <Typography variant="caption" color="text.secondary">{thread.views.toLocaleString('id-ID')}</Typography>
           </Stack>
+          {canDonate && (
+            <Button size="small" variant="contained" color="warning" startIcon={<VolunteerActivismIcon />} sx={{ ml: 'auto' }} onClick={(e) => { e.stopPropagation(); setDonateOpen(true); }}>
+              Donasi
+            </Button>
+          )}
         </Stack>
+      </Box>
+      <Box onClick={(e) => e.stopPropagation()}>
+        {canDonate && <DonateDialog open={donateOpen} onClose={() => setDonateOpen(false)} thread={thread} />}
       </Box>
     </GlossCard>
   );

@@ -23,6 +23,9 @@ import { categoryIcon } from '../components/categoryIcons';
 import { formatRupiah } from '../data/mockData';
 import { brand } from '../theme/theme';
 import { useAuth } from '../context/AuthContext';
+import { useState } from 'react';
+import DonateDialog from '../components/DonateDialog';
+import CampaignProgress from '../components/CampaignProgress';
 import { useCategories, useThreads, useStats, useModalUsahaList } from '../lib/queries';
 
 const steps = [
@@ -40,6 +43,7 @@ export default function Home() {
   const { data: projects = [] } = useModalUsahaList();
   const { data: stats } = useStats();
   const { counts } = useRegions();
+  const [donateOpen, setDonateOpen] = useState(false);
   const featured = threads.filter((t) => t.campaign?.status !== 'completed').slice(0, 3);
 
   const statCards = [
@@ -58,28 +62,49 @@ export default function Home() {
         subtitle="Danai warga yang memulai usahanya, dukung aksi di sekitarmu, dan awasi bersama."
         actions={
           <>
-            <Button size="large" variant="contained" color="warning" onClick={() => navigate('/modal-usaha')}>Danai Usaha</Button>
-            <Button size="large" variant="contained" onClick={() => navigate('/komunitas')} sx={{ bgcolor: '#fff', color: 'primary.dark', backgroundImage: 'none', '&:hover': { bgcolor: brand.ice } }}>Komunitas</Button>
+            <Button size="large" variant="contained" color="warning" startIcon={<VolunteerActivismIcon />} onClick={() => document.getElementById('donasi')?.scrollIntoView({ behavior: 'smooth' })}>Donasi</Button>
+            <Button size="large" variant="contained" onClick={() => navigate('/modal-usaha')} sx={{ bgcolor: '#fff', color: 'primary.dark', backgroundImage: 'none', '&:hover': { bgcolor: brand.ice } }}>Danai Usaha</Button>
           </>
         }
         aside={
-          <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'flex-end', justifyContent: 'center', gap: 2 }}>
-            <Box className="float-slow"><Tree size={200} /></Box>
-            <Box className="float-slow" sx={{ animationDelay: '-2s' }}><HandHeart size={260} /></Box>
-            <Box className="float-slow" sx={{ animationDelay: '-4s' }}><Flower size={110} /></Box>
-          </Box>
+          featured[0]?.campaign ? (
+            <GlossCard sx={{ gap: 2, p: 3 }}>
+              <Chip icon={<VolunteerActivismIcon />} label="Butuh dukungan" color="primary" size="small" sx={{ alignSelf: 'flex-start' }} />
+              <Typography variant="h5" sx={{ fontSize: '1.3rem', color: 'text.primary' }}>{featured[0].title}</Typography>
+              <CampaignProgress campaign={featured[0].campaign} />
+              <Button fullWidth size="large" variant="contained" color="warning" startIcon={<VolunteerActivismIcon />} onClick={() => setDonateOpen(true)}>Donasi sekarang</Button>
+              <Button fullWidth onClick={() => navigate(`/thread/${featured[0].id}`)}>Lihat kampanye</Button>
+            </GlossCard>
+          ) : (
+            <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'flex-end', justifyContent: 'center', gap: 2 }}>
+              <Box className="float-slow"><Tree size={200} /></Box>
+              <Box className="float-slow" sx={{ animationDelay: '-2s' }}><HandHeart size={260} /></Box>
+              <Box className="float-slow" sx={{ animationDelay: '-4s' }}><Flower size={110} /></Box>
+            </Box>
+          )
         }
       />
 
-      <Section overlap>
-        <CardGrid cols={{ xs: 2, md: 4 }}>
-          {statCards.map((s, i) => (
-            <GlossCard key={s.label} delay={i * 0.05} sx={{ alignItems: 'center', justifyContent: 'center', textAlign: 'center', gap: 0.5 }}>
-              <Typography variant="h4" color="primary.dark" sx={{ fontSize: { xs: '1.5rem', md: '2.1rem' } }}>{s.value}</Typography>
-              <Typography variant="body2" color="text.secondary">{s.label}</Typography>
-            </GlossCard>
-          ))}
-        </CardGrid>
+      <Section
+        overlap
+        id="donasi"
+        title="Butuh dukunganmu"
+        subtitle="Donasi langsung ke kampanye yang sedang berjalan."
+        action={<Button endIcon={<ArrowForwardIcon />} onClick={() => navigate('/komunitas')}>Semua</Button>}
+      >
+        {featured.length ? (
+          <CardGrid cols={{ xs: 1, md: 3 }}>
+            {featured.map((t, i) => <ThreadCard thread={t} key={t.id} index={i} />)}
+          </CardGrid>
+        ) : (
+          <EmptyState
+            icon={<VolunteerActivismIcon />}
+            color={brand.cta}
+            title="Belum ada aksi"
+            description="Jadilah yang pertama."
+            action={<Button variant="contained" color="warning" onClick={() => navigate('/komunitas')}>Mulai</Button>}
+          />
+        )}
       </Section>
 
       <Section
@@ -101,6 +126,17 @@ export default function Home() {
         )}
       </Section>
 
+      <Section>
+        <CardGrid cols={{ xs: 2, md: 4 }}>
+          {statCards.map((s, i) => (
+            <GlossCard key={s.label} delay={i * 0.05} sx={{ alignItems: 'center', justifyContent: 'center', textAlign: 'center', gap: 0.5 }}>
+              <Typography variant="h4" color="primary.dark" sx={{ fontSize: { xs: '1.5rem', md: '2.1rem' } }}>{s.value}</Typography>
+              <Typography variant="body2" color="text.secondary">{s.label}</Typography>
+            </GlossCard>
+          ))}
+        </CardGrid>
+      </Section>
+
       <Section title="Peta kampanye" subtitle="Klik wilayah untuk melihat usaha dan aksi di sana.">
         <GlossCard sx={{ p: { xs: 2, md: 4 }, background: 'linear-gradient(180deg, rgba(255,255,255,0.92), rgba(219,234,254,0.7))' }}>
           <IndonesiaMap counts={counts} />
@@ -117,26 +153,6 @@ export default function Home() {
             </GlossCard>
           ))}
         </CardGrid>
-      </Section>
-
-      <Section
-        title="Aksi pilihan"
-        subtitle="Kampanye yang butuh dukunganmu."
-        action={<Button endIcon={<ArrowForwardIcon />} onClick={() => navigate('/komunitas')}>Semua</Button>}
-      >
-        {featured.length ? (
-          <CardGrid cols={{ xs: 1, md: 3 }}>
-            {featured.map((t, i) => <ThreadCard thread={t} key={t.id} index={i} />)}
-          </CardGrid>
-        ) : (
-          <EmptyState
-            icon={<VolunteerActivismIcon />}
-            color={brand.cta}
-            title="Belum ada aksi"
-            description="Jadilah yang pertama."
-            action={<Button variant="contained" color="warning" onClick={() => navigate('/komunitas')}>Mulai</Button>}
-          />
-        )}
       </Section>
 
       <Section title="Ruang komunitas" subtitle="Dari isu daerah sampai hobi.">
@@ -162,6 +178,7 @@ export default function Home() {
           </GlossCard>
         </Section>
       )}
+      {featured[0] && <DonateDialog open={donateOpen} onClose={() => setDonateOpen(false)} thread={featured[0]} />}
     </Box>
   );
 }
