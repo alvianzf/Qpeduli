@@ -227,3 +227,14 @@ export function useAdminAction() {
     },
   });
 }
+
+export function usePostProjectUpdate(projectId: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (payload: { title: string; content: string }) =>
+      (await api.post(`/modal-usaha/${projectId}/updates`, payload)).data,
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['modal-usaha', projectId] });
+    },
+  });
+}

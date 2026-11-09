@@ -20,6 +20,8 @@ import { alpha } from '@mui/material/styles';
 import HeroDecor from '../components/HeroDecor';
 import CampaignProgress from '../components/CampaignProgress';
 import ProjectArt from '../components/ProjectArt';
+import ProjectUpdateForm from '../components/ProjectUpdateForm';
+import { useAuth } from '../context/AuthContext';
 import BackProjectDialog from '../components/BackProjectDialog';
 import VerifiedBadge from '../components/VerifiedBadge';
 import { heroBase, brand } from '../theme/theme';
@@ -31,6 +33,7 @@ import NotFound from './NotFound';
 export default function ModalUsahaDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user: me } = useAuth();
   const { data: project, isLoading, isError } = useModalUsaha(id);
   const [backOpen, setBackOpen] = useState(false);
   const [rewardId, setRewardId] = useState<string | undefined>();
@@ -42,6 +45,7 @@ export default function ModalUsahaDetail() {
   const owner = userCache[project.ownerId];
   const guarantor = project.guarantorId ? userCache[project.guarantorId] : undefined;
   const open = project.campaign.status === 'active';
+  const canPost = !!me && (String(me.id) === project.ownerId || me.role === 'ADMIN');
 
   const back = (rid?: string) => {
     setRewardId(rid);
@@ -108,6 +112,7 @@ export default function ModalUsahaDetail() {
 
               <Card sx={{ p: { xs: 2.5, md: 3.5 } }}>
                 <Typography variant="h6" sx={{ mb: 2 }}>Kabar dari pemilik usaha</Typography>
+                {canPost && <ProjectUpdateForm projectId={project.id} />}
                 {project.updates.length === 0 ? (
                   <Typography variant="body2" color="text.secondary">Belum ada kabar. Update akan muncul di sini.</Typography>
                 ) : (
