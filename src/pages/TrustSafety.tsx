@@ -64,7 +64,7 @@ export default function TrustSafety() {
       </Section>
 
       <Section>
-        <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: 'minmax(0,7fr) minmax(0,5fr)' }, alignItems: 'start' }}>
+        <Box sx={{ display: 'grid', gap: 3, gridTemplateColumns: { xs: '1fr', md: 'minmax(0,7fr) minmax(0,5fr)' }, alignItems: 'start' }}>
           <Stack spacing={3}>
             <GlossCard sx={{ p: { xs: 3, md: 4 }, gap: 3 }}>
               <Typography variant="h5">Alur pencairan</Typography>
@@ -77,7 +77,7 @@ export default function TrustSafety() {
                 ))}
               </Stack>
             </GlossCard>
-            <GlossCard sx={{ p: { xs: 3, md: 4 }, gap: 2, background: 'linear-gradient(135deg, rgba(66,103,178,0.08), rgba(246,196,83,0.16))' }}>
+            <GlossCard sx={{ p: { xs: 3, md: 4 }, gap: 3, background: 'linear-gradient(135deg, rgba(31,122,77,0.08), rgba(246,196,83,0.16))' }}>
               <Typography variant="h6">Kenapa hybrid?</Typography>
               <Typography variant="body2"><b>Murni komunitas</b> rentan kolusi akun untuk meloloskan kampanye palsu.</Typography>
               <Typography variant="body2"><b>Murni admin</b> lambat dan mengurangi rasa memiliki.</Typography>

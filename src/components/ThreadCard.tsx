@@ -15,44 +15,45 @@ import Typography from './ui/Txt';
 import VerifiedBadge from './VerifiedBadge';
 import CampaignProgress from './CampaignProgress';
 
-/** Dense feed row: title first, meta line under it, stats and progress on the right on wide screens. */
+/** Feed card: author line, tags, title, excerpt, optional progress, stats pinned to the bottom. */
 export default function ThreadCard({ thread, index = 0 }: { thread: Thread; index?: number }) {
   const navigate = useNavigate();
   const author = users[thread.authorId];
   const category = categoryCache[thread.categoryId];
-  const aksi = thread.isAksiSosial && thread.campaign;
 
   return (
-    <GlossCard onClick={() => navigate(`/thread/${thread.id}`)} delay={Math.min(index, 4) * 0.05} sx={{ p: 2 }}>
-      <Box sx={{ display: 'grid', gap: 2, alignItems: 'center', gridTemplateColumns: { xs: '1fr', md: aksi ? 'minmax(0,1fr) 220px' : '1fr' } }}>
-        <Stack direction="row" spacing={1.5} alignItems="flex-start" sx={{ minWidth: 0 }}>
-          <Avatar sx={{ bgcolor: author?.avatarColor, width: 36, height: 36, fontSize: 15, fontWeight: 700 }}>{author?.avatarInitial}</Avatar>
-          <Box sx={{ flex: 1, minWidth: 0 }}>
-            <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap" useFlexGap>
-              {thread.hot && <LocalFireDepartmentIcon sx={{ fontSize: 16, color: 'warning.main' }} />}
-              {thread.isAksiSosial && <Chip icon={<VolunteerActivismIcon />} label="Aksi" size="small" color="primary" />}
-              {category && <Chip label={category.name} size="small" variant="outlined" />}
-            </Stack>
-            <Typography variant="h6" sx={{ fontSize: '1rem', lineHeight: 1.3, mt: 0.75 }}>{thread.title}</Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mt: 0.25, display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-              {thread.content}
-            </Typography>
-            <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mt: 1 }}>
-              <Typography variant="caption" color="text.secondary" noWrap>{author?.name}</Typography>
-              {author?.isKsatria && <VerifiedBadge size={14} />}
-              <Typography variant="caption" color="text.secondary">{timeAgo(thread.createdAt)}</Typography>
-              <Stack direction="row" spacing={0.5} alignItems="center">
-                <ChatBubbleOutlineIcon sx={{ fontSize: 14, color: 'text.disabled' }} />
-                <Typography variant="caption" color="text.secondary">{thread.comments.length}</Typography>
-              </Stack>
-              <Stack direction="row" spacing={0.5} alignItems="center">
-                <VisibilityOutlinedIcon sx={{ fontSize: 14, color: 'text.disabled' }} />
-                <Typography variant="caption" color="text.secondary">{thread.views.toLocaleString('id-ID')}</Typography>
-              </Stack>
-            </Stack>
-          </Box>
+    <GlossCard onClick={() => navigate(`/thread/${thread.id}`)} delay={Math.min(index, 4) * 0.05} sx={{ gap: 1.5 }}>
+      <Stack direction="row" spacing={1.5} alignItems="center">
+        <Avatar sx={{ bgcolor: author?.avatarColor, width: 40, height: 40, fontWeight: 700 }}>{author?.avatarInitial}</Avatar>
+        <Box sx={{ minWidth: 0, flex: 1 }}>
+          <Stack direction="row" spacing={0.75} alignItems="center">
+            <Typography variant="subtitle2" noWrap>{author?.name}</Typography>
+            {author?.isKsatria && <VerifiedBadge size={15} />}
+          </Stack>
+          <Typography variant="caption" color="text.secondary">{timeAgo(thread.createdAt)}</Typography>
+        </Box>
+        {thread.hot && <LocalFireDepartmentIcon sx={{ color: 'warning.main' }} />}
+      </Stack>
+      <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap sx={{ minHeight: 28 }}>
+        {category && <Chip label={category.name} size="small" variant="outlined" />}
+        {thread.isAksiSosial && <Chip icon={<VolunteerActivismIcon />} label="Aksi" size="small" color="primary" />}
+      </Stack>
+      <Typography variant="h6" sx={{ fontSize: '1.15rem', lineHeight: 1.3 }}>{thread.title}</Typography>
+      <Typography variant="body2" color="text.secondary" sx={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+        {thread.content}
+      </Typography>
+      <Box sx={{ mt: 'auto', pt: 1, display: 'flex', flexDirection: 'column', gap: 2 }}>
+        {thread.isAksiSosial && thread.campaign && <CampaignProgress campaign={thread.campaign} compact />}
+        <Stack direction="row" spacing={3}>
+          <Stack direction="row" spacing={0.75} alignItems="center">
+            <ChatBubbleOutlineIcon sx={{ fontSize: 16, color: 'text.disabled' }} />
+            <Typography variant="caption" color="text.secondary">{thread.comments.length}</Typography>
+          </Stack>
+          <Stack direction="row" spacing={0.75} alignItems="center">
+            <VisibilityOutlinedIcon sx={{ fontSize: 16, color: 'text.disabled' }} />
+            <Typography variant="caption" color="text.secondary">{thread.views.toLocaleString('id-ID')}</Typography>
+          </Stack>
         </Stack>
-        {aksi && thread.campaign && <CampaignProgress campaign={thread.campaign} compact />}
       </Box>
     </GlossCard>
   );

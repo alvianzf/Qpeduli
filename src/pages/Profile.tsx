@@ -62,7 +62,7 @@ export default function Profile() {
           </Stack>
         </GlossCard>
 
-        <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '340px minmax(0,1fr)' }, alignItems: 'start' }}>
+        <Box sx={{ display: 'grid', gap: 3, gridTemplateColumns: { xs: '1fr', md: '340px minmax(0,1fr)' }, alignItems: 'start' }}>
           <Stack spacing={3}>
             <GlossCard sx={{ gap: 2 }}>
               <Stack direction="row" spacing={1} alignItems="center">

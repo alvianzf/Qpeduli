@@ -30,7 +30,7 @@ import { useFjbItems } from '../lib/queries';
 import { useAuth } from '../context/AuthContext';
 import type { FjbItem } from '../types';
 
-const cover = 'linear-gradient(135deg, rgba(66,103,178,0.1), rgba(246,196,83,0.2))';
+const cover = 'linear-gradient(135deg, rgba(31,122,77,0.1), rgba(246,196,83,0.2))';
 
 export default function FjbAmal() {
   const navigate = useNavigate();

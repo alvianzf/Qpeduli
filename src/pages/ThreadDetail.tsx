@@ -98,7 +98,7 @@ export default function ThreadDetail() {
       />
 
       <Section overlap>
-        <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: 'minmax(0,1fr) 340px' }, alignItems: 'start' }}>
+        <Box sx={{ display: 'grid', gap: 3, gridTemplateColumns: { xs: '1fr', md: 'minmax(0,1fr) 340px' }, alignItems: 'start' }}>
           <Stack spacing={3} sx={{ minWidth: 0 }}>
             <GlossCard sx={{ p: { xs: 3, md: 4 } }}>
               <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 3 }}>

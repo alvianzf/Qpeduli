@@ -68,7 +68,7 @@ export default function ModalUsahaDetail() {
       />
 
       <Section overlap>
-        <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: 'minmax(0,8fr) minmax(0,4fr)' }, alignItems: 'start' }}>
+        <Box sx={{ display: 'grid', gap: 3, gridTemplateColumns: { xs: '1fr', md: 'minmax(0,8fr) minmax(0,4fr)' }, alignItems: 'start' }}>
           <Box sx={{ minWidth: 0 }}>
             <Stack spacing={3}>
               <GlossCard flush>
@@ -128,7 +128,7 @@ export default function ModalUsahaDetail() {
           </Box>
 
           <Box sx={{ minWidth: 0 }}>
-            <Stack spacing={3} sx={{ position: { md: 'sticky' }, top: { md: 16 } }}>
+            <Stack spacing={3} sx={{ position: { md: 'sticky' }, top: { md: 96 } }}>
               <GlossCard>
                 <CampaignProgress campaign={project.campaign} />
                 <Button fullWidth variant="contained" color="warning" size="large" sx={{ mt: 2.5 }} disabled={!open} onClick={() => back()}>

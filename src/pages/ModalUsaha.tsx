@@ -48,7 +48,7 @@ export default function ModalUsaha() {
             action={<Button variant="contained" onClick={handleCreate}>Ajukan</Button>}
           />
         ) : (
-          <CardGrid cols={{ xs: 1, md: 2 }}>
+          <CardGrid cols={{ xs: 1, sm: 2, md: 3 }}>
             {projects.map((p, i) => <ProjectCard key={p.id} project={p} index={i} />)}
           </CardGrid>
         )}

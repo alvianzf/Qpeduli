@@ -20,7 +20,7 @@ export default function NatureBackground() {
         zIndex: 0,
         pointerEvents: 'none',
         overflow: 'hidden',
-        background: 'linear-gradient(180deg, #A9C5F0 0%, #CFE0F7 38%, #E8F0FB 70%, #F3F7FC 100%)',
+        background: 'linear-gradient(180deg, #BFE3D0 0%, #E4F2DF 38%, #F3F7E8 70%, #FFF6E3 100%)',
       }}
     >
       <div className="nb-blob a" />
@@ -47,7 +47,7 @@ export default function NatureBackground() {
         <Box
           key={i}
           className="nb-cloud"
-          sx={{ top: c.top, filter: 'drop-shadow(0 8px 12px rgba(47,79,138,0.22))', animation: `nb-drift ${c.dur}s linear ${c.delay}s infinite` }}
+          sx={{ top: c.top, filter: 'drop-shadow(0 8px 12px rgba(20,83,45,0.22))', animation: `nb-drift ${c.dur}s linear ${c.delay}s infinite` }}
         >
           <Cloud width={c.width} opacity={c.opacity} />
         </Box>
@@ -55,9 +55,9 @@ export default function NatureBackground() {
 
       <Box sx={{ position: 'absolute', left: '-3%', right: '-3%', bottom: 0, height: { xs: '26vh', md: '34vh' } }}>
         <svg width="100%" height="100%" viewBox="0 0 1440 300" preserveAspectRatio="none" style={{ position: 'absolute', inset: 0 }}>
-          <path className="nb-hill h3" d="M0 140C180 70 340 70 520 120C700 170 860 150 1040 100C1220 50 1340 70 1440 110V300H0Z" fill="#9DB6E3" opacity=".85" />
-          <path className="nb-hill h2" d="M0 190C200 130 380 140 560 180C740 220 920 200 1100 160C1250 126 1360 140 1440 160V300H0Z" fill="#5A7EC4" opacity=".7" />
-          <path className="nb-hill h1" d="M0 240C220 200 420 210 640 236C860 262 1060 240 1240 214C1330 202 1400 206 1440 214V300H0Z" fill="#4267B2" opacity=".6" />
+          <path className="nb-hill h3" d="M0 140C180 70 340 70 520 120C700 170 860 150 1040 100C1220 50 1340 70 1440 110V300H0Z" fill="#A7DDBE" opacity=".85" />
+          <path className="nb-hill h2" d="M0 190C200 130 380 140 560 180C740 220 920 200 1100 160C1250 126 1360 140 1440 160V300H0Z" fill="#3FAE76" opacity=".7" />
+          <path className="nb-hill h1" d="M0 240C220 200 420 210 640 236C860 262 1060 240 1240 214C1330 202 1400 206 1440 214V300H0Z" fill="#1F7A4D" opacity=".6" />
         </svg>
       </Box>
     </Box>
