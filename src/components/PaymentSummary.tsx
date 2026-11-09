@@ -21,7 +21,7 @@ export default function PaymentSummary({ result, title, note }: { result: Donati
         <Typography variant="body2" color="text.secondary">Untuk "{title}"</Typography>
       </Box>
 
-      <Box sx={{ width: '100%', p: 3, borderRadius: '12px', bgcolor: 'rgba(31,122,77,0.08)', textAlign: 'center' }}>
+      <Box sx={{ width: '100%', p: 3, borderRadius: '12px', bgcolor: 'rgba(66,103,178,0.08)', textAlign: 'center' }}>
         <Typography variant="caption" color="text.secondary">Transfer tepat</Typography>
         <Typography variant="h4" color="primary.dark">{formatRupiah(result.payAmount)}</Typography>
         <Typography variant="caption" color="text.secondary">Referensi {result.reference}. Tiga digit terakhir membantu admin mencocokkan pembayaranmu.</Typography>

@@ -2,10 +2,10 @@ import Box from '@mui/material/Box';
 import { Sprout, Tree, Flower, Leaf } from './art/Nature';
 
 const palettes = [
-  ['#DDF3E6', '#BFE3CB'],
+  ['#DBEAFE', '#C5D6F0'],
   ['#FFE8D6', '#FFCFAE'],
-  ['#E1F3E6', '#B6E2C4'],
-  ['#E4F2E8', '#CFE6D6'],
+  ['#D9F3FC', '#A8E4F7'],
+  ['#E6ECF9', '#C9D6F2'],
 ];
 
 /** Illustrated cover for a project (we have no photos yet): a soft scene picked by id. */

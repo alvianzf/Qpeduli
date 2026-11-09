@@ -15,6 +15,8 @@ import IconTile from '../components/ui/IconTile';
 import Typography from '../components/ui/Txt';
 import EmptyState from '../components/EmptyState';
 import ThreadCard from '../components/ThreadCard';
+import IndonesiaMap from '../components/IndonesiaMap';
+import { useRegions } from '../lib/useRegions';
 import ProjectCard from '../components/ProjectCard';
 import { HandHeart, Sprout, Tree, Flower } from '../components/art/Nature';
 import { categoryIcon } from '../components/categoryIcons';
@@ -37,6 +39,7 @@ export default function Home() {
   const { data: threads = [] } = useThreads({ filter: 'aksi' });
   const { data: projects = [] } = useModalUsahaList();
   const { data: stats } = useStats();
+  const { counts } = useRegions();
   const featured = threads.filter((t) => t.campaign?.status !== 'completed').slice(0, 3);
 
   const statCards = [
@@ -98,6 +101,12 @@ export default function Home() {
         )}
       </Section>
 
+      <Section title="Peta kampanye" subtitle="Klik wilayah untuk melihat usaha dan aksi di sana.">
+        <GlossCard sx={{ p: { xs: 2, md: 4 }, background: 'linear-gradient(180deg, rgba(255,255,255,0.92), rgba(219,234,254,0.7))' }}>
+          <IndonesiaMap counts={counts} />
+        </GlossCard>
+      </Section>
+
       <Section title="Cara kerja" subtitle="Empat langkah dari peduli ke dampak.">
         <CardGrid cols={{ xs: 1, sm: 2, md: 4 }}>
           {steps.map((s, i) => (
@@ -147,7 +156,7 @@ export default function Home() {
 
       {!user && (
         <Section>
-          <GlossCard sx={{ p: { xs: 4, md: 6 }, alignItems: 'center', textAlign: 'center', gap: 2.5, background: 'linear-gradient(135deg, rgba(31,122,77,0.1), rgba(242,107,29,0.12))' }}>
+          <GlossCard sx={{ p: { xs: 4, md: 6 }, alignItems: 'center', textAlign: 'center', gap: 2.5, background: 'linear-gradient(135deg, rgba(66,103,178,0.1), rgba(255,90,0,0.12))' }}>
             <Typography variant="h3" sx={{ fontSize: { xs: '1.6rem', md: '2.2rem' } }}>Siap menanam kebaikan?</Typography>
             <Button size="large" variant="contained" color="warning" onClick={() => navigate('/daftar')}>Daftar</Button>
           </GlossCard>

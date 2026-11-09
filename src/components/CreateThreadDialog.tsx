@@ -114,7 +114,7 @@ export default function CreateThreadDialog({ open, onClose }: { open: boolean; o
             />
 
             <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{
-              p: 2, borderRadius: '12px', bgcolor: 'rgba(31,122,77,0.07)', border: '1px solid rgba(31,122,77,0.18)',
+              p: 2, borderRadius: '12px', bgcolor: 'rgba(66,103,178,0.07)', border: '1px solid rgba(66,103,178,0.18)',
             }}>
               <Stack>
                 <Typography fontWeight={700} variant="body2">Jadikan "Aksi Sosial"</Typography>

@@ -47,7 +47,7 @@ export default function GlossCard({ children, onClick, flush = false, delay = 0,
             transition: 'transform .2s ease, box-shadow .2s ease',
             ...(interactive && {
               cursor: 'pointer',
-              '&:hover, &:focus-visible': { transform: 'translateY(-4px)', boxShadow: '0 18px 36px rgba(20,83,45,0.16)', outline: 'none' },
+              '&:hover, &:focus-visible': { transform: 'translateY(-4px)', boxShadow: '0 18px 36px rgba(47,79,138,0.16)', outline: 'none' },
             }),
           },
           ...(Array.isArray(sx) ? sx : sx ? [sx] : []),

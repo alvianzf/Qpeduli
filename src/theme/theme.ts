@@ -4,26 +4,26 @@ import { createTheme, alpha } from '@mui/material/styles';
 // Radius scale (8/16/24) intentionally mirrors tiketq.com's own theme so the
 // two products read as siblings, not lookalikes by coincidence.
 export const brand = {
-  deep: '#14532D',
-  primary: '#1F7A4D',
-  mid: '#2A8F5C',
-  bright: '#3FAE76',
-  sky: '#A7DDBE',
-  ice: '#DDF3E6',
-  cta: '#F26B1D',
-  ctaLight: '#FF8A3D',
-  ctaDark: '#D4560F',
-  ink: '#10261B',
-  slate: '#54675C',
-  line: '#DCE8DF',
-  cream: '#FBF8F1',
+  deep: '#2F4F8A',
+  primary: '#4267B2',
+  mid: '#4D70B8',
+  bright: '#5A7EC4',
+  sky: '#9DB6E3',
+  ice: '#DBEAFE',
+  cta: '#FF5A00',
+  ctaLight: '#FF7A33',
+  ctaDark: '#E65100',
+  ink: '#0F172A',
+  slate: '#5B6B85',
+  line: '#E1E8F2',
+  cream: '#F8FAFC',
   sun: '#F6C453',
 };
 
 export const heroGradient = `linear-gradient(170deg, ${brand.deep} 0%, ${brand.primary} 55%, ${brand.bright} 100%)`;
 // Same gradient, translucent, so the animated sky shows through hero bands.
-export const heroGradientSoft = `linear-gradient(170deg, rgba(20,83,45,0.88) 0%, rgba(31,122,77,0.8) 55%, rgba(63,174,118,0.72) 100%)`;
-export const pageGradient = `linear-gradient(180deg, #E3F2E8 0%, #FBF8F1 100%)`;
+export const heroGradientSoft = `linear-gradient(170deg, rgba(47,79,138,0.88) 0%, rgba(66,103,178,0.8) 55%, rgba(90,126,196,0.72) 100%)`;
+export const pageGradient = `linear-gradient(180deg, #E8EFFB 0%, #F8FAFC 100%)`;
 
 // Spread into a hero band's sx so <HeroDecor /> (zIndex -1) paints between the
 // gradient and the band's content.
@@ -38,7 +38,7 @@ export const heroBase = {
   borderRadius: '24px',
   border: '1px solid rgba(255,255,255,0.45)',
   boxShadow:
-    'inset 0 1.5px 0 rgba(255,255,255,0.6), inset 0 -24px 48px rgba(255,255,255,0.07), 0 28px 60px rgba(20,83,45,0.32)',
+    'inset 0 1.5px 0 rgba(255,255,255,0.6), inset 0 -24px 48px rgba(255,255,255,0.07), 0 28px 60px rgba(47,79,138,0.32)',
   // top specular sheen
   '&::before': {
     content: '""',
@@ -76,7 +76,7 @@ const theme = createTheme({
       contrastText: '#fff',
     },
     secondary: {
-      main: '#F6C453',
+      main: '#0AD1FF',
       dark: '#00B3D9',
     },
     success: { main: '#16A34A' },
@@ -123,11 +123,11 @@ const theme = createTheme({
         {
           props: { variant: 'contained', color: 'primary' },
           style: {
-            backgroundImage: `linear-gradient(180deg, ${brand.bright} 0%, ${brand.primary} 52%, #176640 100%)`,
+            backgroundImage: `linear-gradient(180deg, ${brand.bright} 0%, ${brand.primary} 52%, #3A5CA3 100%)`,
             border: '1px solid rgba(255,255,255,0.28)',
             boxShadow: `inset 0 1.5px 0 rgba(255,255,255,0.5), inset 0 -2px 4px rgba(0,0,0,0.12), 0 8px 18px ${alpha(brand.primary, 0.34)}`,
             '&:hover': {
-              backgroundImage: `linear-gradient(180deg, #4FBE86 0%, ${brand.mid} 52%, ${brand.deep} 100%)`,
+              backgroundImage: `linear-gradient(180deg, #6C8FD3 0%, ${brand.mid} 52%, ${brand.deep} 100%)`,
               boxShadow: `inset 0 1.5px 0 rgba(255,255,255,0.55), inset 0 -2px 4px rgba(0,0,0,0.14), 0 10px 22px ${alpha(brand.primary, 0.42)}`,
             },
           },
