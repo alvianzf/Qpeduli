@@ -6,6 +6,7 @@ export const categoryCache: Record<string, Category> = {};
 function badgesFor(role: string, karma: number): string[] {
   const badges: string[] = [];
   if (role === 'KSATRIA_KOMUNITAS') badges.push('Ksatria Komunitas');
+  if (role === 'PENGGALANG') badges.push('Penggalang Dana');
   if (role === 'SUPERADMIN') badges.push('Superadmin Qpeduli');
   else if (role === 'ADMIN') badges.push('Admin Qpeduli');
   if (karma >= 500) badges.push('Donatur Aktif');

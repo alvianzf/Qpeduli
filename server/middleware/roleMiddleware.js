@@ -47,7 +47,7 @@ const requirePerm = (...perms) => (req, res, next) => {
   next();
 };
 
-const ROLES = ["USER", "KSATRIA_KOMUNITAS", "ADMIN", "SUPERADMIN"];
+const ROLES = ["USER", "KSATRIA_KOMUNITAS", "PENGGALANG", "ADMIN", "SUPERADMIN"];
 
 // Returns an error message if `actor` may not change a user from `target.role` to `newRole`, else null.
 // Admins manage regular users only. Only a superadmin can touch admins/superadmins or grant those roles.

@@ -1,4 +1,5 @@
 const express = require("express");
+const { grantCreatorRole } = require("../utils/creator");
 const { isStaff } = require("../middleware/roleMiddleware");
 const { body } = require("express-validator");
 const prisma = require("../db");
@@ -129,6 +130,7 @@ router.post(
         include,
       });
 
+      await grantCreatorRole(req.user.id);
       res.status(201).json({
         ...project,
         message: "Usaha terkirim dan menunggu verifikasi sebelum tampil ke publik.",

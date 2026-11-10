@@ -10,6 +10,7 @@ import { Dashboard, Campaigns } from './admin/pages';
 import { Verification, Donations, Disbursement } from './pages/Admin';
 import UsersTable from './admin/UsersTable';
 import Roles from './admin/Roles';
+import { CreatorDashboard, CreatorFunds, CreatorDonors, CreatorComments, CreatorReports, ReportWizard } from './creator/pages';
 import { Analytics, Reports, SettingsPanel, AuditLog } from './pages/AdminExtras';
 import ModalUsaha from './pages/ModalUsaha';
 import ModalUsahaDetail from './pages/ModalUsahaDetail';
@@ -45,6 +46,7 @@ export default function App() {
   const location = useLocation();
   const { user: me, loading: authLoading } = useAuth();
   const inProfileShell = location.pathname.startsWith('/profil/') && (authLoading || !!me);
+  const isCreatorArea = location.pathname === '/penggalang' || location.pathname.startsWith('/penggalang/');
   const isAdmin = location.pathname === '/admin' || location.pathname.startsWith('/admin/');
   const hideChrome = location.pathname === '/masuk' || location.pathname === '/daftar';
 
@@ -54,6 +56,24 @@ export default function App() {
         <Routes>
           <Route path="/profil/:username" element={<AdminLayout variant="profile" />}>
             <Route index element={<Profile />} />
+          </Route>
+        </Routes>
+      </CreateThreadProvider>
+    );
+  }
+
+  if (isCreatorArea) {
+    return (
+      <CreateThreadProvider>
+        <Routes>
+          <Route path="/penggalang" element={<AdminLayout variant="creator" />}>
+            <Route index element={<CreatorDashboard />} />
+            <Route path="dana" element={<CreatorFunds />} />
+            <Route path="laporan" element={<CreatorReports />} />
+            <Route path="laporan/baru" element={<ReportWizard />} />
+            <Route path="donatur" element={<CreatorDonors />} />
+            <Route path="komentar" element={<CreatorComments />} />
+            <Route path="*" element={<Navigate to="/penggalang" replace />} />
           </Route>
         </Routes>
       </CreateThreadProvider>

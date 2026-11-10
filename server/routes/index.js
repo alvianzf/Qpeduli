@@ -7,6 +7,7 @@ router.use("/threads", require("./threads"));
 router.use("/campaigns", require("./campaigns"));
 router.use("/modal-usaha", require("./modalUsaha"));
 router.use("/admin", require("./admin"));
+router.use("/creator", require("./creator"));
 router.use("/fjb", require("./fjb"));
 router.use("/users", require("./users"));
 router.use("/stats", require("./stats"));

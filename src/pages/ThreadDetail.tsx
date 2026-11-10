@@ -21,6 +21,8 @@ import { alpha } from '@mui/material/styles';
 import Hero from '../components/ui/Hero';
 import Section from '../components/ui/Section';
 import GlossCard from '../components/ui/GlossCard';
+import CampaignComments from '../components/CampaignComments';
+import { joinedLabel } from '../lib/joined';
 import IconTile from '../components/ui/IconTile';
 import Stack from '../components/ui/FlexStack';
 import Typography from '../components/ui/Txt';
@@ -107,6 +109,7 @@ export default function ThreadDetail() {
                   <Stack direction="row" alignItems="center" spacing={0.75}>
                     <Typography fontWeight={700}>{author?.name}</Typography>
                     {author?.isKsatria && <VerifiedBadge />}
+                    {author && <Typography variant="caption" color="text.secondary">· {joinedLabel(author.joinedAt)}</Typography>}
                   </Stack>
                   <Typography variant="caption" color="text.secondary">
                     {[author?.city, timeAgo(thread.createdAt), `${thread.views.toLocaleString('id-ID')} dilihat`].filter(Boolean).join(' · ')}
@@ -157,6 +160,14 @@ export default function ThreadDetail() {
               </GlossCard>
             )}
 
+            {campaign && (
+              <GlossCard sx={{ p: { xs: 3, md: 4 } }}>
+                <Typography variant="h6" sx={{ mb: 0.5 }}>Komentar donatur</Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 2.5 }}>Donatur yang donasinya terkonfirmasi bisa berkomentar dengan nama asli atau anonim.</Typography>
+                <CampaignComments campaignId={campaign.id} />
+              </GlossCard>
+            )}
+
             <GlossCard sx={{ p: { xs: 3, md: 4 } }}>
               <CardTitle icon={<ForumIcon />}>Diskusi ({thread.comments.length})</CardTitle>
               {commentError && <Typography variant="body2" color="error" sx={{ mb: 2 }}>{commentError}</Typography>}
@@ -183,6 +194,7 @@ export default function ThreadDetail() {
                         <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap" useFlexGap>
                           <Typography variant="body2" fontWeight={700}>{u?.name}</Typography>
                           {u?.isKsatria && <VerifiedBadge size={14} />}
+                          {u && <Typography variant="caption" color="text.secondary">{joinedLabel(u.joinedAt)}</Typography>}
                           {c.isDonor && <Chip label="Donatur" size="small" color="primary" />}
                           <Typography variant="caption" color="text.secondary">{timeAgo(c.date)}</Typography>
                         </Stack>
@@ -232,7 +244,7 @@ export default function ThreadDetail() {
                   <Avatar sx={{ bgcolor: author.avatarColor, fontWeight: 700 }}>{author.avatarInitial}</Avatar>
                   <Box>
                     <Typography variant="body2" fontWeight={700}>{author.name}</Typography>
-                    <Typography variant="caption" color="text.secondary">Bergabung {new Date(author.joinedAt).getFullYear()}</Typography>
+                    <Typography variant="caption" color="text.secondary">{joinedLabel(author.joinedAt)}</Typography>
                   </Box>
                 </Stack>
                 {author.badges.length > 0 && (

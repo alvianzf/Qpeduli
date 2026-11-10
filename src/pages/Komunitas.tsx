@@ -10,6 +10,7 @@ import ForumIcon from '@mui/icons-material/Forum';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { useNavigate, useParams } from 'react-router-dom';
 import Hero from '../components/ui/Hero';
+import { CommunityArt } from '../components/art/Nature';
 import Section from '../components/ui/Section';
 import CardGrid from '../components/ui/CardGrid';
 import GlossCard from '../components/ui/GlossCard';
@@ -42,6 +43,7 @@ export default function Komunitas() {
         title={active ? active.name : 'Ruang Komunitas'}
         subtitle={active ? active.description : 'Diskusi bebas, dan jadikan aksi saat dibutuhkan.'}
         actions={<Button variant="contained" color="warning" startIcon={<AddCircleIcon />} onClick={create}>Buat Thread</Button>}
+        aside={<Box className="float-slow" sx={{ display: { xs: 'none', md: 'flex' }, justifyContent: 'center' }}><CommunityArt size={320} /></Box>}
       />
 
       <Section overlap>

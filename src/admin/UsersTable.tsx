@@ -27,8 +27,8 @@ import { useAuth } from '../context/AuthContext';
 import { useAdminAction, useAdminList, apiErrorMessage } from '../lib/queries';
 import { useFeedback } from '../feedback/FeedbackProvider';
 
-const roleLabel: Record<string, string> = { USER: 'Pengguna', KSATRIA_KOMUNITAS: 'Ksatria Komunitas', ADMIN: 'Admin', SUPERADMIN: 'Superadmin' };
-const roleColor: Record<string, 'default' | 'primary' | 'warning' | 'error'> = { USER: 'default', KSATRIA_KOMUNITAS: 'primary', ADMIN: 'warning', SUPERADMIN: 'error' };
+const roleLabel: Record<string, string> = { USER: 'Pengguna', KSATRIA_KOMUNITAS: 'Ksatria Komunitas', PENGGALANG: 'Penggalang Dana', ADMIN: 'Admin', SUPERADMIN: 'Superadmin' };
+const roleColor: Record<string, 'default' | 'primary' | 'warning' | 'error'> = { USER: 'default', KSATRIA_KOMUNITAS: 'primary', PENGGALANG: 'primary', ADMIN: 'warning', SUPERADMIN: 'error' };
 
 type SortKey = 'name' | 'username' | 'email' | 'role' | 'karma' | 'createdAt';
 
@@ -140,6 +140,7 @@ export default function UsersTable() {
                           <Select size="small" value={u.role} disabled={act.isPending} onChange={(e) => patch(u, { role: e.target.value })} sx={{ minWidth: 160 }}>
                             <MenuItem value="USER">Pengguna</MenuItem>
                             <MenuItem value="KSATRIA_KOMUNITAS">Ksatria Komunitas</MenuItem>
+                            <MenuItem value="PENGGALANG">Penggalang Dana</MenuItem>
                             <MenuItem value="ADMIN" disabled={!isSuper}>Admin</MenuItem>
                             <MenuItem value="SUPERADMIN" disabled={!isSuper}>Superadmin</MenuItem>
                           </Select>

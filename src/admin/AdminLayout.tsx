@@ -32,7 +32,7 @@ import UserAvatar from '../components/UserAvatar';
 import { useAuth } from '../context/AuthContext';
 import { useAdminOverview } from '../lib/queries';
 import FloatingLeaves from './FloatingLeaves';
-import { adminTheme, lte, profilePalette } from './adminTheme';
+import { adminTheme, lte, profilePalette, creatorPalette } from './adminTheme';
 
 interface Item { to: string; label: string; icon: React.ReactNode; badge?: number; superOnly?: boolean; end?: boolean; perm?: string[] }
 
@@ -40,9 +40,10 @@ const FULL = 250;
 const MINI = 64;
 
 /** AdminLTE-style shell: dark sidebar, top bar, content header with breadcrumb, light content area. */
-export default function AdminLayout({ variant = 'admin' }: { variant?: 'admin' | 'profile' }) {
+export default function AdminLayout({ variant = 'admin' }: { variant?: 'admin' | 'profile' | 'creator' }) {
   const profile = variant === 'profile';
-  const pal = profile ? profilePalette : lte;
+  const creator = variant === 'creator';
+  const pal = profile ? profilePalette : creator ? creatorPalette : lte;
   const { user, loading, logout } = useAuth();
   const { pathname } = useLocation();
   const navigate = useNavigate();
@@ -53,7 +54,7 @@ export default function AdminLayout({ variant = 'admin' }: { variant?: 'admin' |
 
   if (loading) return <Stack alignItems="center" sx={{ py: 10 }}><CircularProgress /></Stack>;
   const perms = user?.permissions ?? [];
-  if (!user || (!profile && perms.length === 0)) return <Navigate to={profile ? '/masuk' : '/'} replace />;
+  if (!user || (!profile && !creator && perms.length === 0)) return <Navigate to={profile || creator ? '/masuk' : '/'} replace />;
   const isSuper = user.role === 'SUPERADMIN';
   const can = (i: Item) => (!i.superOnly || isSuper) && (!i.perm || i.perm.some((p) => perms.includes(p)));
 
@@ -84,9 +85,19 @@ export default function AdminLayout({ variant = 'admin' }: { variant?: 'admin' |
       { to: '/modal-usaha', label: 'Modal Usaha', icon: <CampaignIcon /> },
       { to: '/fjb', label: 'FJB Amal', icon: <DonationIcon /> },
     ] },
-    ...(perms.length ? [{ title: 'PENGELOLAAN', items: [{ to: '/admin', label: 'Konsol admin', icon: <ShieldIcon /> }] }] : []),
+    ...(perms.length || user.isCreator ? [{ title: 'PENGELOLAAN', items: [...(user.isCreator ? [{ to: '/penggalang', label: 'Konsol penggalang', icon: <CampaignIcon /> }] : []), ...(perms.length ? [{ to: '/admin', label: 'Konsol admin', icon: <ShieldIcon /> }] : [])] }] : []),
   ];
-  const groups = profile ? profileGroups : adminGroups;
+  const creatorGroups: { title: string; items: Item[] }[] = [
+    { title: 'RINGKASAN', items: [{ to: '/penggalang', label: 'Dashboard', icon: <DashboardIcon />, end: true }] },
+    { title: 'KAMPANYE', items: [
+      { to: '/penggalang/dana', label: 'Dana', icon: <PaymentsIcon /> },
+      { to: '/penggalang/laporan', label: 'Laporan', icon: <AssessmentIcon /> },
+      { to: '/penggalang/donatur', label: 'Donatur', icon: <PeopleIcon /> },
+      { to: '/penggalang/komentar', label: 'Komentar', icon: <ForumIcon /> },
+    ] },
+    { title: 'LAINNYA', items: [{ to: `/profil/${user.username}`, label: 'Profil saya', icon: <PeopleIcon /> }, { to: '/', label: 'Ke situs', icon: <OpenInNewIcon /> }] },
+  ];
+  const groups = profile ? profileGroups : creator ? creatorGroups : adminGroups;
   const flat = groups.flatMap((g) => g.items).filter(can);
   const current = flat.find((i) => (i.end ? pathname === i.to : pathname.startsWith(i.to) && i.to !== '/admin')) ?? flat[0];
   const width = mini ? MINI : FULL;
@@ -94,16 +105,16 @@ export default function AdminLayout({ variant = 'admin' }: { variant?: 'admin' |
   const sidebar = (compact: boolean) => (
     <Box sx={{ width: compact ? MINI : FULL, background: pal.sidebar, color: pal.sidebarText, height: '100%', display: 'flex', flexDirection: 'column', overflowY: 'auto', overflowX: 'hidden', transition: 'width .2s ease', position: 'relative', '& > *:not([aria-hidden])': { position: 'relative', zIndex: 1 } }}>
       <FloatingLeaves />
-      <Stack direction="row" alignItems="center" spacing={1.25} sx={{ height: 57, px: compact ? 1.5 : 2, borderBottom: '1px solid rgba(255,255,255,0.18)', cursor: 'pointer', flexShrink: 0 }} onClick={() => navigate(profile ? '/' : '/admin')}>
+      <Stack direction="row" alignItems="center" spacing={1.25} sx={{ height: 57, px: compact ? 1.5 : 2, borderBottom: '1px solid rgba(255,255,255,0.18)', cursor: 'pointer', flexShrink: 0 }} onClick={() => navigate(profile ? '/' : creator ? '/penggalang' : '/admin')}>
         <Logo size={30} light />
-        {!compact && <Typography sx={{ color: '#fff', fontWeight: 700, fontSize: '1.15rem', whiteSpace: 'nowrap' }}>Qpeduli <Box component="span" sx={{ fontWeight: 400, opacity: 0.7 }}>{profile ? 'Akun' : 'Admin'}</Box></Typography>}
+        {!compact && <Typography sx={{ color: '#fff', fontWeight: 700, fontSize: '1.15rem', whiteSpace: 'nowrap' }}>Qpeduli <Box component="span" sx={{ fontWeight: 400, opacity: 0.7 }}>{profile ? 'Akun' : creator ? 'Penggalang' : 'Admin'}</Box></Typography>}
       </Stack>
       <Stack direction="row" alignItems="center" spacing={1.5} sx={{ px: compact ? 1.5 : 2, py: 1.75, borderBottom: '1px solid rgba(255,255,255,0.18)' }}>
         <UserAvatar name={user.name} src={user.avatarUrl} color={user.avatarColor} size={36} />
         {!compact && (
           <Box sx={{ minWidth: 0 }}>
             <Typography noWrap sx={{ color: '#fff', fontWeight: 600, fontSize: 14 }}>{user.name}</Typography>
-            <Typography noWrap sx={{ color: pal.sidebarText, fontSize: 12 }}>{isSuper ? 'Superadmin' : user.role === 'ADMIN' ? 'Admin' : 'Anggota'}</Typography>
+            <Typography noWrap sx={{ color: pal.sidebarText, fontSize: 12 }}>{isSuper ? 'Superadmin' : user.role === 'ADMIN' ? 'Admin' : user.role === 'PENGGALANG' ? 'Penggalang dana' : 'Anggota'}</Typography>
           </Box>
         )}
       </Stack>
@@ -190,7 +201,7 @@ export default function AdminLayout({ variant = 'admin' }: { variant?: 'admin' |
           <Stack direction={{ xs: 'column', sm: 'row' }} justifyContent="space-between" alignItems={{ sm: 'center' }} spacing={0.5} sx={{ px: 3, pt: 2.5, pb: 1 }}>
             <Typography variant="h5" sx={{ fontWeight: 600, fontSize: '1.6rem' }}>{current.label}</Typography>
             <Typography variant="body2" color="text.secondary">
-              <Box component={NavLink} to="/" sx={{ color: pal.blue, textDecoration: 'none' }}>Beranda</Box> / {profile ? <>Profil</> : <><Box component={NavLink} to="/admin" sx={{ color: pal.blue, textDecoration: 'none' }}>Admin</Box>{current.to !== '/admin' && <> / {current.label}</>}</>}
+              <Box component={NavLink} to="/" sx={{ color: pal.blue, textDecoration: 'none' }}>Beranda</Box> / {profile ? <>Profil</> : creator ? <><Box component={NavLink} to="/penggalang" sx={{ color: pal.blue, textDecoration: 'none' }}>Penggalang</Box>{current.to !== '/penggalang' && <> / {current.label}</>}</> : <><Box component={NavLink} to="/admin" sx={{ color: pal.blue, textDecoration: 'none' }}>Admin</Box>{current.to !== '/admin' && <> / {current.label}</>}</>}
             </Typography>
           </Stack>
 

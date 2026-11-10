@@ -5,6 +5,8 @@ const { authMiddleware, optionalAuth } = require("../middleware/authMiddleware")
 const { requireRole, requirePerm } = require("../middleware/roleMiddleware");
 const validate = require("../middleware/validate");
 const { addKarma } = require("../utils/karma");
+const { ownsCampaign } = require("../utils/creator");
+const { isStaff } = require("../middleware/roleMiddleware");
 
 const { getSettings, audit } = require("../utils/settings");
 
@@ -204,5 +206,92 @@ router.patch(
     }
   },
 );
+
+// ---- Campaign comments -------------------------------------------------------------------------
+// Confirmed donors and the campaign's creator can comment. Donors choose to appear under their real
+// name or anonymously; anonymous authors are hidden from everyone except staff.
+async function viewerFlags(user, campaignId) {
+  if (!user) return { isOwner: false, isDonor: false, staff: false };
+  const [isOwner, donated] = await Promise.all([
+    ownsCampaign(user.id, campaignId),
+    prisma.donation.count({ where: { campaignId, donorId: user.id, status: "CONFIRMED" } }),
+  ]);
+  return { isOwner, isDonor: donated > 0, staff: isStaff(user) };
+}
+
+router.get("/:id/comments", optionalAuth, async (req, res, next) => {
+  try {
+    const campaignId = Number(req.params.id);
+    const campaign = await prisma.campaign.findUnique({ where: { id: campaignId }, select: { id: true } });
+    if (!campaign) return res.status(404).json({ error: "Kampanye tidak ditemukan." });
+    const flags = await viewerFlags(req.user, campaignId);
+    const rows = await prisma.campaignComment.findMany({
+      where: { campaignId },
+      include: { author: { select: { id: true, name: true, username: true, avatarUrl: true, avatarColor: true, createdAt: true } } },
+      orderBy: { createdAt: "desc" },
+      take: 200,
+    });
+    const authorIds = [...new Set(rows.map((r) => r.authorId))];
+    const donors = new Set((await prisma.donation.findMany({ where: { campaignId, status: "CONFIRMED", donorId: { in: authorIds } }, select: { donorId: true }, distinct: ["donorId"] })).map((d) => d.donorId));
+    const ownerChecks = await Promise.all(authorIds.map(async (id) => [id, await ownsCampaign(id, campaignId)]));
+    const owners = new Set(ownerChecks.filter(([, v]) => v).map(([id]) => id));
+    res.json({
+      canComment: flags.isOwner || flags.isDonor || flags.staff,
+      viewer: { isOwner: flags.isOwner, isDonor: flags.isDonor },
+      comments: rows.map((c) => {
+        const hide = c.anonymous && !flags.staff;
+        return {
+          id: c.id,
+          content: c.content,
+          createdAt: c.createdAt,
+          anonymous: c.anonymous,
+          isOwner: owners.has(c.authorId),
+          isDonor: donors.has(c.authorId),
+          mine: !!req.user && c.authorId === req.user.id,
+          author: hide ? { name: "Donatur anonim", username: null, avatarUrl: null, avatarColor: "#64748B" } : c.author,
+          realName: c.anonymous && flags.staff ? c.author.name : undefined,
+        };
+      }),
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post(
+  "/:id/comments",
+  authMiddleware,
+  [body("content").trim().isLength({ min: 2, max: 1000 }).withMessage("Komentar 2 sampai 1000 karakter."), body("anonymous").optional().isBoolean()],
+  validate,
+  async (req, res, next) => {
+    try {
+      const campaignId = Number(req.params.id);
+      const campaign = await prisma.campaign.findUnique({ where: { id: campaignId }, select: { id: true } });
+      if (!campaign) return res.status(404).json({ error: "Kampanye tidak ditemukan." });
+      const flags = await viewerFlags(req.user, campaignId);
+      if (!flags.isOwner && !flags.isDonor && !flags.staff) {
+        return res.status(403).json({ error: "Hanya donatur yang sudah terkonfirmasi dan penggalang dana yang bisa berkomentar." });
+      }
+      // Only donors may hide their name; creators and staff always comment openly.
+      const anonymous = Boolean(req.body.anonymous) && flags.isDonor && !flags.isOwner && !flags.staff;
+      const created = await prisma.campaignComment.create({ data: { campaignId, authorId: req.user.id, content: req.body.content.trim(), anonymous } });
+      res.status(201).json({ id: created.id, anonymous });
+    } catch (err) {
+      next(err);
+    }
+  },
+);
+
+router.delete("/:id/comments/:commentId", authMiddleware, async (req, res, next) => {
+  try {
+    const comment = await prisma.campaignComment.findUnique({ where: { id: Number(req.params.commentId) } });
+    if (!comment || comment.campaignId !== Number(req.params.id)) return res.status(404).json({ error: "Komentar tidak ditemukan." });
+    if (comment.authorId !== req.user.id && !isStaff(req.user)) return res.status(403).json({ error: "Kamu tidak bisa menghapus komentar ini." });
+    await prisma.campaignComment.delete({ where: { id: comment.id } });
+    res.json({ ok: true });
+  } catch (err) {
+    next(err);
+  }
+});
 
 module.exports = router;

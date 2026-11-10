@@ -1,4 +1,5 @@
 const express = require("express");
+const { grantCreatorRole } = require("../utils/creator");
 const { isStaff } = require("../middleware/roleMiddleware");
 const { body } = require("express-validator");
 const prisma = require("../db");
@@ -109,6 +110,7 @@ router.post(
         include: threadInclude,
       });
 
+      if (isAksiSosial && campaign) await grantCreatorRole(req.user.id);
       res.status(201).json(thread);
     } catch (err) {
       next(err);

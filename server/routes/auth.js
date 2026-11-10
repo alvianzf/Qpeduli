@@ -9,6 +9,7 @@ const { sendWelcomeEmail } = require("../utils/mailer");
 
 const { getSettings } = require("../utils/settings");
 const { permissionsOf } = require("../middleware/roleMiddleware");
+const { isCreator } = require("../utils/creator");
 
 const router = express.Router();
 
@@ -82,16 +83,20 @@ router.post(
       const token = signToken(user);
       const full = user.customRoleId ? await prisma.user.findUnique({ where: { id: user.id }, include: { customRole: true } }) : user;
       const { passwordHash: _, ...safeUser } = full;
-      res.json({ user: { ...safeUser, permissions: permissionsOf(full) }, token });
+      res.json({ user: { ...safeUser, permissions: permissionsOf(full), isCreator: await isCreator(full) }, token });
     } catch (err) {
       next(err);
     }
   },
 );
 
-router.get("/me", authMiddleware, (req, res) => {
-  const { passwordHash: _, ...safeUser } = req.user;
-  res.json({ user: { ...safeUser, permissions: permissionsOf(req.user) } });
+router.get("/me", authMiddleware, async (req, res, next) => {
+  try {
+    const { passwordHash: _, ...safeUser } = req.user;
+    res.json({ user: { ...safeUser, permissions: permissionsOf(req.user), isCreator: await isCreator(req.user) } });
+  } catch (err) {
+    next(err);
+  }
 });
 
 module.exports = router;

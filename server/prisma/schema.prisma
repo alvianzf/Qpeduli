@@ -12,6 +12,7 @@ enum Role {
   KSATRIA_KOMUNITAS
   ADMIN
   SUPERADMIN
+  PENGGALANG
 }
 
 enum CampaignStatus {
@@ -63,6 +64,7 @@ model User {
   guaranteeing   Campaign[]       @relation("Guarantor")
   ownedCampaigns Campaign[]       @relation("CampaignOwner")
   karmaLogs      KarmaLog[]
+  campaignComments CampaignComment[]
 
   @@map("users")
 }
@@ -126,6 +128,7 @@ model Campaign {
 
   milestones Milestone[]
   updates    CampaignUpdate[]
+  comments   CampaignComment[]
   donations  Donation[]
   fjbItems   FjbItem[]
 
@@ -153,6 +156,10 @@ model CampaignUpdate {
   author     User     @relation(fields: [authorId], references: [id])
   title      String
   content    String
+  isReport   Boolean  @default(false)
+  spent      Decimal?
+  milestoneId Int?
+  nextSteps  String?
   createdAt  DateTime @default(now())
 
   @@map("campaign_updates")
@@ -262,4 +269,18 @@ model CustomRole {
   users       User[]
 
   @@map("custom_roles")
+}
+
+model CampaignComment {
+  id         Int      @id @default(autoincrement())
+  campaignId Int
+  campaign   Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  authorId   Int
+  author     User     @relation(fields: [authorId], references: [id])
+  content    String
+  anonymous  Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  @@index([campaignId, createdAt])
+  @@map("campaign_comments")
 }

@@ -4,6 +4,7 @@ import Typography from '../components/ui/Txt';
 import Hero from '../components/ui/Hero';
 import Section from '../components/ui/Section';
 import GlossCard from '../components/ui/GlossCard';
+import CampaignComments from '../components/CampaignComments';
 import Stack from '../components/ui/FlexStack';
 import Chip from '@mui/material/Chip';
 import Button from '@mui/material/Button';
@@ -123,6 +124,12 @@ export default function ModalUsahaDetail() {
                     ))}
                   </Stack>
                 )}
+              </GlossCard>
+
+              <GlossCard sx={{ p: { xs: 3, md: 4 } }}>
+                <Typography variant="h6" sx={{ mb: 0.5 }}>Komentar donatur</Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 2.5 }}>Donatur yang donasinya terkonfirmasi bisa berkomentar dengan nama asli atau anonim.</Typography>
+                <CampaignComments campaignId={project.id} />
               </GlossCard>
             </Stack>
           </Box>

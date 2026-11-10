@@ -13,6 +13,7 @@ import { timeAgo } from '../data/mockData';
 import { userCache as users, categoryCache } from '../lib/adapters';
 import GlossCard from './ui/GlossCard';
 import Stack from './ui/FlexStack';
+import { joinedLabel } from '../lib/joined';
 import Typography from './ui/Txt';
 import VerifiedBadge from './VerifiedBadge';
 import CampaignProgress from './CampaignProgress';
@@ -35,7 +36,7 @@ export default function ThreadCard({ thread, index = 0 }: { thread: Thread; inde
             <Typography variant="subtitle2" noWrap>{author?.name}</Typography>
             {author?.isKsatria && <VerifiedBadge size={15} />}
           </Stack>
-          <Typography variant="caption" color="text.secondary">{timeAgo(thread.createdAt)}</Typography>
+          <Typography variant="caption" color="text.secondary">{author ? `${joinedLabel(author.joinedAt)} · ` : ''}{timeAgo(thread.createdAt)}</Typography>
         </Box>
         {thread.hot && <LocalFireDepartmentIcon sx={{ color: 'warning.main' }} />}
       </Stack>

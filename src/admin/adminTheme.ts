@@ -50,3 +50,12 @@ export const profilePalette = {
   cyan: '#14958A',
   green: '#0B4F4A',
 };
+
+// Creator console: same layout, violet so it reads as a different area from admin (blue) and profile (teal).
+export const creatorPalette = {
+  ...lte,
+  sidebar: 'linear-gradient(180deg, #34176B 0%, #5B2BB0 55%, #7C4DDB 100%)',
+  blue: '#5B2BB0',
+  cyan: '#7C4DDB',
+  green: '#34176B',
+};

@@ -100,6 +100,7 @@ export default function Navbar() {
                     <Divider />
                     <MenuItem onClick={() => { setAnchor(null); go(`/profil/${user.username}`); }}>Profil</MenuItem>
                     {((user.permissions?.length ?? 0) > 0 || user.role === 'ADMIN' || user.role === 'SUPERADMIN') && <MenuItem onClick={() => { setAnchor(null); go('/admin'); }}>Panel admin</MenuItem>}
+                    {user.isCreator && <MenuItem onClick={() => { setAnchor(null); go('/penggalang'); }}>Konsol penggalang</MenuItem>}
                     <MenuItem onClick={() => { setAnchor(null); logout(); go('/'); }}>Keluar</MenuItem>
                   </Menu>
                 </Stack>

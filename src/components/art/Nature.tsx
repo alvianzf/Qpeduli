@@ -143,3 +143,40 @@ export function DonationArt({ size = 260 }: { size?: number }) {
     </svg>
   );
 }
+
+/** Hero art for the community page: overlapping speech bubbles with a heart, a sprout and a few faces. */
+export function CommunityArt({ size = 300 }: { size?: number }) {
+  return (
+    <svg width={size} height={size * 0.82} viewBox="0 0 320 262" fill="none" aria-hidden>
+      <defs>
+        <radialGradient id="ca-glow" cx="50%" cy="50%" r="50%">
+          <stop offset="0" stopColor="#fff" stopOpacity=".5" />
+          <stop offset="1" stopColor="#fff" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      <circle cx="160" cy="124" r="118" fill="url(#ca-glow)" />
+      {/* back bubble */}
+      <g className="float-slow">
+        <path d="M44 58c0-14 10-24 24-24h116c14 0 24 10 24 24v58c0 14-10 24-24 24h-72l-30 24 4-24h-18c-14 0-24-10-24-24Z" fill="#fff" fillOpacity=".9" stroke="#fff" strokeWidth="3" strokeLinejoin="round" />
+        <rect x="64" y="56" width="92" height="9" rx="4.5" fill="#4267B2" fillOpacity=".55" />
+        <rect x="64" y="76" width="124" height="9" rx="4.5" fill="#4267B2" fillOpacity=".3" />
+        <rect x="64" y="96" width="70" height="9" rx="4.5" fill="#4267B2" fillOpacity=".3" />
+      </g>
+      {/* front bubble */}
+      <g className="float-slow" style={{ animationDelay: '1.2s' }}>
+        <path d="M148 118c0-14 10-24 24-24h96c14 0 24 10 24 24v52c0 14-10 24-24 24h-12l4 24-32-24h-56c-14 0-24-10-24-24Z" fill="#FF7A33" stroke="#fff" strokeWidth="3" strokeLinejoin="round" />
+        <path d="M220 168c-20-12-30-22-30-34 0-9 7-15 15-15 6 0 12 3 15 9 3-6 9-9 15-9 8 0 15 6 15 15 0 12-10 22-30 34z" fill="#fff" />
+      </g>
+      {/* faces */}
+      <g>
+        <circle cx="62" cy="206" r="18" fill="#F7C79B" stroke="#fff" strokeWidth="3" />
+        <circle cx="104" cy="214" r="15" fill="#E8B07A" stroke="#fff" strokeWidth="3" />
+        <circle cx="140" cy="222" r="13" fill="#FBD9B5" stroke="#fff" strokeWidth="3" />
+        <path d="M54 212c4 5 14 5 18 0M97 219c3 4 11 4 14 0" stroke="#7A4A22" strokeWidth="2" strokeLinecap="round" />
+      </g>
+      {/* sprout */}
+      <path d="M286 238v-34" stroke="#fff" strokeWidth="4" strokeLinecap="round" />
+      <path d="M286 214c-16 0-24-10-24-24 16 0 24 10 24 24Zm0-6c14 0 22-9 22-22-14 0-22 9-22 22Z" fill="#9DB6E3" stroke="#fff" strokeWidth="3" strokeLinejoin="round" />
+    </svg>
+  );
+}

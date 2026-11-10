@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import api, { apiErrorMessage } from '../lib/api';
 
-export type Role = 'USER' | 'KSATRIA_KOMUNITAS' | 'ADMIN' | 'SUPERADMIN';
+export type Role = 'USER' | 'KSATRIA_KOMUNITAS' | 'PENGGALANG' | 'ADMIN' | 'SUPERADMIN';
 
 export interface AuthUser {
   id: number;
@@ -18,6 +18,8 @@ export interface AuthUser {
   createdAt: string;
   /** Console permissions (all of them for ADMIN/SUPERADMIN, or those of the custom role). */
   permissions?: string[];
+  /** Owns a campaign (or has the PENGGALANG role): may use the creator console. */
+  isCreator?: boolean;
   customRole?: { id: number; name: string } | null;
 }
 

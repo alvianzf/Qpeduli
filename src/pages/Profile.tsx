@@ -26,6 +26,7 @@ import { profilePalette as pal } from '../admin/adminTheme';
 import { formatRupiah } from '../data/mockData';
 import { useUserProfile } from '../lib/queries';
 import { useAuth } from '../context/AuthContext';
+import { joinedLabel } from '../lib/joined';
 
 const nextLevelKarma = 2000;
 
@@ -55,7 +56,7 @@ export default function Profile() {
               <Typography variant="h5" sx={{ fontWeight: 700 }}>{user.name}</Typography>
               {user.isKsatria && <VerifiedBadge />}
             </Stack>
-            <Typography color="text.secondary" sx={{ mb: 1.5 }}>@{user.username}{user.city ? ` · ${user.city}` : ''}</Typography>
+            <Typography color="text.secondary" sx={{ mb: 1.5 }}>@{user.username}{user.city ? ` · ${user.city}` : ''} · {joinedLabel(user.joinedAt)}</Typography>
             {user.bio ? <Typography variant="body2" sx={{ mb: 2, maxWidth: 560 }}>{user.bio}</Typography> : own && <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>Belum ada bio. Ceritakan sedikit tentang dirimu.</Typography>}
             <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
               {user.badges.map((b) => <Chip key={b} icon={<EmojiEventsIcon />} label={b} size="small" sx={{ bgcolor: `${pal.blue}18`, color: pal.green }} />)}
