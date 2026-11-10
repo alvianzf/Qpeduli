@@ -9,6 +9,7 @@ const PERMISSIONS = {
   donasi: "Konfirmasi atau tolak donasi",
   pencairan: "Cairkan dana milestone",
   pengguna: "Lihat daftar pengguna",
+  kyc: "Tinjau verifikasi identitas (KYC)",
 };
 
 const permissionsOf = (user) => {
@@ -47,7 +48,7 @@ const requirePerm = (...perms) => (req, res, next) => {
   next();
 };
 
-const ROLES = ["USER", "KSATRIA_KOMUNITAS", "PENGGALANG", "ADMIN", "SUPERADMIN"];
+const ROLES = ["USER", "KSATRIA_KOMUNITAS", "PENGGALANG", "MODERATOR", "ADMIN", "SUPERADMIN"];
 
 // Returns an error message if `actor` may not change a user from `target.role` to `newRole`, else null.
 // Admins manage regular users only. Only a superadmin can touch admins/superadmins or grant those roles.

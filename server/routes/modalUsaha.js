@@ -1,5 +1,7 @@
 const express = require("express");
 const { grantCreatorRole } = require("../utils/creator");
+const { kycBlock } = require("../utils/kyc");
+const { kepriArea, KEPRI_ONLY_MESSAGE } = require("../utils/region");
 const { isStaff } = require("../middleware/roleMiddleware");
 const { body } = require("express-validator");
 const prisma = require("../db");
@@ -98,6 +100,10 @@ router.post(
       if (new Date(deadline) <= new Date()) {
         return res.status(400).json({ error: "Batas waktu harus di masa depan." });
       }
+      const blocked = await kycBlock(req.user);
+      if (blocked) return res.status(403).json({ error: blocked });
+      const area = kepriArea(city || req.user.city);
+      if (!area) return res.status(400).json({ error: KEPRI_ONLY_MESSAGE });
       const milestoneTotal = milestones.reduce((sum, m) => sum + Number(m.amount), 0);
       if (Math.abs(milestoneTotal - Number(target)) > 1) {
         return res.status(400).json({ error: "Total semua tahap harus sama dengan target dana." });
@@ -109,7 +115,7 @@ router.post(
           title,
           story,
           businessType: businessType || null,
-          city: city || req.user.city || null,
+          city: area.name,
           emoji: emoji || null,
           ownerId: req.user.id,
           target,

@@ -10,6 +10,7 @@ const { sendWelcomeEmail } = require("../utils/mailer");
 const { getSettings } = require("../utils/settings");
 const { permissionsOf } = require("../middleware/roleMiddleware");
 const { isCreator } = require("../utils/creator");
+const { kycStatusOf } = require("../utils/kyc");
 
 const router = express.Router();
 
@@ -75,6 +76,7 @@ router.post(
         return res.status(401).json({ error: "Email/username atau kata sandi salah." });
       }
 
+      if (user.bannedAt) return res.status(403).json({ error: "Akun ini diblokir." });
       const valid = await bcrypt.compare(password, user.passwordHash);
       if (!valid) {
         return res.status(401).json({ error: "Email/username atau kata sandi salah." });
@@ -83,7 +85,7 @@ router.post(
       const token = signToken(user);
       const full = user.customRoleId ? await prisma.user.findUnique({ where: { id: user.id }, include: { customRole: true } }) : user;
       const { passwordHash: _, ...safeUser } = full;
-      res.json({ user: { ...safeUser, permissions: permissionsOf(full), isCreator: await isCreator(full) }, token });
+      res.json({ user: { ...safeUser, permissions: permissionsOf(full), isCreator: await isCreator(full), kycStatus: await kycStatusOf(full) }, token });
     } catch (err) {
       next(err);
     }
@@ -93,7 +95,7 @@ router.post(
 router.get("/me", authMiddleware, async (req, res, next) => {
   try {
     const { passwordHash: _, ...safeUser } = req.user;
-    res.json({ user: { ...safeUser, permissions: permissionsOf(req.user), isCreator: await isCreator(req.user) } });
+    res.json({ user: { ...safeUser, permissions: permissionsOf(req.user), isCreator: await isCreator(req.user), kycStatus: await kycStatusOf(req.user) } });
   } catch (err) {
     next(err);
   }

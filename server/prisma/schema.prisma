@@ -13,6 +13,7 @@ enum Role {
   ADMIN
   SUPERADMIN
   PENGGALANG
+  MODERATOR
 }
 
 enum CampaignStatus {
@@ -48,6 +49,8 @@ model User {
   bio          String?
   avatarColor  String   @default("#2563EB")
   avatarUrl    String?
+  suspendedUntil DateTime?
+  bannedAt     DateTime?
   role         Role     @default(USER)
   customRoleId Int?
   customRole   CustomRole? @relation(fields: [customRoleId], references: [id], onDelete: SetNull)
@@ -65,6 +68,12 @@ model User {
   ownedCampaigns Campaign[]       @relation("CampaignOwner")
   karmaLogs      KarmaLog[]
   campaignComments CampaignComment[]
+  moderatedCategories ModeratorAssignment[]
+  sanctions    Sanction[]
+  reactions    Reaction[]
+  flagsFiled   Flag[]
+  campaignRequests CampaignRequest[]
+  kyc          Kyc?
 
   @@map("users")
 }
@@ -77,6 +86,7 @@ model Category {
   icon        String?
   color       String?
   threads     Thread[]
+  moderators  ModeratorAssignment[]
 
   @@map("categories")
 }
@@ -90,12 +100,16 @@ model Thread {
   title        String
   content      String
   isAksiSosial Boolean  @default(false)
+  images       String[] @default([])
+  removedAt    DateTime?
+  removedReason String?
   views        Int      @default(0)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
   campaign Campaign?
   comments Comment[]
+  campaignRequests CampaignRequest[]
 
   @@map("threads")
 }
@@ -172,6 +186,9 @@ model Comment {
   authorId   Int
   author     User     @relation(fields: [authorId], references: [id])
   content    String
+  imageUrl   String?
+  removedAt  DateTime?
+  removedReason String?
   karmaGiven Int      @default(0)
   createdAt  DateTime @default(now())
 
@@ -283,4 +300,112 @@ model CampaignComment {
 
   @@index([campaignId, createdAt])
   @@map("campaign_comments")
+}
+
+model ModeratorAssignment {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  categoryId Int
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, categoryId])
+  @@map("moderator_assignments")
+}
+
+// Love (+1) or heartbreak (-1) on a thread or comment.
+model Reaction {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  targetType String
+  targetId   Int
+  value      Int
+  createdAt  DateTime @default(now())
+
+  @@unique([userId, targetType, targetId])
+  @@index([targetType, targetId])
+  @@map("reactions")
+}
+
+model Flag {
+  id           Int      @id @default(autoincrement())
+  targetType   String
+  targetId     Int
+  reporterId   Int
+  reporter     User     @relation(fields: [reporterId], references: [id], onDelete: Cascade)
+  reason       String
+  status       String   @default("OPEN")
+  resolvedBy   String?
+  resolution   String?
+  createdAt    DateTime @default(now())
+  resolvedAt   DateTime?
+
+  @@index([status, createdAt])
+  @@map("flags")
+}
+
+// SUSPEND is immediate and time-limited. BAN made by a moderator waits for admin approval.
+model Sanction {
+  id          Int       @id @default(autoincrement())
+  userId      Int
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type        String
+  reason      String
+  until       DateTime?
+  status      String
+  createdBy   String
+  createdById Int?
+  decidedBy   String?
+  createdAt   DateTime  @default(now())
+  decidedAt   DateTime?
+
+  @@index([status])
+  @@map("sanctions")
+}
+
+// A thread starter's request to turn the thread into a fundraising campaign.
+model CampaignRequest {
+  id          Int      @id @default(autoincrement())
+  threadId    Int
+  thread      Thread   @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  requesterId Int
+  requester   User     @relation(fields: [requesterId], references: [id], onDelete: Cascade)
+  target      Decimal
+  deadline    DateTime
+  message     String
+  city        String?
+  evidence    Json     @default("[]")
+  status      String   @default("PENDING")
+  reviewedBy  String?
+  reviewNote  String?
+  createdAt   DateTime @default(now())
+  reviewedAt  DateTime?
+
+  @@index([status])
+  @@map("campaign_requests")
+}
+
+// One-time identity verification. Photos live in a private directory; the ID number itself is never stored,
+// only its last 4 digits and a keyed fingerprint used to block the same person verifying twice.
+model Kyc {
+  id            Int       @id @default(autoincrement())
+  userId        Int       @unique
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  fullName      String
+  idFingerprint String
+  idLast4       String
+  phone         String
+  address       String
+  idPhoto       String
+  selfie        String
+  status        String    @default("PENDING")
+  reviewNote    String?
+  reviewedBy    String?
+  submittedAt   DateTime  @default(now())
+  reviewedAt    DateTime?
+
+  @@index([status])
+  @@index([idFingerprint])
+  @@map("kyc")
 }

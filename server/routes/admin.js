@@ -9,6 +9,8 @@ const { audit } = require("../utils/settings");
 const router = express.Router();
 router.use(authMiddleware, requireConsole);
 router.use(require("./adminRoles"));
+router.use(require("./adminModerators"));
+router.use(require("./adminKyc"));
 router.use(require("./adminExtra"));
 
 const personSelect = { id: true, username: true, name: true, city: true, role: true, isVerified: true, avatarUrl: true };

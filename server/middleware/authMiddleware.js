@@ -19,6 +19,14 @@ async function authMiddleware(req, res, next) {
       return res.status(401).json({ error: "Akun tidak ditemukan." });
     }
 
+    if (user.bannedAt) {
+      return res.status(403).json({ error: "Akun ini diblokir." });
+    }
+    if (user.suspendedUntil && user.suspendedUntil > new Date() && req.method !== "GET") {
+      const until = user.suspendedUntil.toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
+      return res.status(403).json({ error: `Akunmu ditangguhkan sampai ${until}. Kamu masih bisa membaca.` });
+    }
+
     req.user = user;
     next();
   } catch (err) {
