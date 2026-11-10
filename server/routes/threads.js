@@ -1,4 +1,5 @@
 const express = require("express");
+const { isStaff } = require("../middleware/roleMiddleware");
 const { body } = require("express-validator");
 const prisma = require("../db");
 const { authMiddleware, optionalAuth } = require("../middleware/authMiddleware");
@@ -150,7 +151,7 @@ router.post(
       if (!thread || !thread.campaign) return res.status(404).json({ error: "Kampanye tidak ditemukan." });
 
       const isOwner = thread.authorId === req.user.id;
-      const isAdmin = req.user.role === "ADMIN";
+      const isAdmin = isStaff(req.user);
       if (!isOwner && !isAdmin) {
         return res.status(403).json({ error: "Hanya pembuat thread yang bisa memberi update." });
       }

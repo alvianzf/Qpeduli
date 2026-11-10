@@ -2,11 +2,13 @@ const express = require("express");
 const { body } = require("express-validator");
 const prisma = require("../db");
 const { authMiddleware } = require("../middleware/authMiddleware");
-const { requireRole } = require("../middleware/roleMiddleware");
+const { requireRole, roleChangeError, ROLES } = require("../middleware/roleMiddleware");
 const validate = require("../middleware/validate");
+const { audit } = require("../utils/settings");
 
 const router = express.Router();
 router.use(authMiddleware, requireRole("ADMIN"));
+router.use(require("./adminExtra"));
 
 const personSelect = { id: true, username: true, name: true, city: true, role: true, isVerified: true };
 
@@ -90,7 +92,9 @@ router.post("/donations/:id/reject", async (req, res, next) => {
     if (donation.status !== "PENDING") {
       return res.status(409).json({ error: "Hanya donasi yang menunggu yang bisa ditolak." });
     }
-    res.json(await prisma.donation.update({ where: { id }, data: { status: "FAILED" } }));
+    const rejected = await prisma.donation.update({ where: { id }, data: { status: "FAILED" } });
+    await audit(req, "donasi.tolak", `donasi #${id}`, `Rp${Number(donation.amount).toLocaleString("id-ID")}`);
+    res.json(rejected);
   } catch (err) {
     next(err);
   }
@@ -115,18 +119,24 @@ router.get("/users", async (req, res, next) => {
 
 router.patch(
   "/users/:id",
-  [body("role").optional().isIn(["USER", "KSATRIA_KOMUNITAS", "ADMIN"]), body("isVerified").optional().isBoolean()],
+  [body("role").optional().isIn(ROLES), body("isVerified").optional().isBoolean()],
   validate,
   async (req, res, next) => {
     try {
       const id = Number(req.params.id);
-      if (id === req.user.id && req.body.role && req.body.role !== "ADMIN") {
-        return res.status(400).json({ error: "Kamu tidak bisa menurunkan peran admin milikmu sendiri." });
+      const target = await prisma.user.findUnique({ where: { id }, select: { id: true, role: true } });
+      if (!target) return res.status(404).json({ error: "Pengguna tidak ditemukan." });
+      if (req.body.role && req.body.role !== target.role) {
+        const denied = roleChangeError(req.user, target, req.body.role);
+        if (denied) return res.status(403).json({ error: denied });
+      } else if (["ADMIN", "SUPERADMIN"].includes(target.role) && req.user.role !== "SUPERADMIN" && target.id !== req.user.id) {
+        return res.status(403).json({ error: "Hanya superadmin yang bisa mengelola admin." });
       }
       const data = {};
       if (req.body.role) data.role = req.body.role;
       if (req.body.isVerified !== undefined) data.isVerified = Boolean(req.body.isVerified);
       const user = await prisma.user.update({ where: { id }, data, select: personSelect });
+      await audit(req, "pengguna.ubah", `@${user.username}`, JSON.stringify(data));
       res.json(user);
     } catch (err) {
       if (err.code === "P2025") return res.status(404).json({ error: "Pengguna tidak ditemukan." });

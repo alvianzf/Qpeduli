@@ -16,17 +16,17 @@ async function main() {
 
   const existing = await prisma.user.findUnique({ where: { email } });
   if (existing) {
-    await prisma.user.update({ where: { id: existing.id }, data: { passwordHash, role: "ADMIN", isVerified: true } });
-    console.log(`Updated ${email} (@${existing.username}) to ADMIN with the new password.`);
+    await prisma.user.update({ where: { id: existing.id }, data: { passwordHash, role: process.env.ADMIN_ROLE === "ADMIN" ? "ADMIN" : "SUPERADMIN", isVerified: true } });
+    console.log(`Updated ${email} (@${existing.username}) to ${process.env.ADMIN_ROLE === "ADMIN" ? "ADMIN" : "SUPERADMIN"} with the new password.`);
     return;
   }
 
   let username = base;
   for (let i = 1; await prisma.user.findUnique({ where: { username } }); i++) username = `${base}${i}`;
   await prisma.user.create({
-    data: { email, username, name, passwordHash, role: "ADMIN", isVerified: true, avatarColor: "#4267B2" },
+    data: { email, username, name, passwordHash, role: process.env.ADMIN_ROLE === "ADMIN" ? "ADMIN" : "SUPERADMIN", isVerified: true, avatarColor: "#4267B2" },
   });
-  console.log(`Created ADMIN ${email} (@${username}).`);
+  console.log(`Created SUPERADMIN ${email} (@${username}).`);
 }
 
 main()

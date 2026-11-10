@@ -6,7 +6,8 @@ export const categoryCache: Record<string, Category> = {};
 function badgesFor(role: string, karma: number): string[] {
   const badges: string[] = [];
   if (role === 'KSATRIA_KOMUNITAS') badges.push('Ksatria Komunitas');
-  if (role === 'ADMIN') badges.push('Admin Qpeduli');
+  if (role === 'SUPERADMIN') badges.push('Superadmin Qpeduli');
+  else if (role === 'ADMIN') badges.push('Admin Qpeduli');
   if (karma >= 500) badges.push('Donatur Aktif');
   if (karma >= 1500) badges.push('Validator Terpercaya');
   return badges;
@@ -20,7 +21,7 @@ export function adaptUser(u: any): User {
     avatarColor: u.avatarColor || '#2563EB',
     avatarInitial: (u.name || '?').charAt(0).toUpperCase(),
     karma: u.karma ?? 0,
-    isKsatria: u.role === 'KSATRIA_KOMUNITAS' || u.role === 'ADMIN',
+    isKsatria: u.role === 'KSATRIA_KOMUNITAS' || u.role === 'ADMIN' || u.role === 'SUPERADMIN',
     city: u.city || '',
     joinedAt: u.createdAt || new Date().toISOString(),
     bio: u.bio || undefined,

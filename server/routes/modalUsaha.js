@@ -1,4 +1,5 @@
 const express = require("express");
+const { isStaff } = require("../middleware/roleMiddleware");
 const { body } = require("express-validator");
 const prisma = require("../db");
 const { authMiddleware, optionalAuth } = require("../middleware/authMiddleware");
@@ -64,7 +65,7 @@ router.get("/:id", optionalAuth, async (req, res, next) => {
     if (!project) return res.status(404).json({ error: "Usaha tidak ditemukan." });
 
     const isPublic = project.status !== "PENDING_VERIFICATION";
-    const canSee = req.user && (req.user.role === "ADMIN" || req.user.id === project.ownerId);
+    const canSee = req.user && (isStaff(req.user) || req.user.id === project.ownerId);
     if (!isPublic && !canSee) return res.status(404).json({ error: "Usaha tidak ditemukan." });
 
     res.json(project);
@@ -149,7 +150,7 @@ router.post(
         where: { id: Number(req.params.id), kind: "MODAL_USAHA" },
       });
       if (!project) return res.status(404).json({ error: "Usaha tidak ditemukan." });
-      if (project.ownerId !== req.user.id && req.user.role !== "ADMIN") {
+      if (project.ownerId !== req.user.id && !isStaff(req.user)) {
         return res.status(403).json({ error: "Hanya pemilik usaha yang bisa memberi update." });
       }
 

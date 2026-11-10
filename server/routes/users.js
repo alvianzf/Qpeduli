@@ -2,7 +2,8 @@ const express = require("express");
 const { body } = require("express-validator");
 const prisma = require("../db");
 const { authMiddleware } = require("../middleware/authMiddleware");
-const { requireRole } = require("../middleware/roleMiddleware");
+const { audit } = require("../utils/settings");
+const { requireRole, roleChangeError, ROLES } = require("../middleware/roleMiddleware");
 const validate = require("../middleware/validate");
 
 const router = express.Router();
@@ -50,6 +51,7 @@ router.patch(
         data: { name, city, bio },
         select: publicSelect,
       });
+      await audit(req, "peran.ubah", `@${updated.username}`, `${target.role} -> ${req.body.role}`);
       res.json(updated);
     } catch (err) {
       next(err);
@@ -62,11 +64,15 @@ router.patch(
   "/:id/role",
   authMiddleware,
   requireRole("ADMIN"),
-  [body("role").isIn(["USER", "KSATRIA_KOMUNITAS", "ADMIN"])],
+  [body("role").isIn(ROLES)],
   validate,
   async (req, res, next) => {
     try {
       const id = Number(req.params.id);
+      const target = await prisma.user.findUnique({ where: { id }, select: { id: true, role: true } });
+      if (!target) return res.status(404).json({ error: "Pengguna tidak ditemukan." });
+      const denied = roleChangeError(req.user, target, req.body.role);
+      if (denied) return res.status(403).json({ error: denied });
       const updated = await prisma.user.update({
         where: { id },
         data: {

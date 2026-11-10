@@ -23,6 +23,7 @@ import EmptyState from '../components/EmptyState';
 import { Sprout } from '../components/art/Nature';
 import { formatRupiah, timeAgo } from '../data/mockData';
 import { useAuth, type Role } from '../context/AuthContext';
+import { Analytics, Reports, SettingsPanel, AuditLog } from './AdminExtras';
 import { useAdminOverview, useAdminList, useAdminAction, apiErrorMessage } from '../lib/queries';
 
 function useRun() {
@@ -213,12 +214,13 @@ function Users() {
               <Select
                 size="small"
                 value={u.role as Role}
-                disabled={busy || u.id === me?.id}
+                disabled={busy || u.id === me?.id || (me?.role !== 'SUPERADMIN' && (u.role === 'ADMIN' || u.role === 'SUPERADMIN'))}
                 onChange={(e) => run('patch', `/admin/users/${u.id}`, { role: e.target.value })}
               >
                 <MenuItem value="USER">Pengguna</MenuItem>
                 <MenuItem value="KSATRIA_KOMUNITAS">Ksatria Komunitas</MenuItem>
-                <MenuItem value="ADMIN">Admin</MenuItem>
+                <MenuItem value="ADMIN" disabled={me?.role !== 'SUPERADMIN'}>Admin</MenuItem>
+                <MenuItem value="SUPERADMIN" disabled={me?.role !== 'SUPERADMIN'}>Superadmin</MenuItem>
               </Select>
             </Stack>
           </Stack>
@@ -228,28 +230,38 @@ function Users() {
   );
 }
 
-const tabs = ['Ringkasan', 'Verifikasi', 'Donasi', 'Pencairan', 'Pengguna'];
+const baseTabs = ['Ringkasan', 'Analitik', 'Verifikasi', 'Donasi', 'Pencairan', 'Pengguna', 'Laporan', 'Pengaturan'];
 
 export default function Admin() {
   const { user, loading } = useAuth();
-  const [tab, setTab] = useState(0);
+  const [tab, setTab] = useState('Ringkasan');
   if (loading) return <Loading />;
-  if (!user || user.role !== 'ADMIN') return <Navigate to="/" replace />;
+  if (!user || (user.role !== 'ADMIN' && user.role !== 'SUPERADMIN')) return <Navigate to="/" replace />;
+  const tabs = user.role === 'SUPERADMIN' ? [...baseTabs, 'Log audit'] : baseTabs;
 
   return (
     <Box>
-      <Hero size="sm" title="Panel Admin" subtitle="Verifikasi, konfirmasi donasi, pencairan, peran." />
+      <Hero
+        size="sm"
+        eyebrow={<Chip label={user.role === 'SUPERADMIN' ? 'Superadmin' : 'Admin'} sx={{ bgcolor: 'rgba(255,255,255,0.18)', color: '#fff' }} />}
+        title="Panel Admin"
+        subtitle="Ringkasan, analitik, verifikasi, pencairan, pengguna, laporan dan pengaturan."
+      />
       <Section overlap>
         <GlossCard flush sx={{ mb: 3, height: 'auto' }}>
           <Tabs value={tab} onChange={(_, v) => setTab(v)} variant="scrollable" scrollButtons="auto">
-            {tabs.map((t) => <Tab key={t} label={t} />)}
+            {tabs.map((t) => <Tab key={t} label={t} value={t} />)}
           </Tabs>
         </GlossCard>
-        {tab === 0 && <Overview />}
-        {tab === 1 && <Verification />}
-        {tab === 2 && <Donations />}
-        {tab === 3 && <Disbursement />}
-        {tab === 4 && <Users />}
+        {tab === 'Ringkasan' && <Overview />}
+        {tab === 'Analitik' && <Analytics />}
+        {tab === 'Verifikasi' && <Verification />}
+        {tab === 'Donasi' && <Donations />}
+        {tab === 'Pencairan' && <Disbursement />}
+        {tab === 'Pengguna' && <Users />}
+        {tab === 'Laporan' && <Reports />}
+        {tab === 'Pengaturan' && <SettingsPanel />}
+        {tab === 'Log audit' && user.role === 'SUPERADMIN' && <AuditLog />}
       </Section>
     </Box>
   );

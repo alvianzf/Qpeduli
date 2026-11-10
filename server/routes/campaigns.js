@@ -6,6 +6,8 @@ const { requireRole } = require("../middleware/roleMiddleware");
 const validate = require("../middleware/validate");
 const { addKarma } = require("../utils/karma");
 
+const { getSettings, audit } = require("../utils/settings");
+
 const router = express.Router();
 
 router.post(
@@ -17,6 +19,10 @@ router.post(
     try {
       const campaignId = Number(req.params.id);
       const { amount, anonymous, rewardId } = req.body;
+      const settings = await getSettings();
+      if (Number(amount) < settings.minDonation) {
+        return res.status(400).json({ error: `Donasi minimal Rp${settings.minDonation.toLocaleString("id-ID")}.` });
+      }
 
       const campaign = await prisma.campaign.findUnique({ where: { id: campaignId } });
       if (!campaign) return res.status(404).json({ error: "Kampanye tidak ditemukan." });
@@ -67,7 +73,7 @@ router.post(
         donation,
         payAmount,
         reference: `QP-${donation.id}`,
-        instructions: process.env.PAYMENT_INSTRUCTIONS || null,
+        instructions: settings.paymentInstructions || null,
         message: "Donasi tercatat, menunggu konfirmasi pembayaran oleh admin.",
       });
     } catch (err) {
@@ -114,6 +120,7 @@ router.post(
         await addKarma(donation.donorId, karmaPoints, "Donasi ke kampanye");
       }
 
+      await audit(req, "donasi.konfirmasi", `donasi #${donationId}`, `Kampanye #${campaignId}, Rp${Number(donation.amount).toLocaleString("id-ID")}`);
       res.json(updatedDonation);
     } catch (err) {
       next(err);
@@ -170,6 +177,7 @@ router.post("/:id/milestones/:milestoneId/release", authMiddleware, requireRole(
       }),
     ]);
 
+    await audit(req, "milestone.cair", `milestone #${milestoneId}`, `Kampanye #${campaignId}, Rp${Number(milestone.amount).toLocaleString("id-ID")}`);
     res.json(updatedMilestone);
   } catch (err) {
     next(err);
@@ -189,6 +197,7 @@ router.patch(
         where: { id: campaignId },
         data: { status: req.body.status },
       });
+      await audit(req, "kampanye.status", `kampanye #${campaignId}`, req.body.status);
       res.json(updated);
     } catch (err) {
       next(err);

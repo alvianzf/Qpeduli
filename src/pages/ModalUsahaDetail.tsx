@@ -44,7 +44,7 @@ export default function ModalUsahaDetail() {
   const owner = userCache[project.ownerId];
   const guarantor = project.guarantorId ? userCache[project.guarantorId] : undefined;
   const open = project.campaign.status === 'active';
-  const canPost = !!me && (String(me.id) === project.ownerId || me.role === 'ADMIN');
+  const canPost = !!me && (String(me.id) === project.ownerId || me.role === 'ADMIN' || me.role === 'SUPERADMIN');
 
   const back = (rid?: string) => {
     setRewardId(rid);

@@ -35,7 +35,7 @@ export default function Navbar() {
   const { user, logout } = useAuth();
   const { openCreateThread } = useCreateThreadDialog();
 
-  const all = [...links, ...(user?.role === 'ADMIN' ? [{ label: 'Admin', to: '/admin' }] : [])];
+  const all = [...links, ...((user?.role === 'ADMIN' || user?.role === 'SUPERADMIN') ? [{ label: 'Admin', to: '/admin' }] : [])];
   const go = (to: string) => { navigate(to); setOpen(false); };
   const create = () => { setOpen(false); if (!user) return navigate('/masuk'); openCreateThread(); };
   const active = (to: string) => (to === '/' ? pathname === '/' : pathname.startsWith(to));

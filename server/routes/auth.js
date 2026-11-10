@@ -7,6 +7,8 @@ const { authMiddleware } = require("../middleware/authMiddleware");
 const validate = require("../middleware/validate");
 const { sendWelcomeEmail } = require("../utils/mailer");
 
+const { getSettings } = require("../utils/settings");
+
 const router = express.Router();
 
 const AVATAR_COLORS = ["#2563EB", "#0EA5E9", "#6366F1", "#10B981", "#F59E0B", "#EC4899"];
@@ -23,6 +25,9 @@ router.post(
   async (req, res, next) => {
     try {
       const { email, username, name, password, city } = req.body;
+      if (!(await getSettings()).registrationOpen) {
+        return res.status(403).json({ error: "Pendaftaran akun baru sedang ditutup." });
+      }
 
       const existing = await prisma.user.findFirst({
         where: { OR: [{ email }, { username }] },

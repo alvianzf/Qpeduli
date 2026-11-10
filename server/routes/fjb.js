@@ -1,4 +1,5 @@
 const express = require("express");
+const { isStaff } = require("../middleware/roleMiddleware");
 const { body } = require("express-validator");
 const prisma = require("../db");
 const { authMiddleware } = require("../middleware/authMiddleware");
@@ -59,7 +60,7 @@ router.patch("/:id/sold", authMiddleware, async (req, res, next) => {
     if (!item) return res.status(404).json({ error: "Barang tidak ditemukan." });
 
     const isOwner = item.sellerId === req.user.id;
-    const isAdmin = req.user.role === "ADMIN";
+    const isAdmin = isStaff(req.user);
     if (!isOwner && !isAdmin) return res.status(403).json({ error: "Bukan barangmu." });
 
     const updated = await prisma.fjbItem.update({ where: { id }, data: { sold: true } });

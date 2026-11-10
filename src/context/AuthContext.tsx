@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import api, { apiErrorMessage } from '../lib/api';
 
-export type Role = 'USER' | 'KSATRIA_KOMUNITAS' | 'ADMIN';
+export type Role = 'USER' | 'KSATRIA_KOMUNITAS' | 'ADMIN' | 'SUPERADMIN';
 
 export interface AuthUser {
   id: number;
