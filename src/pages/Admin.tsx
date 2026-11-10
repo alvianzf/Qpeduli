@@ -1,30 +1,31 @@
 import { useState } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '../components/ui/Txt';
-import Hero from '../components/ui/Hero';
-import Section from '../components/ui/Section';
-import CardGrid from '../components/ui/CardGrid';
-import GlossCard from '../components/ui/GlossCard';
 import Card from '@mui/material/Card';
 import Stack from '../components/ui/FlexStack';
 import Chip from '@mui/material/Chip';
 import Button from '@mui/material/Button';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
 import Alert from '@mui/material/Alert';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import AdminCard from '../admin/AdminCard';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import CircularProgress from '@mui/material/CircularProgress';
-import { Navigate } from 'react-router-dom';
 import EmptyState from '../components/EmptyState';
 import { Sprout } from '../components/art/Nature';
 import { formatRupiah, timeAgo } from '../data/mockData';
 import { useAuth, type Role } from '../context/AuthContext';
-import { Analytics, Reports, SettingsPanel, AuditLog } from './AdminExtras';
-import { useAdminOverview, useAdminList, useAdminAction, apiErrorMessage } from '../lib/queries';
+import { useAdminList, useAdminAction, apiErrorMessage } from '../lib/queries';
 
 function useRun() {
   const act = useAdminAction();
@@ -47,35 +48,7 @@ function Loading() {
   return <Stack alignItems="center" sx={{ py: 6 }}><CircularProgress /></Stack>;
 }
 
-function Overview() {
-  const { data } = useAdminOverview();
-  if (!data) return <Loading />;
-  const cards = [
-    { label: 'Menunggu verifikasi', value: data.pendingCampaigns },
-    { label: 'Donasi menunggu konfirmasi', value: data.pendingDonations },
-    { label: 'Kampanye aktif', value: data.activeCampaigns },
-    { label: 'Pengguna', value: data.users },
-    { label: 'Dana terkumpul', value: formatRupiah(Number(data.totalCollected)) },
-    { label: 'Dana dicairkan', value: formatRupiah(Number(data.totalDisbursed)) },
-    { label: 'Donasi terkonfirmasi', value: data.confirmedDonations ?? 0 },
-    { label: 'Rata-rata donasi', value: formatRupiah(Number(data.avgDonation ?? 0)) },
-    { label: 'Donatur', value: data.donors ?? 0 },
-    { label: 'Donatur berulang', value: data.repeatDonors ?? 0 },
-    { label: 'Kampanye terdanai', value: data.fundedCampaigns ?? 0 },
-  ];
-  return (
-    <CardGrid cols={{ xs: 2, md: 4 }}>
-      {cards.map((c) => (
-        <GlossCard key={c.label} sx={{ gap: 0.5 }}>
-          <Typography variant="h5" color="primary.dark">{c.value}</Typography>
-          <Typography variant="body2" color="text.secondary">{c.label}</Typography>
-        </GlossCard>
-      ))}
-    </CardGrid>
-  );
-}
-
-function Verification() {
+export function Verification() {
   const { data = [], isLoading } = useAdminList('campaigns', { status: 'PENDING_VERIFICATION' });
   const { run, busy, error } = useRun();
   if (isLoading) return <Loading />;
@@ -117,38 +90,56 @@ function Verification() {
   );
 }
 
-function Donations() {
-  const { data = [], isLoading } = useAdminList('donations', { status: 'PENDING' });
+export function Donations() {
+  const [status, setStatus] = useState<'PENDING' | 'CONFIRMED' | 'FAILED'>('PENDING');
+  const { data = [], isLoading } = useAdminList('donations', { status });
   const { run, busy, error } = useRun();
-  if (isLoading) return <Loading />;
-  if (!data.length) return <EmptyState icon={<Sprout size={34} />} title="Semua donasi sudah diproses" />;
   return (
-    <Stack spacing={1.5}>
-      <Alert severity="info">Konfirmasi hanya setelah dana benar-benar masuk ke rekening. Konfirmasi menambah total kampanye dan memberi poin kebaikan ke donatur.</Alert>
+    <Stack spacing={2}>
+      <ToggleButtonGroup exclusive size="small" value={status} onChange={(_, v) => v && setStatus(v)} aria-label="Status donasi">
+        <ToggleButton value="PENDING">Menunggu</ToggleButton>
+        <ToggleButton value="CONFIRMED">Terkonfirmasi</ToggleButton>
+        <ToggleButton value="FAILED">Ditolak</ToggleButton>
+      </ToggleButtonGroup>
+      {status === 'PENDING' && <Alert severity="info">Konfirmasi hanya setelah dana benar-benar masuk ke rekening. Cocokkan nominal unik dan referensi QP-ID. Konfirmasi menambah total kampanye dan memberi poin kebaikan ke donatur.</Alert>}
       {error && <Alert severity="error">{error}</Alert>}
-      {data.map((d: any) => (
-        <Card key={d.id} sx={{ p: 2 }}>
-          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} justifyContent="space-between" alignItems={{ sm: 'center' }}>
-            <Box sx={{ minWidth: 0 }}>
-              <Typography fontWeight={800} color="primary.dark">{formatRupiah(Number(d.amount))}</Typography>
-              <Typography variant="body2">{campaignTitle(d.campaign)}</Typography>
-              <Typography variant="caption" color="text.secondary">
-                {d.donor ? `${d.donor.name} (@${d.donor.username})` : 'Tamu'}{d.anonymous ? ' · anonim' : ''} · {timeAgo(d.createdAt)}
-                {d.reward ? ` · hadiah: ${d.reward.title}` : ''}
-              </Typography>
-            </Box>
-            <Stack direction="row" spacing={1} sx={{ flexShrink: 0 }}>
-              <Button variant="contained" disabled={busy} onClick={() => run('post', `/campaigns/${d.campaignId}/donations/${d.id}/confirm`)}>Konfirmasi</Button>
-              <Button color="error" disabled={busy} onClick={() => run('post', `/admin/donations/${d.id}/reject`)}>Tolak</Button>
-            </Stack>
-          </Stack>
-        </Card>
-      ))}
+      {isLoading ? <Loading /> : !data.length ? (
+        <EmptyState icon={<Sprout size={34} />} title="Tidak ada donasi di status ini" />
+      ) : (
+        <AdminCard flush>
+          <TableContainer>
+            <Table size="small">
+              <TableHead>
+                <TableRow>
+                  <TableCell>Referensi</TableCell><TableCell>Nominal</TableCell><TableCell>Kampanye</TableCell><TableCell>Donatur</TableCell><TableCell>Waktu</TableCell>{status === 'PENDING' && <TableCell align="right">Aksi</TableCell>}
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {data.map((d: any) => (
+                  <TableRow key={d.id} hover>
+                    <TableCell>QP-{d.id}</TableCell>
+                    <TableCell sx={{ fontWeight: 700 }}>{formatRupiah(Number(d.amount))}</TableCell>
+                    <TableCell>{campaignTitle(d.campaign)}{d.reward ? ` · ${d.reward.title}` : ''}</TableCell>
+                    <TableCell>{d.donor ? `${d.donor.name} (@${d.donor.username})` : 'Tamu'}{d.anonymous ? ' · anonim' : ''}</TableCell>
+                    <TableCell>{timeAgo(d.createdAt)}</TableCell>
+                    {status === 'PENDING' && (
+                      <TableCell align="right" sx={{ whiteSpace: 'nowrap' }}>
+                        <Button size="small" variant="contained" disabled={busy} onClick={() => run('post', `/campaigns/${d.campaignId}/donations/${d.id}/confirm`)}>Konfirmasi</Button>{' '}
+                        <Button size="small" color="error" disabled={busy} onClick={() => run('post', `/admin/donations/${d.id}/reject`)}>Tolak</Button>
+                      </TableCell>
+                    )}
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </AdminCard>
+      )}
     </Stack>
   );
 }
 
-function Disbursement() {
+export function Disbursement() {
   const { data = [], isLoading } = useAdminList('campaigns', { status: 'ACTIVE' });
   const { run, busy, error } = useRun();
   if (isLoading) return <Loading />;
@@ -190,7 +181,7 @@ function Disbursement() {
   );
 }
 
-function Users() {
+export function Users() {
   const [q, setQ] = useState('');
   const { data = [], isLoading } = useAdminList('users', q ? { q } : {});
   const { run, busy, error } = useRun();
@@ -230,39 +221,3 @@ function Users() {
   );
 }
 
-const baseTabs = ['Ringkasan', 'Analitik', 'Verifikasi', 'Donasi', 'Pencairan', 'Pengguna', 'Laporan', 'Pengaturan'];
-
-export default function Admin() {
-  const { user, loading } = useAuth();
-  const [tab, setTab] = useState('Ringkasan');
-  if (loading) return <Loading />;
-  if (!user || (user.role !== 'ADMIN' && user.role !== 'SUPERADMIN')) return <Navigate to="/" replace />;
-  const tabs = user.role === 'SUPERADMIN' ? [...baseTabs, 'Log audit'] : baseTabs;
-
-  return (
-    <Box>
-      <Hero
-        size="sm"
-        eyebrow={<Chip label={user.role === 'SUPERADMIN' ? 'Superadmin' : 'Admin'} sx={{ bgcolor: 'rgba(255,255,255,0.18)', color: '#fff' }} />}
-        title="Panel Admin"
-        subtitle="Ringkasan, analitik, verifikasi, pencairan, pengguna, laporan dan pengaturan."
-      />
-      <Section overlap>
-        <GlossCard flush sx={{ mb: 3, height: 'auto' }}>
-          <Tabs value={tab} onChange={(_, v) => setTab(v)} variant="scrollable" scrollButtons="auto">
-            {tabs.map((t) => <Tab key={t} label={t} value={t} />)}
-          </Tabs>
-        </GlossCard>
-        {tab === 'Ringkasan' && <Overview />}
-        {tab === 'Analitik' && <Analytics />}
-        {tab === 'Verifikasi' && <Verification />}
-        {tab === 'Donasi' && <Donations />}
-        {tab === 'Pencairan' && <Disbursement />}
-        {tab === 'Pengguna' && <Users />}
-        {tab === 'Laporan' && <Reports />}
-        {tab === 'Pengaturan' && <SettingsPanel />}
-        {tab === 'Log audit' && user.role === 'SUPERADMIN' && <AuditLog />}
-      </Section>
-    </Box>
-  );
-}

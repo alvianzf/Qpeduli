@@ -16,7 +16,9 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import Stack from '../components/ui/FlexStack';
 import Typography from '../components/ui/Txt';
 import CardGrid from '../components/ui/CardGrid';
-import GlossCard from '../components/ui/GlossCard';
+import AdminCard from '../admin/AdminCard';
+import { SmallBox } from '../admin/Boxes';
+import { lte } from '../admin/adminTheme';
 import api, { apiErrorMessage } from '../lib/api';
 import { formatRupiah } from '../data/mockData';
 import { useAuth } from '../context/AuthContext';
@@ -32,7 +34,7 @@ function Loading() {
 interface Point { d: string; v: number }
 
 /** Dependency-free area chart with hover read-out. */
-function AreaChart({ points, color, money }: { points: Point[]; color: string; money?: boolean }) {
+export function AreaChart({ points, color, money }: { points: Point[]; color: string; money?: boolean }) {
   const [hover, setHover] = useState<number | null>(null);
   const W = 640;
   const H = 180;
@@ -93,16 +95,8 @@ function AreaChart({ points, color, money }: { points: Point[]; color: string; m
   );
 }
 
-function Panel({ title, hint, children }: { title: string; hint?: string; children: React.ReactNode }) {
-  return (
-    <GlossCard sx={{ gap: 2 }}>
-      <Box>
-        <Typography variant="h6" sx={{ fontSize: '1.05rem' }}>{title}</Typography>
-        {hint && <Typography variant="caption" color="text.secondary">{hint}</Typography>}
-      </Box>
-      {children}
-    </GlossCard>
-  );
+export function Panel({ title, hint, children, accent }: { title: string; hint?: string; children: React.ReactNode; accent?: string }) {
+  return <AdminCard title={title} hint={hint} accent={accent}>{children}</AdminCard>;
 }
 
 function Bars({ rows }: { rows: { label: string; value: number; note?: string }[] }) {
@@ -135,7 +129,7 @@ export function Analytics() {
   return (
     <Stack spacing={3}>
       <Stack direction="row" justifyContent="space-between" alignItems="center" flexWrap="wrap" useFlexGap spacing={2}>
-        <Typography variant="h6">Analitik {days} hari terakhir</Typography>
+        <Typography variant="subtitle1" fontWeight={700}>Periode: {days} hari terakhir</Typography>
         <ToggleButtonGroup exclusive size="small" value={days} onChange={(_, v) => v && setDays(v)} aria-label="Rentang">
           <ToggleButton value={7}>7 hari</ToggleButton>
           <ToggleButton value={30}>30 hari</ToggleButton>
@@ -143,18 +137,11 @@ export function Analytics() {
         </ToggleButtonGroup>
       </Stack>
 
-      <CardGrid cols={{ xs: 2, md: 4 }}>
-        {[
-          { label: 'Dana masuk (periode)', value: formatRupiah(totalRaised) },
-          { label: 'Donasi terkonfirmasi', value: fmt(sum(data.donations)) },
-          { label: 'Pengguna baru', value: fmt(sum(data.signups)) },
-          { label: 'Tingkat konfirmasi', value: data.confirmRate === null ? '-' : `${Math.round(data.confirmRate * 100)}%` },
-        ].map((c) => (
-          <GlossCard key={c.label} sx={{ gap: 0.5 }}>
-            <Typography variant="h5" color="primary.dark">{c.value}</Typography>
-            <Typography variant="body2" color="text.secondary">{c.label}</Typography>
-          </GlossCard>
-        ))}
+      <CardGrid cols={{ xs: 1, sm: 2, md: 4 }}>
+        <SmallBox color={lte.blue} icon={<span>Rp</span>} value={formatRupiah(totalRaised)} label="Dana masuk (periode)" />
+        <SmallBox color={lte.green} icon={<span>#</span>} value={fmt(sum(data.donations))} label="Donasi terkonfirmasi" />
+        <SmallBox color={lte.cyan} icon={<span>+</span>} value={fmt(sum(data.signups))} label="Pengguna baru" />
+        <SmallBox color={lte.orange} icon={<span>%</span>} value={data.confirmRate === null ? '-' : `${Math.round(data.confirmRate * 100)}%`} label="Tingkat konfirmasi" />
       </CardGrid>
 
       <CardGrid cols={{ xs: 1, md: 2 }}>
@@ -256,11 +243,11 @@ export function Reports() {
       </Stack>
       <CardGrid cols={{ xs: 1, md: 3 }}>
         {reports.map((r) => (
-          <GlossCard key={r.type} sx={{ gap: 2 }}>
+          <AdminCard key={r.type} sx={{ gap: 2 }}>
             <Typography variant="h6" sx={{ fontSize: '1.1rem' }}>{r.title}</Typography>
             <Typography variant="body2" color="text.secondary">{r.desc}</Typography>
             <Button sx={{ mt: 'auto', alignSelf: 'flex-start' }} variant="contained" startIcon={busy === r.type ? <CircularProgress size={16} color="inherit" /> : <DownloadIcon />} disabled={!!busy} onClick={() => download(r.type)}>Unduh CSV</Button>
-          </GlossCard>
+          </AdminCard>
         ))}
       </CardGrid>
     </Stack>
@@ -286,7 +273,7 @@ export function SettingsPanel() {
     <Stack spacing={3} sx={{ maxWidth: 720 }}>
       {!canEdit && <Alert severity="info">Hanya superadmin yang bisa mengubah pengaturan platform.</Alert>}
       {msg && <Alert severity={msg.ok ? 'success' : 'error'}>{msg.text}</Alert>}
-      <GlossCard sx={{ gap: 3 }}>
+      <AdminCard sx={{ gap: 3 }}>
         <TextField
           label="Petunjuk pembayaran"
           helperText="Ditampilkan ke donatur setelah donasi dibuat: nama bank, nomor rekening, atas nama."
@@ -321,7 +308,7 @@ export function SettingsPanel() {
             Simpan
           </Button>
         )}
-      </GlossCard>
+      </AdminCard>
     </Stack>
   );
 }

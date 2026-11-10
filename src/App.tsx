@@ -1,10 +1,13 @@
 import { type ReactNode } from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import { AnimatePresence, motion } from 'framer-motion';
 import Navbar from './layout/Navbar';
 import NatureBackground from './components/NatureBackground';
-import Admin from './pages/Admin';
+import AdminLayout from './admin/AdminLayout';
+import { Dashboard, Campaigns } from './admin/pages';
+import { Verification, Donations, Disbursement, Users } from './pages/Admin';
+import { Analytics, Reports, SettingsPanel, AuditLog } from './pages/AdminExtras';
 import ModalUsaha from './pages/ModalUsaha';
 import ModalUsahaDetail from './pages/ModalUsahaDetail';
 import Footer from './layout/Footer';
@@ -37,7 +40,30 @@ function PageTransition({ children }: { children: ReactNode }) {
 
 export default function App() {
   const location = useLocation();
+  const isAdmin = location.pathname === '/admin' || location.pathname.startsWith('/admin/');
   const hideChrome = location.pathname === '/masuk' || location.pathname === '/daftar';
+
+  if (isAdmin) {
+    return (
+      <CreateThreadProvider>
+        <Routes>
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<Dashboard />} />
+            <Route path="analitik" element={<Analytics />} />
+            <Route path="laporan" element={<Reports />} />
+            <Route path="kampanye" element={<Campaigns />} />
+            <Route path="verifikasi" element={<Verification />} />
+            <Route path="donasi" element={<Donations />} />
+            <Route path="pencairan" element={<Disbursement />} />
+            <Route path="pengguna" element={<Users />} />
+            <Route path="pengaturan" element={<SettingsPanel />} />
+            <Route path="audit" element={<AuditLog />} />
+            <Route path="*" element={<Navigate to="/admin" replace />} />
+          </Route>
+        </Routes>
+      </CreateThreadProvider>
+    );
+  }
 
   return (
     <CreateThreadProvider>
@@ -51,7 +77,6 @@ export default function App() {
               <Route path="/komunitas" element={<PageTransition><Komunitas /></PageTransition>} />
               <Route path="/komunitas/:slug" element={<PageTransition><Komunitas /></PageTransition>} />
               <Route path="/thread/:id" element={<PageTransition><ThreadDetail /></PageTransition>} />
-              <Route path="/admin" element={<PageTransition><Admin /></PageTransition>} />
               <Route path="/modal-usaha" element={<PageTransition><ModalUsaha /></PageTransition>} />
               <Route path="/modal-usaha/:id" element={<PageTransition><ModalUsahaDetail /></PageTransition>} />
               <Route path="/fjb" element={<PageTransition><FjbAmal /></PageTransition>} />
