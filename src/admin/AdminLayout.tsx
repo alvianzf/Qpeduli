@@ -24,7 +24,7 @@ import HistoryIcon from '@mui/icons-material/History';
 import ForumIcon from '@mui/icons-material/Forum';
 import ShieldIcon from '@mui/icons-material/AdminPanelSettings';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import LogoutIcon from '@mui/icons-material/Logout';
+import PowerIcon from '@mui/icons-material/PowerSettingsNew';
 import Stack from '../components/ui/FlexStack';
 import Typography from '../components/ui/Txt';
 import Logo from '../components/Logo';
@@ -155,9 +155,10 @@ export default function AdminLayout({ variant = 'admin' }: { variant?: 'admin' |
           component="button"
           onClick={() => { logout(); navigate('/'); }}
           title="Keluar"
-          sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: compact ? 'center' : 'flex-start', gap: 1.5, px: 1.5, py: 1.1, border: 0, borderRadius: '4px', cursor: 'pointer', font: 'inherit', fontSize: 14, color: '#fff', bgcolor: 'rgba(255,255,255,0.14)', '&:hover': { bgcolor: 'rgba(255,255,255,0.26)' } }}
+          aria-label="Keluar"
+          sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: compact ? 'center' : 'flex-start', gap: 1.5, px: 1.5, py: 1.1, border: 0, background: 'transparent', cursor: 'pointer', font: 'inherit', fontSize: 14, color: lte.sidebarText, '&:hover': { color: '#fff' }, '&:hover svg': { color: '#FF7A33' } }}
         >
-          <LogoutIcon sx={{ fontSize: 20 }} />
+          <PowerIcon sx={{ fontSize: 22, transition: 'color .15s ease' }} />
           {!compact && 'Keluar'}
         </Box>
       </Box>
@@ -178,7 +179,6 @@ export default function AdminLayout({ variant = 'admin' }: { variant?: 'admin' |
             <IconButton aria-label="Menu" onClick={() => (window.innerWidth >= 900 ? setMini((m) => !m) : setMobile(true))}><MenuIcon /></IconButton>
             <Button component="a" href="/" target="_blank" rel="noreferrer" size="small" endIcon={<OpenInNewIcon fontSize="small" />} sx={{ display: { xs: 'none', sm: 'inline-flex' }, color: 'text.secondary' }}>Lihat situs</Button>
             <Box sx={{ flex: 1 }} />
-            <Button variant="outlined" color="error" size="small" startIcon={<LogoutIcon />} onClick={() => { logout(); navigate('/'); }}>Keluar</Button>
             <Stack direction="row" alignItems="center" spacing={1} onClick={(e) => setAnchor(e.currentTarget as HTMLElement)} sx={{ cursor: 'pointer' }}>
               <Badge color="warning" variant="dot" invisible={!(ov?.pendingCampaigns || ov?.pendingDonations)}>
                 <UserAvatar name={user.name} src={user.avatarUrl} color={user.avatarColor} size={32} />
