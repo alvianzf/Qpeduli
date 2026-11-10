@@ -14,19 +14,19 @@ import EmptyState from '../components/EmptyState';
 import ThreadCard from '../components/ThreadCard';
 import ProjectCard from '../components/ProjectCard';
 import { Sprout } from '../components/art/Nature';
-import { provinceName } from '../data/regions';
+import { kepriArea } from '../data/kepri';
 import { useRegions } from '../lib/useRegions';
 import NotFound from './NotFound';
 
-/** Everything running in one province: Modal Usaha and Aksi campaigns. */
+/** Everything running in one Kepulauan Riau city or regency: Modal Usaha and Aksi campaigns. */
 export default function Wilayah() {
   const { id = '' } = useParams();
   const navigate = useNavigate();
-  const name = provinceName(id);
-  const { byProvince, isLoading } = useRegions();
+  const name = kepriArea(id)?.name;
+  const { byArea, isLoading } = useRegions();
 
   if (!name) return <NotFound />;
-  const data = byProvince[id] ?? { projects: [], threads: [] };
+  const data = byArea[id] ?? { projects: [], threads: [] };
 
   return (
     <Box>

@@ -86,6 +86,7 @@ export function adaptCampaign(c: any): Campaign {
     guarantorId: c.guarantorId ? String(c.guarantorId) : undefined,
     status: c.status === 'ACTIVE' ? 'active' : c.status === 'COMPLETED' ? 'completed' : 'pending-verification',
     disbursed: toNum(c.disbursed),
+    city: c.city || undefined,
     milestones: (c.milestones || []).map((m: any) => ({
       id: String(m.id),
       label: m.label,

@@ -50,6 +50,7 @@ export interface Campaign {
   guarantorId?: string;
   status: 'active' | 'completed' | 'pending-verification';
   disbursed: number;
+  city?: string;
   milestones: { id: string; label: string; amount: number; released: boolean }[];
 }
 

@@ -16,7 +16,7 @@ import Stack from '../components/ui/FlexStack';
 import Typography from '../components/ui/Txt';
 import EmptyState from '../components/EmptyState';
 import ThreadCard from '../components/ThreadCard';
-import IndonesiaMap from '../components/IndonesiaMap';
+import KepriMap from '../components/KepriMap';
 import { useRegions } from '../lib/useRegions';
 import ProjectCard from '../components/ProjectCard';
 import { Sprout, DonationArt } from '../components/art/Nature';
@@ -134,9 +134,9 @@ export default function Home() {
         </CardGrid>
       </Section>
 
-      <Section title="Peta kampanye" subtitle="Klik wilayah untuk melihat usaha dan aksi di sana.">
+      <Section title="Peta kampanye Kepulauan Riau" subtitle="Saat ini kampanye hanya untuk Kepri. Klik kota atau kabupaten untuk melihat usaha dan aksi di sana.">
         <GlossCard sx={{ p: { xs: 2, md: 4 }, background: 'linear-gradient(180deg, rgba(255,255,255,0.92), rgba(219,234,254,0.7))' }}>
-          <IndonesiaMap counts={counts} />
+          <KepriMap counts={counts} />
         </GlossCard>
       </Section>
 
