@@ -4,7 +4,6 @@ import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
-import Avatar from '@mui/material/Avatar';
 import Drawer from '@mui/material/Drawer';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -16,6 +15,7 @@ import { alpha } from '@mui/material/styles';
 import Stack from '../components/ui/FlexStack';
 import Typography from '../components/ui/Txt';
 import KarmaChip from '../components/KarmaChip';
+import UserAvatar from '../components/UserAvatar';
 import Logo from '../components/Logo';
 import { useAuth } from '../context/AuthContext';
 import { useCreateThreadDialog } from '../context/CreateThreadContext';
@@ -39,7 +39,7 @@ export default function Navbar() {
   const { user, logout } = useAuth();
   const { openCreateThread } = useCreateThreadDialog();
 
-  const all = [...links, ...((user?.role === 'ADMIN' || user?.role === 'SUPERADMIN') ? [{ label: 'Admin', to: '/admin' }] : [])];
+  const all = [...links, ...(((user?.permissions?.length ?? 0) > 0 || user?.role === 'ADMIN' || user?.role === 'SUPERADMIN') ? [{ label: 'Admin', to: '/admin' }] : [])];
   const go = (to: string) => { navigate(to); setOpen(false); };
   const create = () => { setOpen(false); if (!user) return navigate('/masuk'); openCreateThread(); };
   const active = (to: string) => (to === '/' ? pathname === '/' : pathname.startsWith(to));
@@ -90,9 +90,7 @@ export default function Navbar() {
                   <KarmaChip karma={user.karma} compact />
                   <Button size="small" onClick={() => { logout(); go('/'); }}>Keluar</Button>
                   <IconButton aria-label="Menu akun" onClick={(e) => setAnchor(e.currentTarget)} sx={{ p: 0 }}>
-                    <Avatar sx={{ bgcolor: user.avatarColor, width: 40, height: 40, fontWeight: 700 }}>
-                      {user.name.charAt(0).toUpperCase()}
-                    </Avatar>
+                    <UserAvatar name={user.name} src={user.avatarUrl} color={user.avatarColor} size={40} />
                   </IconButton>
                   <Menu anchorEl={anchor} open={!!anchor} onClose={() => setAnchor(null)} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} transformOrigin={{ vertical: 'top', horizontal: 'right' }}>
                     <Box sx={{ px: 2, py: 1 }}>
@@ -101,7 +99,7 @@ export default function Navbar() {
                     </Box>
                     <Divider />
                     <MenuItem onClick={() => { setAnchor(null); go(`/profil/${user.username}`); }}>Profil</MenuItem>
-                    {(user.role === 'ADMIN' || user.role === 'SUPERADMIN') && <MenuItem onClick={() => { setAnchor(null); go('/admin'); }}>Panel admin</MenuItem>}
+                    {((user.permissions?.length ?? 0) > 0 || user.role === 'ADMIN' || user.role === 'SUPERADMIN') && <MenuItem onClick={() => { setAnchor(null); go('/admin'); }}>Panel admin</MenuItem>}
                     <MenuItem onClick={() => { setAnchor(null); logout(); go('/'); }}>Keluar</MenuItem>
                   </Menu>
                 </Stack>
@@ -121,7 +119,7 @@ export default function Navbar() {
         <Stack spacing={1.5}>
           {user ? (
             <Stack direction="row" spacing={1.5} alignItems="center" onClick={() => go(`/profil/${user.username}`)} sx={{ mb: 1, cursor: 'pointer' }}>
-              <Avatar sx={{ bgcolor: user.avatarColor, fontWeight: 700 }}>{user.name.charAt(0).toUpperCase()}</Avatar>
+              <UserAvatar name={user.name} src={user.avatarUrl} color={user.avatarColor} size={40} />
               <Box sx={{ minWidth: 0 }}>
                 <Typography fontWeight={700} noWrap>{user.name}</Typography>
                 <KarmaChip karma={user.karma} compact />

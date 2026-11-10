@@ -33,6 +33,8 @@ import { AreaChart, Panel } from '../pages/AdminExtras';
 import api from '../lib/api';
 import { formatRupiah, timeAgo } from '../data/mockData';
 import { useAdminOverview, useAdminList, useAdminAction, apiErrorMessage } from '../lib/queries';
+import { useAuth } from '../context/AuthContext';
+import { useFeedback } from '../feedback/FeedbackProvider';
 
 const fmt = (n: number) => Math.round(n).toLocaleString('id-ID');
 const title = (c: any) => c.title || c.thread?.title || `Kampanye #${c.id}`;
@@ -44,38 +46,11 @@ function Loading() {
   return <Stack alignItems="center" sx={{ py: 6 }}><CircularProgress /></Stack>;
 }
 
-export function Dashboard() {
+function DonationQueue() {
   const navigate = useNavigate();
-  const { data: ov } = useAdminOverview();
-  const { data: an } = useQuery({ queryKey: ['admin', 'analytics', 30], queryFn: async () => (await api.get('/admin/analytics', { params: { days: 30 } })).data });
   const { data: pending = [] } = useAdminList('donations', { status: 'PENDING' });
-  if (!ov) return <Loading />;
   return (
-    <Stack spacing={3}>
-      <CardGrid cols={{ xs: 1, sm: 2, md: 4 }}>
-        <SmallBox color={lte.orange} icon={<VolunteerActivismIcon />} value={fmt(ov.pendingDonations)} label="Donasi menunggu konfirmasi" to="/admin/donasi" />
-        <SmallBox color={lte.blue} icon={<FactCheckIcon />} value={fmt(ov.pendingCampaigns)} label="Kampanye menunggu verifikasi" to="/admin/verifikasi" />
-        <SmallBox color={lte.cyan} icon={<PaymentsIcon />} value={formatRupiah(Number(ov.totalCollected))} label="Dana terkumpul" to="/admin/analitik" />
-        <SmallBox color={lte.green} icon={<PeopleIcon />} value={fmt(ov.users)} label="Pengguna terdaftar" to="/admin/pengguna" />
-      </CardGrid>
-
-      <CardGrid cols={{ xs: 1, sm: 2, md: 4 }}>
-        <InfoBox color={lte.blue} icon={<CampaignIcon />} label="Kampanye aktif" value={fmt(ov.activeCampaigns)} />
-        <InfoBox color={lte.cyan} icon={<FavoriteIcon />} label="Donasi terkonfirmasi" value={`${fmt(ov.confirmedDonations ?? 0)} · rata-rata ${formatRupiah(Number(ov.avgDonation ?? 0))}`} />
-        <InfoBox color={lte.green} icon={<AutorenewIcon />} label="Donatur (berulang)" value={`${fmt(ov.donors ?? 0)} (${fmt(ov.repeatDonors ?? 0)})`} />
-        <InfoBox color={lte.orange} icon={<FlagIcon />} label="Kampanye terdanai · dana dicairkan" value={`${fmt(ov.fundedCampaigns ?? 0)} · ${formatRupiah(Number(ov.totalDisbursed))}`} />
-      </CardGrid>
-
-      <CardGrid cols={{ xs: 1, md: 2 }}>
-        <Panel accent={lte.blue} title="Dana masuk, 30 hari" hint="Donasi terkonfirmasi per hari (Rp)">
-          {an ? <AreaChart color="#4267B2" money points={an.donations.map((x: any) => ({ d: x.d, v: x.total }))} /> : <Loading />}
-        </Panel>
-        <Panel accent={lte.orange} title="Pengguna baru, 30 hari">
-          {an ? <AreaChart color="#E65100" points={an.signups.map((x: any) => ({ d: x.d, v: x.n }))} /> : <Loading />}
-        </Panel>
-      </CardGrid>
-
-      <AdminCard
+    <AdminCard
         accent={lte.orange}
         title="Antrean donasi"
         hint="Menunggu konfirmasi pembayaran"
@@ -102,6 +77,41 @@ export function Dashboard() {
           </TableContainer>
         )}
       </AdminCard>
+  );
+}
+
+export function Dashboard() {
+  const { data: ov } = useAdminOverview();
+  const { user } = useAuth();
+  const has = (p: string) => (user?.permissions ?? []).includes(p);
+  const { data: an } = useQuery({ queryKey: ['admin', 'analytics', 30], queryFn: async () => (await api.get('/admin/analytics', { params: { days: 30 } })).data, enabled: has('analitik') });
+  if (!ov) return <Loading />;
+  return (
+    <Stack spacing={3}>
+      <CardGrid cols={{ xs: 1, sm: 2, md: 4 }}>
+        <SmallBox color={lte.orange} icon={<VolunteerActivismIcon />} value={fmt(ov.pendingDonations)} label="Donasi menunggu konfirmasi" to="/admin/donasi" />
+        <SmallBox color={lte.blue} icon={<FactCheckIcon />} value={fmt(ov.pendingCampaigns)} label="Kampanye menunggu verifikasi" to="/admin/verifikasi" />
+        <SmallBox color={lte.cyan} icon={<PaymentsIcon />} value={formatRupiah(Number(ov.totalCollected))} label="Dana terkumpul" to="/admin/analitik" />
+        <SmallBox color={lte.green} icon={<PeopleIcon />} value={fmt(ov.users)} label="Pengguna terdaftar" to="/admin/pengguna" />
+      </CardGrid>
+
+      <CardGrid cols={{ xs: 1, sm: 2, md: 4 }}>
+        <InfoBox color={lte.blue} icon={<CampaignIcon />} label="Kampanye aktif" value={fmt(ov.activeCampaigns)} />
+        <InfoBox color={lte.cyan} icon={<FavoriteIcon />} label="Donasi terkonfirmasi" value={`${fmt(ov.confirmedDonations ?? 0)} · rata-rata ${formatRupiah(Number(ov.avgDonation ?? 0))}`} />
+        <InfoBox color={lte.green} icon={<AutorenewIcon />} label="Donatur (berulang)" value={`${fmt(ov.donors ?? 0)} (${fmt(ov.repeatDonors ?? 0)})`} />
+        <InfoBox color={lte.orange} icon={<FlagIcon />} label="Kampanye terdanai · dana dicairkan" value={`${fmt(ov.fundedCampaigns ?? 0)} · ${formatRupiah(Number(ov.totalDisbursed))}`} />
+      </CardGrid>
+
+      {has('analitik') && <CardGrid cols={{ xs: 1, md: 2 }}>
+        <Panel accent={lte.blue} title="Dana masuk, 30 hari" hint="Donasi terkonfirmasi per hari (Rp)">
+          {an ? <AreaChart color="#4267B2" money points={an.donations.map((x: any) => ({ d: x.d, v: x.total }))} /> : <Loading />}
+        </Panel>
+        <Panel accent={lte.orange} title="Pengguna baru, 30 hari">
+          {an ? <AreaChart color="#E65100" points={an.signups.map((x: any) => ({ d: x.d, v: x.n }))} /> : <Loading />}
+        </Panel>
+      </CardGrid>}
+
+      {has('donasi') && <DonationQueue />}
     </Stack>
   );
 }
@@ -114,13 +124,17 @@ export function Campaigns() {
   if (kind) params.kind = kind;
   const { data = [], isLoading } = useAdminList('campaigns', params);
   const act = useAdminAction();
+  const { toast, confirm } = useFeedback();
   const [error, setError] = useState('');
   const setCampaignStatus = async (id: number, next: string) => {
     setError('');
+    const copy: Record<string, [string, string]> = { ACTIVE: ['Aktifkan kampanye?', 'Kampanye tampil dan menerima dukungan.'], COMPLETED: ['Selesaikan kampanye?', 'Kampanye ditandai selesai dan tidak menerima dukungan baru.'] };
+    if (!(await confirm({ title: copy[next][0], text: copy[next][1], icon: 'question', confirmText: 'Ya, lanjutkan' }))) return;
     try {
       await act.mutateAsync({ method: 'patch', url: `/campaigns/${id}/status`, data: { status: next } });
+      toast.success('Status kampanye diperbarui.');
     } catch (e) {
-      setError(apiErrorMessage(e, 'Gagal mengubah status.'));
+      toast.error(apiErrorMessage(e, 'Gagal mengubah status.'));
     }
   };
   return (

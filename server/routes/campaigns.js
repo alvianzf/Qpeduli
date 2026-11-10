@@ -2,7 +2,7 @@ const express = require("express");
 const { body } = require("express-validator");
 const prisma = require("../db");
 const { authMiddleware, optionalAuth } = require("../middleware/authMiddleware");
-const { requireRole } = require("../middleware/roleMiddleware");
+const { requireRole, requirePerm } = require("../middleware/roleMiddleware");
 const validate = require("../middleware/validate");
 const { addKarma } = require("../utils/karma");
 
@@ -87,7 +87,7 @@ router.post(
 router.post(
   "/:id/donations/:donationId/confirm",
   authMiddleware,
-  requireRole("ADMIN"),
+  requirePerm("donasi"),
   async (req, res, next) => {
     try {
       const campaignId = Number(req.params.id);
@@ -150,7 +150,7 @@ router.post("/:id/guarantor", authMiddleware, requireRole("KSATRIA_KOMUNITAS", "
   }
 });
 
-router.post("/:id/milestones/:milestoneId/release", authMiddleware, requireRole("ADMIN"), async (req, res, next) => {
+router.post("/:id/milestones/:milestoneId/release", authMiddleware, requirePerm("pencairan"), async (req, res, next) => {
   try {
     const campaignId = Number(req.params.id);
     const milestoneId = Number(req.params.milestoneId);
@@ -187,7 +187,7 @@ router.post("/:id/milestones/:milestoneId/release", authMiddleware, requireRole(
 router.patch(
   "/:id/status",
   authMiddleware,
-  requireRole("ADMIN"),
+  requirePerm("verifikasi", "kampanye"),
   [body("status").isIn(["PENDING_VERIFICATION", "ACTIVE", "COMPLETED"])],
   validate,
   async (req, res, next) => {

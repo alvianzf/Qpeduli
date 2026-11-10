@@ -2,15 +2,16 @@ const express = require("express");
 const { body } = require("express-validator");
 const prisma = require("../db");
 const { authMiddleware } = require("../middleware/authMiddleware");
-const { requireRole, roleChangeError, ROLES } = require("../middleware/roleMiddleware");
+const { requireConsole, requirePerm, roleChangeError, ROLES } = require("../middleware/roleMiddleware");
 const validate = require("../middleware/validate");
 const { audit } = require("../utils/settings");
 
 const router = express.Router();
-router.use(authMiddleware, requireRole("ADMIN"));
+router.use(authMiddleware, requireConsole);
+router.use(require("./adminRoles"));
 router.use(require("./adminExtra"));
 
-const personSelect = { id: true, username: true, name: true, city: true, role: true, isVerified: true };
+const personSelect = { id: true, username: true, name: true, city: true, role: true, isVerified: true, avatarUrl: true };
 
 router.get("/overview", async (req, res, next) => {
   try {
@@ -43,7 +44,7 @@ router.get("/overview", async (req, res, next) => {
   }
 });
 
-router.get("/campaigns", async (req, res, next) => {
+router.get("/campaigns", requirePerm("kampanye", "verifikasi", "pencairan"), async (req, res, next) => {
   try {
     const { status, kind } = req.query;
     const where = {};
@@ -65,7 +66,7 @@ router.get("/campaigns", async (req, res, next) => {
   }
 });
 
-router.get("/donations", async (req, res, next) => {
+router.get("/donations", requirePerm("donasi"), async (req, res, next) => {
   try {
     const status = req.query.status || "PENDING";
     const donations = await prisma.donation.findMany({
@@ -84,7 +85,7 @@ router.get("/donations", async (req, res, next) => {
   }
 });
 
-router.post("/donations/:id/reject", async (req, res, next) => {
+router.post("/donations/:id/reject", requirePerm("donasi"), async (req, res, next) => {
   try {
     const id = Number(req.params.id);
     const donation = await prisma.donation.findUnique({ where: { id } });
@@ -100,16 +101,16 @@ router.post("/donations/:id/reject", async (req, res, next) => {
   }
 });
 
-router.get("/users", async (req, res, next) => {
+router.get("/users", requirePerm("pengguna"), async (req, res, next) => {
   try {
     const q = (req.query.q || "").trim();
     const users = await prisma.user.findMany({
       where: q
         ? { OR: [{ name: { contains: q, mode: "insensitive" } }, { username: { contains: q, mode: "insensitive" } }, { email: { contains: q, mode: "insensitive" } }] }
         : {},
-      select: { ...personSelect, email: true, karma: true, createdAt: true },
+      select: { ...personSelect, email: true, karma: true, createdAt: true, customRoleId: true, customRole: { select: { id: true, name: true } } },
       orderBy: { createdAt: "desc" },
-      take: 100,
+      take: 1000,
     });
     res.json(users);
   } catch (err) {
@@ -119,11 +120,15 @@ router.get("/users", async (req, res, next) => {
 
 router.patch(
   "/users/:id",
-  [body("role").optional().isIn(ROLES), body("isVerified").optional().isBoolean()],
+  requirePerm("pengguna"),
+  [body("customRoleId").optional({ nullable: true }).isInt(), body("role").optional().isIn(ROLES), body("isVerified").optional().isBoolean()],
   validate,
   async (req, res, next) => {
     try {
       const id = Number(req.params.id);
+      const isAdminRole = req.user.role === "ADMIN" || req.user.role === "SUPERADMIN";
+      if (req.body.role && !isAdminRole) return res.status(403).json({ error: "Hanya admin yang bisa mengubah peran." });
+      if (req.body.customRoleId !== undefined && req.user.role !== "SUPERADMIN") return res.status(403).json({ error: "Hanya superadmin yang bisa memberi peran khusus." });
       const target = await prisma.user.findUnique({ where: { id }, select: { id: true, role: true } });
       if (!target) return res.status(404).json({ error: "Pengguna tidak ditemukan." });
       if (req.body.role && req.body.role !== target.role) {
@@ -134,8 +139,9 @@ router.patch(
       }
       const data = {};
       if (req.body.role) data.role = req.body.role;
+      if (req.body.customRoleId !== undefined) data.customRoleId = req.body.customRoleId === null ? null : Number(req.body.customRoleId);
       if (req.body.isVerified !== undefined) data.isVerified = Boolean(req.body.isVerified);
-      const user = await prisma.user.update({ where: { id }, data, select: personSelect });
+      const user = await prisma.user.update({ where: { id }, data, select: { ...personSelect, customRole: { select: { id: true, name: true } } } });
       await audit(req, "pengguna.ubah", `@${user.username}`, JSON.stringify(data));
       res.json(user);
     } catch (err) {

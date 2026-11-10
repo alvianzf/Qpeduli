@@ -4,7 +4,6 @@ import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
-import Avatar from '@mui/material/Avatar';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Divider from '@mui/material/Divider';
@@ -22,23 +21,28 @@ import PeopleIcon from '@mui/icons-material/People';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import SettingsIcon from '@mui/icons-material/Settings';
 import HistoryIcon from '@mui/icons-material/History';
+import ForumIcon from '@mui/icons-material/Forum';
+import ShieldIcon from '@mui/icons-material/AdminPanelSettings';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import LogoutIcon from '@mui/icons-material/Logout';
 import Stack from '../components/ui/FlexStack';
 import Typography from '../components/ui/Txt';
 import Logo from '../components/Logo';
+import UserAvatar from '../components/UserAvatar';
 import { useAuth } from '../context/AuthContext';
 import { useAdminOverview } from '../lib/queries';
 import FloatingLeaves from './FloatingLeaves';
-import { adminTheme, lte } from './adminTheme';
+import { adminTheme, lte, profilePalette } from './adminTheme';
 
-interface Item { to: string; label: string; icon: React.ReactNode; badge?: number; superOnly?: boolean; end?: boolean }
+interface Item { to: string; label: string; icon: React.ReactNode; badge?: number; superOnly?: boolean; end?: boolean; perm?: string[] }
 
 const FULL = 250;
 const MINI = 64;
 
 /** AdminLTE-style shell: dark sidebar, top bar, content header with breadcrumb, light content area. */
-export default function AdminLayout() {
+export default function AdminLayout({ variant = 'admin' }: { variant?: 'admin' | 'profile' }) {
+  const profile = variant === 'profile';
+  const pal = profile ? profilePalette : lte;
   const { user, loading, logout } = useAuth();
   const { pathname } = useLocation();
   const navigate = useNavigate();
@@ -48,50 +52,64 @@ export default function AdminLayout() {
   const [anchor, setAnchor] = useState<HTMLElement | null>(null);
 
   if (loading) return <Stack alignItems="center" sx={{ py: 10 }}><CircularProgress /></Stack>;
-  if (!user || (user.role !== 'ADMIN' && user.role !== 'SUPERADMIN')) return <Navigate to="/" replace />;
+  const perms = user?.permissions ?? [];
+  if (!user || (!profile && perms.length === 0)) return <Navigate to={profile ? '/masuk' : '/'} replace />;
   const isSuper = user.role === 'SUPERADMIN';
+  const can = (i: Item) => (!i.superOnly || isSuper) && (!i.perm || i.perm.some((p) => perms.includes(p)));
 
-  const groups: { title: string; items: Item[] }[] = [
+  const adminGroups: { title: string; items: Item[] }[] = [
     { title: 'UTAMA', items: [
       { to: '/admin', label: 'Dashboard', icon: <DashboardIcon />, end: true },
-      { to: '/admin/analitik', label: 'Analitik', icon: <InsightsIcon /> },
-      { to: '/admin/laporan', label: 'Laporan', icon: <AssessmentIcon /> },
+      { to: '/admin/analitik', label: 'Analitik', icon: <InsightsIcon />, perm: ['analitik'] },
+      { to: '/admin/laporan', label: 'Laporan', icon: <AssessmentIcon />, perm: ['laporan'] },
     ] },
     { title: 'OPERASIONAL', items: [
-      { to: '/admin/kampanye', label: 'Kampanye', icon: <CampaignIcon /> },
-      { to: '/admin/verifikasi', label: 'Verifikasi', icon: <FactCheckIcon />, badge: ov?.pendingCampaigns },
-      { to: '/admin/donasi', label: 'Donasi', icon: <DonationIcon />, badge: ov?.pendingDonations },
-      { to: '/admin/pencairan', label: 'Pencairan dana', icon: <PaymentsIcon /> },
+      { to: '/admin/kampanye', label: 'Kampanye', icon: <CampaignIcon />, perm: ['kampanye'] },
+      { to: '/admin/verifikasi', label: 'Verifikasi', icon: <FactCheckIcon />, badge: ov?.pendingCampaigns, perm: ['verifikasi'] },
+      { to: '/admin/donasi', label: 'Donasi', icon: <DonationIcon />, badge: ov?.pendingDonations, perm: ['donasi'] },
+      { to: '/admin/pencairan', label: 'Pencairan dana', icon: <PaymentsIcon />, perm: ['pencairan'] },
     ] },
     { title: 'SISTEM', items: [
-      { to: '/admin/pengguna', label: 'Pengguna & peran', icon: <PeopleIcon /> },
+      { to: '/admin/pengguna', label: 'Pengguna', icon: <PeopleIcon />, perm: ['pengguna'] },
+      { to: '/admin/peran', label: 'Peran & izin', icon: <ShieldIcon />, superOnly: true },
       { to: '/admin/pengaturan', label: 'Pengaturan', icon: <SettingsIcon /> },
       { to: '/admin/audit', label: 'Log audit', icon: <HistoryIcon />, superOnly: true },
     ] },
   ];
-  const flat = groups.flatMap((g) => g.items);
+  const profileGroups: { title: string; items: Item[] }[] = [
+    { title: 'AKUN', items: [{ to: `/profil/${user.username}`, label: 'Profil saya', icon: <PeopleIcon />, end: true }] },
+    { title: 'JELAJAHI', items: [
+      { to: '/', label: 'Beranda', icon: <DashboardIcon />, end: true },
+      { to: '/komunitas', label: 'Komunitas', icon: <ForumIcon /> },
+      { to: '/modal-usaha', label: 'Modal Usaha', icon: <CampaignIcon /> },
+      { to: '/fjb', label: 'FJB Amal', icon: <DonationIcon /> },
+    ] },
+    ...(perms.length ? [{ title: 'PENGELOLAAN', items: [{ to: '/admin', label: 'Konsol admin', icon: <ShieldIcon /> }] }] : []),
+  ];
+  const groups = profile ? profileGroups : adminGroups;
+  const flat = groups.flatMap((g) => g.items).filter(can);
   const current = flat.find((i) => (i.end ? pathname === i.to : pathname.startsWith(i.to) && i.to !== '/admin')) ?? flat[0];
   const width = mini ? MINI : FULL;
 
   const sidebar = (compact: boolean) => (
-    <Box sx={{ width: compact ? MINI : FULL, background: lte.sidebar, color: lte.sidebarText, height: '100%', display: 'flex', flexDirection: 'column', overflowY: 'auto', overflowX: 'hidden', transition: 'width .2s ease', position: 'relative', '& > *:not([aria-hidden])': { position: 'relative', zIndex: 1 } }}>
+    <Box sx={{ width: compact ? MINI : FULL, background: pal.sidebar, color: pal.sidebarText, height: '100%', display: 'flex', flexDirection: 'column', overflowY: 'auto', overflowX: 'hidden', transition: 'width .2s ease', position: 'relative', '& > *:not([aria-hidden])': { position: 'relative', zIndex: 1 } }}>
       <FloatingLeaves />
-      <Stack direction="row" alignItems="center" spacing={1.25} sx={{ height: 57, px: compact ? 1.5 : 2, borderBottom: '1px solid rgba(255,255,255,0.18)', cursor: 'pointer', flexShrink: 0 }} onClick={() => navigate('/admin')}>
+      <Stack direction="row" alignItems="center" spacing={1.25} sx={{ height: 57, px: compact ? 1.5 : 2, borderBottom: '1px solid rgba(255,255,255,0.18)', cursor: 'pointer', flexShrink: 0 }} onClick={() => navigate(profile ? '/' : '/admin')}>
         <Logo size={30} light />
-        {!compact && <Typography sx={{ color: '#fff', fontWeight: 700, fontSize: '1.15rem', whiteSpace: 'nowrap' }}>Qpeduli <Box component="span" sx={{ fontWeight: 400, opacity: 0.7 }}>Admin</Box></Typography>}
+        {!compact && <Typography sx={{ color: '#fff', fontWeight: 700, fontSize: '1.15rem', whiteSpace: 'nowrap' }}>Qpeduli <Box component="span" sx={{ fontWeight: 400, opacity: 0.7 }}>{profile ? 'Akun' : 'Admin'}</Box></Typography>}
       </Stack>
       <Stack direction="row" alignItems="center" spacing={1.5} sx={{ px: compact ? 1.5 : 2, py: 1.75, borderBottom: '1px solid rgba(255,255,255,0.18)' }}>
-        <Avatar sx={{ bgcolor: user.avatarColor, width: 36, height: 36, fontWeight: 700 }}>{user.name.charAt(0).toUpperCase()}</Avatar>
+        <UserAvatar name={user.name} src={user.avatarUrl} color={user.avatarColor} size={36} />
         {!compact && (
           <Box sx={{ minWidth: 0 }}>
             <Typography noWrap sx={{ color: '#fff', fontWeight: 600, fontSize: 14 }}>{user.name}</Typography>
-            <Typography noWrap sx={{ color: lte.sidebarText, fontSize: 12 }}>{isSuper ? 'Superadmin' : 'Admin'}</Typography>
+            <Typography noWrap sx={{ color: pal.sidebarText, fontSize: 12 }}>{isSuper ? 'Superadmin' : user.role === 'ADMIN' ? 'Admin' : 'Anggota'}</Typography>
           </Box>
         )}
       </Stack>
       <Box component="nav" sx={{ py: 1, flex: 1 }}>
         {groups.map((g) => {
-          const items = g.items.filter((i) => !i.superOnly || isSuper);
+          const items = g.items.filter(can);
           if (!items.length) return null;
           return (
             <Box key={g.title} sx={{ mb: 1 }}>
@@ -106,7 +124,7 @@ export default function AdminLayout() {
                   title={i.label}
                   sx={{
                     display: 'flex', alignItems: 'center', gap: 1.5, mx: 1, my: 0.25, px: compact ? 1.75 : 1.5, py: 1.1, borderRadius: '4px',
-                    color: lte.sidebarText, textDecoration: 'none', fontSize: 14, whiteSpace: 'nowrap',
+                    color: pal.sidebarText, textDecoration: 'none', fontSize: 14, whiteSpace: 'nowrap',
                     '&:hover': { bgcolor: 'rgba(255,255,255,0.1)', color: '#fff' },
                     '&.active': { bgcolor: 'rgba(255,255,255,0.2)', color: '#fff', boxShadow: 'inset 3px 0 0 #FF7A33' },
                     '& svg': { fontSize: 20, flexShrink: 0 },
@@ -152,7 +170,7 @@ export default function AdminLayout() {
             <Button variant="outlined" color="error" size="small" startIcon={<LogoutIcon />} onClick={() => { logout(); navigate('/'); }}>Keluar</Button>
             <Stack direction="row" alignItems="center" spacing={1} onClick={(e) => setAnchor(e.currentTarget as HTMLElement)} sx={{ cursor: 'pointer' }}>
               <Badge color="warning" variant="dot" invisible={!(ov?.pendingCampaigns || ov?.pendingDonations)}>
-                <Avatar sx={{ bgcolor: user.avatarColor, width: 32, height: 32, fontWeight: 700 }}>{user.name.charAt(0).toUpperCase()}</Avatar>
+                <UserAvatar name={user.name} src={user.avatarUrl} color={user.avatarColor} size={32} />
               </Badge>
               <Typography sx={{ display: { xs: 'none', sm: 'block' }, fontWeight: 600, fontSize: 14 }}>{user.name}</Typography>
             </Stack>
@@ -172,8 +190,7 @@ export default function AdminLayout() {
           <Stack direction={{ xs: 'column', sm: 'row' }} justifyContent="space-between" alignItems={{ sm: 'center' }} spacing={0.5} sx={{ px: 3, pt: 2.5, pb: 1 }}>
             <Typography variant="h5" sx={{ fontWeight: 600, fontSize: '1.6rem' }}>{current.label}</Typography>
             <Typography variant="body2" color="text.secondary">
-              <Box component={NavLink} to="/" sx={{ color: lte.blue, textDecoration: 'none' }}>Beranda</Box> / <Box component={NavLink} to="/admin" sx={{ color: lte.blue, textDecoration: 'none' }}>Admin</Box>
-              {current.to !== '/admin' && <> / {current.label}</>}
+              <Box component={NavLink} to="/" sx={{ color: pal.blue, textDecoration: 'none' }}>Beranda</Box> / {profile ? <>Profil</> : <><Box component={NavLink} to="/admin" sx={{ color: pal.blue, textDecoration: 'none' }}>Admin</Box>{current.to !== '/admin' && <> / {current.label}</>}</>}
             </Typography>
           </Stack>
 

@@ -1,12 +1,15 @@
 import { type ReactNode } from 'react';
 import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
+import { useAuth } from './context/AuthContext';
 import Box from '@mui/material/Box';
 import { AnimatePresence, motion } from 'framer-motion';
 import Navbar from './layout/Navbar';
 import NatureBackground from './components/NatureBackground';
 import AdminLayout from './admin/AdminLayout';
 import { Dashboard, Campaigns } from './admin/pages';
-import { Verification, Donations, Disbursement, Users } from './pages/Admin';
+import { Verification, Donations, Disbursement } from './pages/Admin';
+import UsersTable from './admin/UsersTable';
+import Roles from './admin/Roles';
 import { Analytics, Reports, SettingsPanel, AuditLog } from './pages/AdminExtras';
 import ModalUsaha from './pages/ModalUsaha';
 import ModalUsahaDetail from './pages/ModalUsahaDetail';
@@ -40,8 +43,22 @@ function PageTransition({ children }: { children: ReactNode }) {
 
 export default function App() {
   const location = useLocation();
+  const { user: me, loading: authLoading } = useAuth();
+  const inProfileShell = location.pathname.startsWith('/profil/') && (authLoading || !!me);
   const isAdmin = location.pathname === '/admin' || location.pathname.startsWith('/admin/');
   const hideChrome = location.pathname === '/masuk' || location.pathname === '/daftar';
+
+  if (inProfileShell) {
+    return (
+      <CreateThreadProvider>
+        <Routes>
+          <Route path="/profil/:username" element={<AdminLayout variant="profile" />}>
+            <Route index element={<Profile />} />
+          </Route>
+        </Routes>
+      </CreateThreadProvider>
+    );
+  }
 
   if (isAdmin) {
     return (
@@ -55,7 +72,8 @@ export default function App() {
             <Route path="verifikasi" element={<Verification />} />
             <Route path="donasi" element={<Donations />} />
             <Route path="pencairan" element={<Disbursement />} />
-            <Route path="pengguna" element={<Users />} />
+            <Route path="pengguna" element={<UsersTable />} />
+            <Route path="peran" element={<Roles />} />
             <Route path="pengaturan" element={<SettingsPanel />} />
             <Route path="audit" element={<AuditLog />} />
             <Route path="*" element={<Navigate to="/admin" replace />} />

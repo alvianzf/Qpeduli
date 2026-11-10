@@ -13,7 +13,7 @@ async function authMiddleware(req, res, next) {
     }
 
     const payload = verifyToken(token);
-    const user = await prisma.user.findUnique({ where: { id: payload.id } });
+    const user = await prisma.user.findUnique({ where: { id: payload.id }, include: { customRole: true } });
 
     if (!user) {
       return res.status(401).json({ error: "Akun tidak ditemukan." });
@@ -35,7 +35,7 @@ async function optionalAuth(req, res, next) {
     if (!token) return next();
 
     const payload = verifyToken(token);
-    const user = await prisma.user.findUnique({ where: { id: payload.id } });
+    const user = await prisma.user.findUnique({ where: { id: payload.id }, include: { customRole: true } });
     if (user) req.user = user;
   } catch (err) {
     // ignore invalid token for optional auth

@@ -15,30 +15,30 @@ import TableRow from '@mui/material/TableRow';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import AdminCard from '../admin/AdminCard';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
-import TextField from '@mui/material/TextField';
-import Switch from '@mui/material/Switch';
-import FormControlLabel from '@mui/material/FormControlLabel';
+import { useFeedback, type ConfirmOptions } from '../feedback/FeedbackProvider';
 import CircularProgress from '@mui/material/CircularProgress';
 import EmptyState from '../components/EmptyState';
 import { Sprout } from '../components/art/Nature';
 import { formatRupiah, timeAgo } from '../data/mockData';
-import { useAuth, type Role } from '../context/AuthContext';
 import { useAdminList, useAdminAction, apiErrorMessage } from '../lib/queries';
 
-function useRun() {
+export interface RunOptions { confirm?: ConfirmOptions; success?: string }
+
+export function useRun() {
   const act = useAdminAction();
-  const [error, setError] = useState('');
-  const run = async (method: 'post' | 'patch', url: string, data?: unknown) => {
-    setError('');
+  const { toast, confirm } = useFeedback();
+  const run = async (method: 'post' | 'patch', url: string, data?: unknown, opts: RunOptions = {}) => {
+    if (opts.confirm && !(await confirm(opts.confirm))) return false;
     try {
       await act.mutateAsync({ method, url, data });
+      toast.success(opts.success ?? 'Berhasil disimpan.');
+      return true;
     } catch (e) {
-      setError(apiErrorMessage(e, 'Aksi gagal.'));
+      toast.error(apiErrorMessage(e, 'Aksi gagal.'));
+      return false;
     }
   };
-  return { run, busy: act.isPending, error };
+  return { run, busy: act.isPending, error: '' };
 }
 
 const campaignTitle = (c: any) => c.title || c.thread?.title || `Kampanye #${c.id}`;
@@ -76,7 +76,7 @@ export function Verification() {
               )}
             </Box>
             <Stack direction="row" spacing={1} sx={{ flexShrink: 0 }}>
-              <Button variant="contained" disabled={busy} onClick={() => run('patch', `/campaigns/${c.id}/status`, { status: 'ACTIVE' })}>
+              <Button variant="contained" disabled={busy} onClick={() => run('patch', `/campaigns/${c.id}/status`, { status: 'ACTIVE' }, { confirm: { title: 'Setujui kampanye ini?', text: 'Kampanye akan tampil dan mulai menerima dukungan.', icon: 'question', confirmText: 'Ya, setujui' }, success: 'Kampanye disetujui.' })}>
                 Setujui
               </Button>
               {c.kind === 'MODAL_USAHA' && (
@@ -124,8 +124,8 @@ export function Donations() {
                     <TableCell>{timeAgo(d.createdAt)}</TableCell>
                     {status === 'PENDING' && (
                       <TableCell align="right" sx={{ whiteSpace: 'nowrap' }}>
-                        <Button size="small" variant="contained" disabled={busy} onClick={() => run('post', `/campaigns/${d.campaignId}/donations/${d.id}/confirm`)}>Konfirmasi</Button>{' '}
-                        <Button size="small" color="error" disabled={busy} onClick={() => run('post', `/admin/donations/${d.id}/reject`)}>Tolak</Button>
+                        <Button size="small" variant="contained" disabled={busy} onClick={() => run('post', `/campaigns/${d.campaignId}/donations/${d.id}/confirm`, undefined, { confirm: { title: 'Konfirmasi donasi?', text: `Pastikan ${formatRupiah(Number(d.amount))} sudah masuk ke rekening (ref QP-${d.id}).`, icon: 'question', confirmText: 'Ya, sudah masuk' }, success: 'Donasi dikonfirmasi.' })}>Konfirmasi</Button>{' '}
+                        <Button size="small" color="error" disabled={busy} onClick={() => run('post', `/admin/donations/${d.id}/reject`, undefined, { confirm: { title: 'Tolak donasi ini?', text: 'Donasi ditandai gagal dan tidak dihitung ke kampanye.', icon: 'warning', danger: true, confirmText: 'Ya, tolak' }, success: 'Donasi ditolak.' })}>Tolak</Button>
                       </TableCell>
                     )}
                   </TableRow>
@@ -167,7 +167,7 @@ export function Disbursement() {
                   {m.released ? (
                     <Chip size="small" color="success" label="Cair" />
                   ) : (
-                    <Button size="small" variant="outlined" disabled={busy || available < Number(m.amount)} onClick={() => run('post', `/campaigns/${c.id}/milestones/${m.id}/release`)}>
+                    <Button size="small" variant="outlined" disabled={busy || available < Number(m.amount)} onClick={() => run('post', `/campaigns/${c.id}/milestones/${m.id}/release`, undefined, { confirm: { title: 'Cairkan dana tahap ini?', text: `${formatRupiah(Number(m.amount))} untuk "${m.label}" akan ditandai cair.`, icon: 'warning', confirmText: 'Ya, cairkan' }, success: 'Dana dicairkan.' })}>
                       Cairkan
                     </Button>
                   )}
@@ -180,44 +180,3 @@ export function Disbursement() {
     </Stack>
   );
 }
-
-export function Users() {
-  const [q, setQ] = useState('');
-  const { data = [], isLoading } = useAdminList('users', q ? { q } : {});
-  const { run, busy, error } = useRun();
-  const { user: me } = useAuth();
-  return (
-    <Stack spacing={2}>
-      <TextField label="Cari nama, username, atau email" value={q} onChange={(e) => setQ(e.target.value)} fullWidth />
-      {error && <Alert severity="error">{error}</Alert>}
-      {isLoading ? <Loading /> : data.map((u: any) => (
-        <Card key={u.id} sx={{ p: 2 }}>
-          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} justifyContent="space-between" alignItems={{ sm: 'center' }}>
-            <Box sx={{ minWidth: 0 }}>
-              <Typography fontWeight={700}>{u.name} <Typography component="span" variant="body2" color="text.secondary">@{u.username}</Typography></Typography>
-              <Typography variant="caption" color="text.secondary">{u.email} · {u.karma} poin</Typography>
-            </Box>
-            <Stack direction="row" spacing={1.5} alignItems="center">
-              <FormControlLabel
-                control={<Switch size="small" checked={u.isVerified} disabled={busy} onChange={(e) => run('patch', `/admin/users/${u.id}`, { isVerified: e.target.checked })} />}
-                label={<Typography variant="caption">Terverifikasi</Typography>}
-              />
-              <Select
-                size="small"
-                value={u.role as Role}
-                disabled={busy || u.id === me?.id || (me?.role !== 'SUPERADMIN' && (u.role === 'ADMIN' || u.role === 'SUPERADMIN'))}
-                onChange={(e) => run('patch', `/admin/users/${u.id}`, { role: e.target.value })}
-              >
-                <MenuItem value="USER">Pengguna</MenuItem>
-                <MenuItem value="KSATRIA_KOMUNITAS">Ksatria Komunitas</MenuItem>
-                <MenuItem value="ADMIN" disabled={me?.role !== 'SUPERADMIN'}>Admin</MenuItem>
-                <MenuItem value="SUPERADMIN" disabled={me?.role !== 'SUPERADMIN'}>Superadmin</MenuItem>
-              </Select>
-            </Stack>
-          </Stack>
-        </Card>
-      ))}
-    </Stack>
-  );
-}
-

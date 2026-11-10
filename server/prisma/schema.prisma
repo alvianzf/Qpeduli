@@ -46,7 +46,10 @@ model User {
   city         String?
   bio          String?
   avatarColor  String   @default("#2563EB")
+  avatarUrl    String?
   role         Role     @default(USER)
+  customRoleId Int?
+  customRole   CustomRole? @relation(fields: [customRoleId], references: [id], onDelete: SetNull)
   karma        Int      @default(0)
   isVerified   Boolean  @default(false)
   createdAt    DateTime @default(now())
@@ -248,4 +251,15 @@ model AuditLog {
 
   @@index([createdAt])
   @@map("audit_logs")
+}
+
+model CustomRole {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  description String?
+  permissions String[]
+  createdAt   DateTime @default(now())
+  users       User[]
+
+  @@map("custom_roles")
 }

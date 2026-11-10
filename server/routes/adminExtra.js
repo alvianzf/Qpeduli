@@ -1,15 +1,15 @@
 const express = require("express");
 const { body } = require("express-validator");
 const prisma = require("../db");
-const { requireRole } = require("../middleware/roleMiddleware");
+const { requireRole, requirePerm } = require("../middleware/roleMiddleware");
 const validate = require("../middleware/validate");
 const { getSettings, audit } = require("../utils/settings");
 
-// Mounted inside routes/admin.js, so authMiddleware + requireRole("ADMIN") already ran.
+// Mounted inside routes/admin.js, so authMiddleware + requireConsole already ran.
 const router = express.Router();
 
 // ---- Analytics ---------------------------------------------------------------------------------
-router.get("/analytics", async (req, res, next) => {
+router.get("/analytics", requirePerm("analitik"), async (req, res, next) => {
   try {
     const days = Math.min(365, Math.max(7, Number(req.query.days) || 30));
     const since = new Date(Date.now() - days * 86400000);
@@ -78,7 +78,7 @@ const dateRange = (q) => {
   return Object.keys(w).length ? { createdAt: w } : {};
 };
 
-router.get("/reports/:type", async (req, res, next) => {
+router.get("/reports/:type", requirePerm("laporan"), async (req, res, next) => {
   try {
     const { type } = req.params;
     if (type === "donasi") {

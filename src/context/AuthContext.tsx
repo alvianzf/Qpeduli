@@ -11,10 +11,14 @@ export interface AuthUser {
   city: string | null;
   bio: string | null;
   avatarColor: string;
+  avatarUrl?: string | null;
   role: Role;
   karma: number;
   isVerified: boolean;
   createdAt: string;
+  /** Console permissions (all of them for ADMIN/SUPERADMIN, or those of the custom role). */
+  permissions?: string[];
+  customRole?: { id: number; name: string } | null;
 }
 
 interface AuthContextValue {

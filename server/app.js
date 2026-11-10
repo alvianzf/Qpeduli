@@ -35,6 +35,7 @@ app.use(express.urlencoded({ extended: true, limit: "5mb" }));
 app.use(cookieParser());
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads"), { maxAge: 31557600000 }));
+app.use("/api/v1/uploads", express.static(path.join(__dirname, "uploads"), { maxAge: 31557600000 }));
 app.use("/api/v1/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use("/api/v1", routes);
 

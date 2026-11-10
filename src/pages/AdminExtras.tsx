@@ -22,6 +22,7 @@ import { lte } from '../admin/adminTheme';
 import api, { apiErrorMessage } from '../lib/api';
 import { formatRupiah } from '../data/mockData';
 import { useAuth } from '../context/AuthContext';
+import { useFeedback } from '../feedback/FeedbackProvider';
 
 const fmt = (n: number) => Math.round(n).toLocaleString('id-ID');
 const shortDate = (d: string) => new Date(d).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
@@ -212,6 +213,7 @@ const reports = [
 ];
 
 export function Reports() {
+  const { toast } = useFeedback();
   const [from, setFrom] = useState('');
   const [to, setTo] = useState('');
   const [busy, setBusy] = useState('');
@@ -227,8 +229,9 @@ export function Reports() {
       a.download = `laporan-${type}-${new Date().toISOString().slice(0, 10)}.csv`;
       a.click();
       URL.revokeObjectURL(url);
+      toast.success('Laporan diunduh.');
     } catch (e) {
-      setError(apiErrorMessage(e, 'Gagal mengunduh laporan.'));
+      toast.error(apiErrorMessage(e, 'Gagal mengunduh laporan.'));
     } finally {
       setBusy('');
     }
@@ -255,6 +258,7 @@ export function Reports() {
 }
 
 export function SettingsPanel() {
+  const { toast } = useFeedback();
   const { user } = useAuth();
   const canEdit = user?.role === 'SUPERADMIN';
   const qc = useQueryClient();
@@ -263,8 +267,8 @@ export function SettingsPanel() {
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const save = useMutation({
     mutationFn: async (body: any) => (await api.put('/admin/settings', body)).data,
-    onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin'] }); setMsg({ ok: true, text: 'Pengaturan tersimpan.' }); },
-    onError: (e) => setMsg({ ok: false, text: apiErrorMessage(e, 'Gagal menyimpan.') }),
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin'] }); toast.success('Pengaturan tersimpan.'); },
+    onError: (e) => toast.error(apiErrorMessage(e, 'Gagal menyimpan.')),
   });
   if (!data) return <Loading />;
   const v = form ?? data;

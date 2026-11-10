@@ -4,6 +4,7 @@ export interface User {
   username: string;
   avatarColor: string;
   avatarInitial: string;
+  avatarUrl?: string;
   karma: number;
   isKsatria: boolean;
   city: string;

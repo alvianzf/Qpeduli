@@ -20,6 +20,7 @@ export function adaptUser(u: any): User {
     username: u.username,
     avatarColor: u.avatarColor || '#2563EB',
     avatarInitial: (u.name || '?').charAt(0).toUpperCase(),
+    avatarUrl: u.avatarUrl || undefined,
     karma: u.karma ?? 0,
     isKsatria: u.role === 'KSATRIA_KOMUNITAS' || u.role === 'ADMIN' || u.role === 'SUPERADMIN',
     city: u.city || '',

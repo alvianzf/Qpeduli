@@ -8,6 +8,7 @@ const validate = require("../middleware/validate");
 const { sendWelcomeEmail } = require("../utils/mailer");
 
 const { getSettings } = require("../utils/settings");
+const { permissionsOf } = require("../middleware/roleMiddleware");
 
 const router = express.Router();
 
@@ -79,8 +80,9 @@ router.post(
       }
 
       const token = signToken(user);
-      const { passwordHash: _, ...safeUser } = user;
-      res.json({ user: safeUser, token });
+      const full = user.customRoleId ? await prisma.user.findUnique({ where: { id: user.id }, include: { customRole: true } }) : user;
+      const { passwordHash: _, ...safeUser } = full;
+      res.json({ user: { ...safeUser, permissions: permissionsOf(full) }, token });
     } catch (err) {
       next(err);
     }
@@ -89,7 +91,7 @@ router.post(
 
 router.get("/me", authMiddleware, (req, res) => {
   const { passwordHash: _, ...safeUser } = req.user;
-  res.json({ user: safeUser });
+  res.json({ user: { ...safeUser, permissions: permissionsOf(req.user) } });
 });
 
 module.exports = router;

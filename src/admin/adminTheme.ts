@@ -41,3 +41,12 @@ export const lte = {
   orange: '#E65100',
   red: '#C2200F',
 };
+
+// Profile area: same layout as the admin console, teal instead of blue.
+export const profilePalette = {
+  ...lte,
+  sidebar: 'linear-gradient(180deg, #0B4F4A 0%, #0F766E 55%, #14958A 100%)',
+  blue: '#0F766E',
+  cyan: '#14958A',
+  green: '#0B4F4A',
+};
