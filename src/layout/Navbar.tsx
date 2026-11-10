@@ -88,6 +88,7 @@ export default function Navbar() {
               {user ? (
                 <Stack direction="row" spacing={1.5} alignItems="center" sx={{ display: { xs: 'none', md: 'flex' } }}>
                   <KarmaChip karma={user.karma} compact />
+                  <Button size="small" onClick={() => { logout(); go('/'); }}>Keluar</Button>
                   <IconButton aria-label="Menu akun" onClick={(e) => setAnchor(e.currentTarget)} sx={{ p: 0 }}>
                     <Avatar sx={{ bgcolor: user.avatarColor, width: 40, height: 40, fontWeight: 700 }}>
                       {user.name.charAt(0).toUpperCase()}
