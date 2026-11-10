@@ -1,21 +1,40 @@
-// Campaigns currently run only in Kepulauan Riau (Kepri). Keep this list in sync with src/data/kepri.ts.
-const KEPRI_AREAS = [
-  { id: "batam", name: "Kota Batam", aliases: ["batam", "batu aji", "sekupang", "nongsa", "batam centre", "batam kota"] },
-  { id: "tanjungpinang", name: "Kota Tanjungpinang", aliases: ["tanjungpinang", "tanjung pinang"] },
-  { id: "bintan", name: "Kabupaten Bintan", aliases: ["bintan", "tanjunguban", "tanjung uban", "kijang", "lagoi"] },
-  { id: "karimun", name: "Kabupaten Karimun", aliases: ["karimun", "tanjung balai karimun", "tanjungbalai karimun", "meral"] },
-  { id: "lingga", name: "Kabupaten Lingga", aliases: ["lingga", "daik", "dabo singkep", "singkep"] },
-  { id: "natuna", name: "Kabupaten Natuna", aliases: ["natuna", "ranai"] },
-  { id: "anambas", name: "Kabupaten Kepulauan Anambas", aliases: ["anambas", "kepulauan anambas", "tarempa"] },
+// Campaigns currently run only in four provinces of central Sumatra. Province ids match @svg-maps/indonesia
+// and src/data/areas.ts: keep the two lists in sync.
+const AREAS = [
+  {
+    id: "id-kr",
+    name: "Kepulauan Riau",
+    aliases: ["kepulauan riau", "kepri", "batam", "batu aji", "sekupang", "nongsa", "tanjungpinang", "tanjung pinang", "bintan", "tanjunguban", "tanjung uban", "kijang", "lagoi", "karimun", "tanjung balai karimun", "tanjungbalai karimun", "meral", "lingga", "daik", "dabo singkep", "singkep", "natuna", "ranai", "anambas", "kepulauan anambas", "tarempa"],
+  },
+  {
+    id: "id-ri",
+    name: "Riau",
+    aliases: ["riau", "pekanbaru", "dumai", "kampar", "siak", "bengkalis", "indragiri", "rengat", "tembilahan", "rokan", "pelalawan", "pangkalan kerinci", "kuantan singingi", "teluk kuantan", "meranti", "selatpanjang", "duri", "bangkinang"],
+  },
+  {
+    id: "id-sb",
+    name: "Sumatera Barat",
+    aliases: ["sumatera barat", "sumbar", "padang", "bukittinggi", "payakumbuh", "padang panjang", "pariaman", "solok", "sawahlunto", "agam", "pesisir selatan", "tanah datar", "batusangkar", "lima puluh kota", "limapuluh kota", "mentawai", "dharmasraya", "pasaman", "painan"],
+  },
+  {
+    id: "id-ja",
+    name: "Jambi",
+    aliases: ["jambi", "sungai penuh", "batanghari", "muaro jambi", "kerinci", "merangin", "bangko", "sarolangun", "tebo", "muara tebo", "bungo", "muara bungo", "tanjung jabung", "kuala tungkal", "muara sabak"],
+  },
 ];
 
-// Returns the Kepri area a free-text city belongs to, or null if it is outside Kepri.
-function kepriArea(city) {
-  const c = String(city || "").toLowerCase().trim();
+// Returns the area a free-text city or province belongs to, or null when it is outside the four provinces.
+function regionOf(text) {
+  const c = String(text || "").toLowerCase().trim();
   if (!c) return null;
-  return KEPRI_AREAS.find((a) => a.id === c || a.name.toLowerCase() === c || a.aliases.some((x) => c === x || c.includes(x))) || null;
+  const parts = c.split(/[,/]/).map((p) => p.replace(/^(kota|kab\.?|kabupaten|provinsi)\s+/i, "").trim()).filter(Boolean);
+  for (const part of [...parts].reverse().concat(parts)) {
+    const hit = AREAS.find((a) => a.aliases.some((x) => part === x || part.includes(x)));
+    if (hit) return hit;
+  }
+  return null;
 }
 
-const KEPRI_ONLY_MESSAGE = "Saat ini kampanye hanya untuk wilayah Kepulauan Riau (Batam, Tanjungpinang, Bintan, Karimun, Lingga, Natuna, Anambas).";
+const REGION_ONLY_MESSAGE = "Saat ini kampanye hanya untuk wilayah Kepulauan Riau, Riau, Sumatera Barat, dan Jambi.";
 
-module.exports = { KEPRI_AREAS, kepriArea, KEPRI_ONLY_MESSAGE };
+module.exports = { AREAS, regionOf, REGION_ONLY_MESSAGE };

@@ -6,7 +6,7 @@ const { authMiddleware, optionalAuth } = require("../middleware/authMiddleware")
 const validate = require("../middleware/validate");
 const { addKarma } = require("../utils/karma");
 const { kycBlock } = require("../utils/kyc");
-const { kepriArea, KEPRI_ONLY_MESSAGE } = require("../utils/region");
+const { regionOf, REGION_ONLY_MESSAGE } = require("../utils/region");
 const { uploader, storeEvidence, MAX_FILES } = require("../utils/evidence");
 
 const router = express.Router();
@@ -276,8 +276,8 @@ router.post(
       const blocked = await kycBlock(req.user);
       if (blocked) return res.status(403).json({ error: blocked });
 
-      const area = kepriArea(req.body.city);
-      if (!area) return res.status(400).json({ error: KEPRI_ONLY_MESSAGE });
+      const area = regionOf(req.body.city);
+      if (!area) return res.status(400).json({ error: REGION_ONLY_MESSAGE });
 
       const deadline = new Date(req.body.deadline);
       if (!(deadline > new Date()) || deadline > new Date(Date.now() + 366 * 86400000)) return res.status(400).json({ error: "Tenggat harus di masa depan dan paling lama 1 tahun." });
@@ -287,7 +287,7 @@ router.post(
       const evidence = await storeEvidence(files, `req-${req.user.id}`);
 
       const r = await prisma.campaignRequest.create({
-        data: { threadId: id, requesterId: req.user.id, target: req.body.target, deadline, city: area.name, message: req.body.message.trim(), evidence },
+        data: { threadId: id, requesterId: req.user.id, target: req.body.target, deadline, city: String(req.body.city).trim().slice(0, 80), message: req.body.message.trim(), evidence },
       });
       res.status(201).json({ id: r.id, status: r.status });
     } catch (err) {
