@@ -6,6 +6,9 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Avatar from '@mui/material/Avatar';
 import Drawer from '@mui/material/Drawer';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import Divider from '@mui/material/Divider';
 import MenuIcon from '@mui/icons-material/Menu';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -30,6 +33,7 @@ const links = [
 /** Full-width glass top bar: logo left, links centered, actions right. */
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const [anchor, setAnchor] = useState<HTMLElement | null>(null);
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { user, logout } = useAuth();
@@ -84,9 +88,21 @@ export default function Navbar() {
               {user ? (
                 <Stack direction="row" spacing={1.5} alignItems="center" sx={{ display: { xs: 'none', md: 'flex' } }}>
                   <KarmaChip karma={user.karma} compact />
-                  <Avatar onClick={() => go(`/profil/${user.username}`)} sx={{ bgcolor: user.avatarColor, cursor: 'pointer', width: 40, height: 40, fontWeight: 700 }}>
-                    {user.name.charAt(0).toUpperCase()}
-                  </Avatar>
+                  <IconButton aria-label="Menu akun" onClick={(e) => setAnchor(e.currentTarget)} sx={{ p: 0 }}>
+                    <Avatar sx={{ bgcolor: user.avatarColor, width: 40, height: 40, fontWeight: 700 }}>
+                      {user.name.charAt(0).toUpperCase()}
+                    </Avatar>
+                  </IconButton>
+                  <Menu anchorEl={anchor} open={!!anchor} onClose={() => setAnchor(null)} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} transformOrigin={{ vertical: 'top', horizontal: 'right' }}>
+                    <Box sx={{ px: 2, py: 1 }}>
+                      <Typography fontWeight={700}>{user.name}</Typography>
+                      <Typography variant="caption" color="text.secondary">@{user.username}</Typography>
+                    </Box>
+                    <Divider />
+                    <MenuItem onClick={() => { setAnchor(null); go(`/profil/${user.username}`); }}>Profil</MenuItem>
+                    {(user.role === 'ADMIN' || user.role === 'SUPERADMIN') && <MenuItem onClick={() => { setAnchor(null); go('/admin'); }}>Panel admin</MenuItem>}
+                    <MenuItem onClick={() => { setAnchor(null); logout(); go('/'); }}>Keluar</MenuItem>
+                  </Menu>
                 </Stack>
               ) : (
                 <Stack direction="row" spacing={1} sx={{ display: { xs: 'none', md: 'flex' } }}>
